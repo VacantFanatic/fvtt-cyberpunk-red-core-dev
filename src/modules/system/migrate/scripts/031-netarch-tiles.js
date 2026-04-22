@@ -9,6 +9,7 @@ export default class NetarchTilesMigration extends BaseMigrationScript {
 
   async migrateMisc() {
     const scenes = game.scenes.contents;
+    const updates = [];
 
     for (const scene of scenes) {
       const tiles = scene.tiles.contents;
@@ -16,9 +17,10 @@ export default class NetarchTilesMigration extends BaseMigrationScript {
         const { src } = tile.texture;
         if (src?.includes(`systems/${game.system.id}/tiles/netarch`)) {
           const newSrc = src.replace(/PNG/, "WebP").replace(/.png/, ".webp");
-          await tile.update({ "texture.src": newSrc });
+          updates.push(tile.update({ "texture.src": newSrc }));
         }
       }
     }
+    await Promise.all(updates);
   }
 }
