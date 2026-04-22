@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 const { Ruler } = foundry.canvas.interaction;
 
 /**
@@ -55,29 +56,71 @@ export default class CPRRuler extends Ruler {
     const base = super._getSegmentStyle(waypoint);
     const token = canvas.tokens.controlled[0];
     const actor = token?.actor;
-    const walkStat = actor?.system?.derivedStats?.walk;
-    const runStat = actor?.system?.derivedStats?.run;
-    if (
-      !walkStat ||
-      !runStat ||
-      typeof walkStat.value !== "number" ||
-      typeof runStat.value !== "number" ||
-      typeof actor.bonuses?.walk !== "number" ||
-      typeof actor.bonuses?.run !== "number"
-    ) {
-      return base;
-    }
+    const moveStat = actor?.system?.stats?.move?.value;
+    if (typeof moveStat !== "number") return base;
 
-    const walkSpeed = walkStat.value + actor.bonuses.walk;
-    const runSpeed = runStat.value + actor.bonuses.run;
+    const moveBonus =
+      typeof actor?.bonuses?.move === "number" ? actor.bonuses.move : 0;
+    const moveSpeed = moveStat + moveBonus;
     const d = waypoint.measurement?.distance;
     if (typeof d !== "number") return base;
 
-    let color;
-    if (d <= walkSpeed) color = 0x00ff00;
-    else if (d <= runSpeed) color = 0xff8000;
-    else color = 0xff0000;
+    const colorRanges = getColorRanges(token, moveSpeed);
+    const range = colorRanges.find((entry) => d <= entry.range);
+    const color = range
+      ? range.color
+      : colorRanges[colorRanges.length - 1].color;
 
     return { ...base, color };
   }
+}
+
+function getColorRanges(token, moveSpeed) {
+  const context = {
+    ranges: [
+      {
+        range: moveSpeed,
+        color: getColorSetting("rulerColorWalk", 0x00ff00),
+      },
+      {
+        range: moveSpeed * 2,
+        color: getColorSetting("rulerColorDash", 0xffff00),
+      },
+      {
+        range: Number.POSITIVE_INFINITY,
+        color: getColorSetting("rulerColorOver", 0xff0000),
+      },
+    ],
+  };
+
+  /**
+   * Hook for module/system extensions to customize ruler movement bands.
+   *
+   * @param {Token} token
+   * @param {{ranges: Array<{range:number, color:number}>}} context
+   */
+  Hooks.callAll("CPR.getRulerRanges", token, context);
+
+  if (!Array.isArray(context.ranges) || context.ranges.length === 0) {
+    return [
+      { range: moveSpeed, color: 0x00ff00 },
+      { range: moveSpeed * 2, color: 0xffff00 },
+      { range: Number.POSITIVE_INFINITY, color: 0xff0000 },
+    ];
+  }
+
+  return context.ranges
+    .filter(
+      (entry) =>
+        typeof entry.range === "number" && typeof entry.color === "number"
+    )
+    .sort((a, b) => a.range - b.range);
+}
+
+function getColorSetting(key, fallback) {
+  const value = game.settings.get(game.system.id, key);
+  if (typeof value !== "string") return fallback;
+  const cleaned = value.trim().replace("#", "");
+  const parsed = Number.parseInt(cleaned, 16);
+  return Number.isNaN(parsed) ? fallback : parsed;
 }

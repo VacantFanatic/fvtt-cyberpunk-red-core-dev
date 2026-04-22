@@ -2,6 +2,27 @@
 
 # Changelog
 
+## Version 1.1.0
+
+### Action Needed
+
+- Disable the standalone `diwako-cpred-additions` module if enabled to avoid duplicate DV overlays and chat hooks.
+
+### New Features
+
+- Integrate Diwako CPR Additions directly into the system.
+- Add hover DV display for equipped ranged weapons (including autofire and supported upgrades).
+- Add ranged attack hit/miss helper chat messaging.
+- Add poor quality weapon jam/break reminder messaging on fumble.
+- Add GM cover-token creation workflow and expose additions helper APIs at `game.cpr.api.additions`.
+- Add optional integrations for Item Piles and DF Active Lights + Automated Animations.
+- Add additions macro compendium (`additions_macros`) and related settings/template/CSS support.
+
+### Bug Fixes
+
+- Fix DV display upgrade weapon type filtering so compatible upgrade weapons are evaluated correctly.
+- Update chat-message author checks for current Foundry API behavior.
+
 ## Version 0.93
 
 ### New Features

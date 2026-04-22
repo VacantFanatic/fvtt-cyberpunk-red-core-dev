@@ -1,0 +1,8 @@
+_id: x5yD6nC9mQ0aP2kL
+_key: "!macros!x5yD6nC9mQ0aP2kL"
+command: |-
+  await game.cpr.api.additions.createCover();
+img: systems/cyberpunk-red-core/icons/compendium/armor/bullet_proof_shield.svg
+name: Create Cover
+scope: global
+type: script

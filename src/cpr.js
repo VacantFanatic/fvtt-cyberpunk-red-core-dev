@@ -23,7 +23,9 @@ import registerHooks from "./modules/system/hooks.js";
 import preloadHandlebarsTemplates from "./modules/system/preload-templates.js";
 import registerHandlebarsHelpers from "./modules/system/register-helpers.js";
 import CPRRuler from "./modules/system/cpr-ruler.js";
+import CPRTokenRuler from "./modules/system/cpr-token-ruler.js";
 import initalizeAPI from "./modules/api/initialize.js";
+import { registerAdditions } from "./modules/additions/index.js";
 
 // System settings
 import registerSystemSettings from "./modules/system/settings.js";
@@ -147,6 +149,7 @@ Hooks.once("init", async () => {
   CONFIG.Item.documentClass = itemConstructor;
   CONFIG.Combatant.documentClass = CPRCombatant;
   CONFIG.Canvas.rulerClass = CPRRuler;
+  CONFIG.Token.rulerClass = CPRTokenRuler;
 
   // Register Actor data models.
   CONFIG.Actor.dataModels.blackIce = BlackIceDataModel;
@@ -276,6 +279,7 @@ Hooks.once("init", async () => {
   preloadHandlebarsTemplates();
   registerHandlebarsHelpers();
   registerSystemSettings();
+  registerAdditions();
 
   // This MUST occur after templates, helpers, and system settings are loaded or registered.
   MigrationRunner.instantiate();
