@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ammoData": {
+      "type": "null"
+    },
+    "max": {
+      "type": "integer"
+    },
+    "value": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "max",
+    "value",
+    "ammoData"
+  ]
+}

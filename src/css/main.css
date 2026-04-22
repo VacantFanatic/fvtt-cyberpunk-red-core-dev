@@ -1,0 +1,49 @@
+@import url("apps/index.css");
+@import url("chat/index.css");
+@import url("compatability/index.css");
+@import url("elements/index.css");
+@import url("layout/index.css");
+@import url("sheets/index.css");
+@import url("variables/index.css");
+
+div,
+section {
+  scrollbar-width: thin;
+}
+
+.window-app .window-content,
+.application .window-content {
+  font-family: var(--cpr-font-primary) !important;
+  color: var(--cpr-text-normal);
+  background: var(--cpr-background-window);
+
+  button {
+    color: var(--cpr-text-foundry-input);
+    background-color: var(--cpr-background-foundry-input);
+  }
+
+  select {
+    color: var(--cpr-text-normal);
+    background: var(--cpr-background-window);
+  }
+
+  .entry-name,
+  .directory-list {
+    color: var(--cpr-text-dir-list);
+  }
+}
+
+.editor {
+  flex: 1 0 auto;
+  padding: 0;
+  min-height: 100%;
+
+  .tox-toolbar-overlord,
+  .tox-toolbar__primary {
+    background: none;
+  }
+}
+
+.editor-content {
+  padding: 0.313rem;
+}
