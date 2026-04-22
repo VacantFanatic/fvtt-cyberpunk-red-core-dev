@@ -26,10 +26,12 @@ import {
   DISCORD_MESSAGE_CHANGELOG,
   DISCORD_MESSAGE_HEADER,
   DISCORD_MESSAGE_INTROS,
+  RELEASE_REPO_BASE,
   SRC_DIR,
   SOURCE_FILES,
   SOURCE_DIRS,
   SYSTEM_FILE,
+  SYSTEM_NAME,
   SYSTEM_TITLE,
   SYSTEM_VERSION,
   PACKS_DIR,
@@ -139,13 +141,22 @@ async function buildManifest() {
     const system = JSON.parse(systemRaw);
     // If we're in CI use $VERSION as the version, else use a dummy version
     const version = SYSTEM_VERSION;
-    // Construct some URLs
-    const repoUrl = process.env.CI
-      ? process.env.REPO_URL
-      : "http://example.com";
-    const zipFile = process.env.CI ? process.env.ZIP_FILE : "cpr.zip";
-    const manifestUrl = `${repoUrl}/latest/${SYSTEM_FILE}`;
-    const downloadUrl = `${repoUrl}/${version}/${zipFile}`;
+    const zipFile = process.env.ZIP_FILE
+      ? process.env.ZIP_FILE
+      : `fvtt-${SYSTEM_NAME}-${version}.zip`;
+    const repoUrl = process.env.REPO_URL;
+    const useGitLabPackageRegistry = Boolean(
+      repoUrl && repoUrl.includes("packages/generic")
+    );
+    let manifestUrl;
+    let downloadUrl;
+    if (useGitLabPackageRegistry) {
+      manifestUrl = `${repoUrl}/latest/${SYSTEM_FILE}`;
+      downloadUrl = `${repoUrl}/${version}/${zipFile}`;
+    } else {
+      manifestUrl = `${RELEASE_REPO_BASE}/releases/latest/download/${SYSTEM_FILE}`;
+      downloadUrl = `${RELEASE_REPO_BASE}/releases/download/${version}/${zipFile}`;
+    }
 
     system.version = version;
     system.manifest = manifestUrl;

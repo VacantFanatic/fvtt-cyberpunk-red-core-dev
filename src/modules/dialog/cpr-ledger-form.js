@@ -205,34 +205,43 @@ export default class CPRLedger extends CPRDialog {
         yesAdd: {
           icon: "fas fa-check",
           label: SystemUtils.Localize("CPR.dialog.ledgerDeletion.yesAdd"),
-          callback: (dialog) => {
-            foundry.utils.mergeObject(dialog.object, { action: true, sign: 1 });
-            dialog.confirmDialog();
+          callback: (ev, btn, dlgV2) => {
+            const dlg = CPRDialog._resolveFormApplication(ev, btn, dlgV2);
+            if (!dlg) return;
+            foundry.utils.mergeObject(dlg.object, { action: true, sign: 1 });
+            dlg.confirmDialog();
           },
         },
         yesSubtract: {
           icon: "fas fa-check",
           label: SystemUtils.Localize("CPR.dialog.ledgerDeletion.yesSubtract"),
-          callback: (dialog) => {
-            foundry.utils.mergeObject(dialog.object, {
+          callback: (ev, btn, dlgV2) => {
+            const dlg = CPRDialog._resolveFormApplication(ev, btn, dlgV2);
+            if (!dlg) return;
+            foundry.utils.mergeObject(dlg.object, {
               action: true,
               sign: -1,
             });
-            dialog.confirmDialog();
+            dlg.confirmDialog();
           },
         },
         no: {
           icon: "fas fa-xmark",
           label: SystemUtils.Localize("CPR.dialog.common.no"),
-          callback: (dialog) => {
-            foundry.utils.mergeObject(dialog.object, { action: false });
-            dialog.confirmDialog();
+          callback: (ev, btn, dlgV2) => {
+            const dlg = CPRDialog._resolveFormApplication(ev, btn, dlgV2);
+            if (!dlg) return;
+            foundry.utils.mergeObject(dlg.object, { action: false });
+            dlg.confirmDialog();
           },
         },
         cancel: {
           icon: "fas fa-xmark",
           label: SystemUtils.Localize("CPR.dialog.common.cancel"),
-          callback: (dialog) => dialog.closeDialog(),
+          callback: (ev, btn, dlgV2) => {
+            const dlg = CPRDialog._resolveFormApplication(ev, btn, dlgV2);
+            dlg?.closeDialog();
+          },
         },
       },
       buttonDefault: "cancel",

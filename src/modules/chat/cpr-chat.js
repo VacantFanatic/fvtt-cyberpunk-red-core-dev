@@ -23,7 +23,7 @@ export default class CPRChat {
   static ChatDataSetup(content, modeOverride, forceWhisper, isRoll = false) {
     const chatData = {
       user: game.user.id,
-      rollMode: modeOverride || game.settings.get("core", "rollMode"),
+      messageMode: modeOverride || game.settings.get("core", "messageMode"),
       content,
     };
 
@@ -31,15 +31,15 @@ export default class CPRChat {
       chatData.sound = CONFIG.sounds.dice;
     }
 
-    if (["gmroll", "blindroll"].includes(chatData.rollMode)) {
+    if (["gmroll", "blindroll"].includes(chatData.messageMode)) {
       chatData.whisper = ChatMessage.getWhisperRecipients("GM").map(
         (u) => u.id
       );
     }
 
-    if (chatData.rollMode === "blindroll") {
+    if (chatData.messageMode === "blindroll") {
       chatData.blind = true;
-    } else if (chatData.rollMode === "selfroll") {
+    } else if (chatData.messageMode === "selfroll") {
       chatData.whisper = [game.user];
     }
 

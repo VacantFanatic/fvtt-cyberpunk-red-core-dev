@@ -5,6 +5,60 @@ import SystemUtils from "../utils/cpr-systemUtils.js";
  * Form application to handle dialogs more generally.
  */
 export default class CPRDialog extends FormApplication {
+  /**
+   * Foundry v14+ `DialogV2` calls button callbacks as
+   * `(event, button, dialogV2)`. Older code and our manual `.callback(this)` pass
+   * the FormApplication as the only argument. Resolve the CPRDialog instance.
+   *
+   * @param {PointerEvent|SubmitEvent|CPRDialog} event
+   * @param {HTMLButtonElement} [button]
+   * @param {*} [dialogV2] - Foundry `DialogV2` when invoked from v14+ dialog submit
+   * @returns {CPRDialog|undefined}
+   */
+  static _resolveFormApplication(event, button, dialogV2) {
+    if (event && typeof event.confirmDialog === "function") {
+      return /** @type {CPRDialog} */ (event);
+    }
+    const parent = dialogV2?.parent;
+    if (parent && typeof parent.confirmDialog === "function") {
+      return /** @type {CPRDialog} */ (parent);
+    }
+
+    /** @param {string|null|undefined} id */
+    const byWindowId = (id) => {
+      if (!id || typeof id !== "string") return undefined;
+      const fromUi = ui?.windows?.[id];
+      if (fromUi && typeof fromUi.confirmDialog === "function") {
+        return /** @type {CPRDialog} */ (fromUi);
+      }
+      const fromV2 = foundry.applications?.instances?.get?.(id);
+      if (fromV2 && typeof fromV2.confirmDialog === "function") {
+        return /** @type {CPRDialog} */ (fromV2);
+      }
+      return undefined;
+    };
+
+    const walkIds = (root) => {
+      let node = root;
+      while (node) {
+        if (node.id) {
+          const app = byWindowId(node.id);
+          if (app) return app;
+        }
+        node = node.parentElement;
+      }
+      return undefined;
+    };
+
+    const fromBtn = walkIds(button?.form ?? null);
+    if (fromBtn) return fromBtn;
+
+    const fromDlg = walkIds(dialogV2?.element ?? null);
+    if (fromDlg) return fromDlg;
+
+    return undefined;
+  }
+
   constructor(dialogData, options) {
     super(dialogData, options);
 
@@ -29,12 +83,26 @@ export default class CPRDialog extends FormApplication {
         confirm: {
           icon: "fas fa-check",
           label: SystemUtils.Localize("CPR.dialog.common.confirm"),
-          callback: (dialog) => dialog.confirmDialog(),
+          callback: (event, button, dialogV2) => {
+            const app = CPRDialog._resolveFormApplication(
+              event,
+              button,
+              dialogV2
+            );
+            return app?.confirmDialog();
+          },
         },
         cancel: {
           icon: "fas fa-xmark",
           label: SystemUtils.Localize("CPR.dialog.common.cancel"),
-          callback: (dialog) => dialog.closeDialog(),
+          callback: (event, button, dialogV2) => {
+            const app = CPRDialog._resolveFormApplication(
+              event,
+              button,
+              dialogV2
+            );
+            return app?.closeDialog();
+          },
         },
       },
       classes: super.defaultOptions.classes.concat(["dialog"]),

@@ -1,10 +1,10 @@
 {
   "name": "fvtt-cyberpunk-red-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cyberpunk-red-team/fvtt-cyberpunk-red-core/"
+    "url": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev"
   },
   "license": "UNLICENSED",
   "scripts": {
