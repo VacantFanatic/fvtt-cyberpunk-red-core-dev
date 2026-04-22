@@ -1,0 +1,9 @@
+_id: K8zV1sJ4nR7bT3mE
+_key: "!macros!K8zV1sJ4nR7bT3mE"
+command: |-
+  const args = [null, null, { size: 1 }];
+  await game.cpr.api.additions.createTemplate(args);
+img: icons/svg/explosion.svg
+name: Create Template (1x1)
+scope: global
+type: script

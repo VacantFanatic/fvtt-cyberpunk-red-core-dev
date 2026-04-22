@@ -62,7 +62,6 @@
     "canvas": "readonly",
     "debugger": "readonly",
     "document": "readonly",
-    "dragRuler": "readonly",
     "duplicate": "readonly",
     "foundry": "readonly",
     "fromUuid": "readonly",

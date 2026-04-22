@@ -17,6 +17,15 @@
       "url": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev"
     }
   ],
+  "relationships": {
+    "requires": [
+      {
+        "id": "lib-wrapper",
+        "type": "module",
+        "compatibility": {}
+      }
+    ]
+  },
   "esmodules": ["cpr.js"],
   "styles": [
     {
@@ -54,6 +63,11 @@
       "name": "Cyberpunk RED: Other",
       "sorting": "m",
       "packs": ["other_macros", "other_scenes", "other_changelog"]
+    },
+    {
+      "name": "Cyberpunk RED: Additions",
+      "sorting": "m",
+      "packs": ["additions_macros"]
     }
   ],
   "packs": [
@@ -300,6 +314,14 @@
       "type": "Scene",
       "name": "other_scenes",
       "path": "packs/other/scenes",
+      "system": "cyberpunk-red-core",
+      "banner": "systems/cyberpunk-red-core/images/compendium-banner.webp"
+    },
+    {
+      "label": "Additions Macros",
+      "type": "Macro",
+      "name": "additions_macros",
+      "path": "packs/additions/macros",
       "system": "cyberpunk-red-core",
       "banner": "systems/cyberpunk-red-core/images/compendium-banner.webp"
     }

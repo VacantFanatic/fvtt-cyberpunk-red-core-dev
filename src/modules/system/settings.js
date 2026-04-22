@@ -1,5 +1,6 @@
 import CPR from "./config.js";
 import CPRCompendiaSettings from "../apps/cpr-compendia-settings.js";
+import registerAdditionsSettings from "../additions/settings.js";
 import LOGGER from "../utils/cpr-logger.js";
 import SystemUtils from "../utils/cpr-systemUtils.js";
 import ModuleMigrationSettings from "./migrate/module-migration-settings.js";
@@ -172,6 +173,42 @@ const registerSystemSettings = () => {
     requiresReload: true,
     onChange: (value) => {
       LOGGER.log(`Changed resizeCPRSheets to ${value}`);
+    },
+  });
+
+  game.settings.register(game.system.id, "rulerColorWalk", {
+    name: "CPR.settings.rulerColorWalk.name",
+    hint: "CPR.settings.rulerColorWalk.hint",
+    scope: "client",
+    config: true,
+    type: String,
+    default: "#00ff00",
+    onChange: (value) => {
+      LOGGER.log(`Changed rulerColorWalk to ${value}`);
+    },
+  });
+
+  game.settings.register(game.system.id, "rulerColorDash", {
+    name: "CPR.settings.rulerColorDash.name",
+    hint: "CPR.settings.rulerColorDash.hint",
+    scope: "client",
+    config: true,
+    type: String,
+    default: "#ffff00",
+    onChange: (value) => {
+      LOGGER.log(`Changed rulerColorDash to ${value}`);
+    },
+  });
+
+  game.settings.register(game.system.id, "rulerColorOver", {
+    name: "CPR.settings.rulerColorOver.name",
+    hint: "CPR.settings.rulerColorOver.hint",
+    scope: "client",
+    config: true,
+    type: String,
+    default: "#ff0000",
+    onChange: (value) => {
+      LOGGER.log(`Changed rulerColorOver to ${value}`);
     },
   });
 
@@ -363,6 +400,8 @@ const registerSystemSettings = () => {
     type: Boolean,
     default: false,
   });
+
+  registerAdditionsSettings();
 };
 
 export default registerSystemSettings;

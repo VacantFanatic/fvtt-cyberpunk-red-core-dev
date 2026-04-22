@@ -22,8 +22,10 @@ import MigrationApp from "./modules/system/migrate/migration-app.js";
 import registerHooks from "./modules/system/hooks.js";
 import preloadHandlebarsTemplates from "./modules/system/preload-templates.js";
 import registerHandlebarsHelpers from "./modules/system/register-helpers.js";
-import overrideRulerFunctions from "./modules/system/overrides.js";
+import CPRRuler from "./modules/system/cpr-ruler.js";
+import CPRTokenRuler from "./modules/system/cpr-token-ruler.js";
 import initalizeAPI from "./modules/api/initialize.js";
+import { registerAdditions } from "./modules/additions/index.js";
 
 // System settings
 import registerSystemSettings from "./modules/system/settings.js";
@@ -146,6 +148,8 @@ Hooks.once("init", async () => {
   CONFIG.Combat.documentClass = CPRCombat;
   CONFIG.Item.documentClass = itemConstructor;
   CONFIG.Combatant.documentClass = CPRCombatant;
+  CONFIG.Canvas.rulerClass = CPRRuler;
+  CONFIG.Token.rulerClass = CPRTokenRuler;
 
   // Register Actor data models.
   CONFIG.Actor.dataModels.blackIce = BlackIceDataModel;
@@ -275,6 +279,7 @@ Hooks.once("init", async () => {
   preloadHandlebarsTemplates();
   registerHandlebarsHelpers();
   registerSystemSettings();
+  registerAdditions();
 
   // This MUST occur after templates, helpers, and system settings are loaded or registered.
   MigrationRunner.instantiate();
@@ -289,12 +294,6 @@ Hooks.once("init", async () => {
  * but then we moved to integers for maintainability's sake.
  */
 Hooks.once("ready", async () => {
-  overrideRulerFunctions();
-  const RulerClass = canvas.controls?.ruler?.constructor;
-  if (RulerClass && "WAYPOINT_LABEL_TEMPLATE" in RulerClass) {
-    RulerClass.WAYPOINT_LABEL_TEMPLATE = `systems/${game.system.id}/templates/hud/waypoint-label-dv.hbs`;
-  }
-
   if (!game.user.isGM) return;
   const { settings } = game;
 

@@ -1,0 +1,33 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+  <div class="directory flexcol">
+    <header class="directory-header flexcol">
+      <b>{{ localize "CPR.additions.settings.soundSelect.hint" }}</b>
+    </header>
+  </div>
+  <table>
+    {{#each userSounds}}
+    <tr>
+      <th>
+        <input type="text" class="diw-audiopath" value="{{.}}" readonly />
+      </th>
+      <th>
+        <a>
+          <i class="fa-solid fa-trash"></i>
+        </a>
+      </th>
+    </tr>
+    {{/each}}
+    <tr class="add-row">
+      <th>
+        <a>
+          <i class="fa-solid fa-add" style="display: contents"></i>
+          {{ localize "CPR.additions.settings.addSound" }}
+        </a>
+      </th>
+    </tr>
+  </table>
+  <button type="button" id="save-hit-sounds">
+    <i class="far fa-save"></i>
+    {{ localize "CPR.additions.settings.submit" }}
+  </button>
+</form>

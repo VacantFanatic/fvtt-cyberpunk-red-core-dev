@@ -1,4 +1,5 @@
 import empableItems from "./actor/empable-items.js";
+import { getAdditionsApi } from "../additions/index.js";
 
 /**
  * Loads actor functions from predefined modules and returns them as an object.
@@ -34,7 +35,7 @@ function initializeAPI() {
   // Load actor functions synchronously
   const actorFunctions = _loadActorFunctions();
   // Return the initialized API object
-  return { actor: actorFunctions };
+  return { actor: actorFunctions, additions: getAdditionsApi() };
 }
 
 export default initializeAPI;

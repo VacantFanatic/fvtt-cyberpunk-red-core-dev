@@ -23,7 +23,6 @@ const hooksImports = [
   "chat/parse-red-command.js",
   "external/babele.js",
   "external/dice-so-nice-preset.js",
-  "external/drag-ruler.js",
   "external/popout.js",
   "foundry/delete-folder.js",
   "foundry/ui/item-folder-upgraded-display.js",
