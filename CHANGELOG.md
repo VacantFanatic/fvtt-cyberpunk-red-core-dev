@@ -8,6 +8,8 @@
 
 - Disable the standalone `diwako-cpred-additions` module if enabled to avoid duplicate DV overlays and chat hooks.
 - Worlds currently on `0.89.2` can now migrate directly to this release; the migration sequence now includes data model version `41` (Remove Unused Install Flag).
+- Worlds currently on data model `24` can now migrate directly to this release in one step.
+- Back up your world before migration, especially when upgrading from older worlds that need multiple migration scripts.
 
 ### New Features
 

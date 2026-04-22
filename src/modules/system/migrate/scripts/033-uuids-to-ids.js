@@ -33,7 +33,8 @@ export default class InstallListUUIDsToIDs extends BaseMigrationScript {
    * @returns {void} - just mutates the document
    */
   static migrateUuids(doc) {
-    const { installedItems } = doc.system;
+    const installedItems = doc.system?.installedItems;
+    if (!installedItems || !Array.isArray(installedItems.list)) return;
     if (installedItems.list.length > 0) {
       const installed = installedItems.list;
       installedItems.list = installed.map((uuid) => {
@@ -42,14 +43,18 @@ export default class InstallListUUIDsToIDs extends BaseMigrationScript {
           return uuid;
         }
 
-        // Parse UUID and find the index of the id which represents the Item.
-        const parsedUuid = foundry.utils.parseUuid(uuid);
-        const index = parsedUuid.embedded.indexOf("Item") + 1;
+        try {
+          // Parse UUID and find the index of the id which represents the Item.
+          const parsedUuid = foundry.utils.parseUuid(uuid);
+          const index = parsedUuid.embedded.indexOf("Item") + 1;
 
-        // If the parsed uuid document type is not Item, return the embedded id at above index.
-        return parsedUuid.documentType === "Item"
-          ? parsedUuid.documentId
-          : parsedUuid.embedded[index];
+          // If the parsed uuid document type is not Item, return the embedded id at above index.
+          return parsedUuid.documentType === "Item"
+            ? parsedUuid.documentId
+            : parsedUuid.embedded[index];
+        } catch {
+          return uuid;
+        }
       });
     }
   }
