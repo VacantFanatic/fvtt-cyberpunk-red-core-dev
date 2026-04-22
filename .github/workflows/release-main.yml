@@ -1,13 +1,12 @@
-# Build and publish a GitHub Release when `package.json` changes on the integration branch.
-# Tag format: v{package.json version}-{run_number} so repeated runs stay unique.
+# Build and create a draft GitHub Release on every push to main/master.
+# Tag format: v{package.json version}-{run_number}. Publish the draft in GitHub when ready.
+# Drafts are not the "latest" release until published.
 
 name: Release (main / master)
 
 on:
   push:
     branches: [main, master]
-    paths:
-      - "package.json"
 
 permissions:
   contents: write
@@ -48,19 +47,22 @@ jobs:
           mv dist "fvtt-cyberpunk-red-core-${SYSTEM_VERSION}"
           zip -qr "fvtt-cyberpunk-red-core-${SYSTEM_VERSION}.zip" "fvtt-cyberpunk-red-core-${SYSTEM_VERSION}"
 
-      - name: Create GitHub Release
+      - name: Create draft GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          draft: true
           tag_name: v${{ steps.pkg.outputs.version }}-${{ github.run_number }}
           name: v${{ steps.pkg.outputs.version }} (build ${{ github.run_number }})
           body: |
-            Automated build from commit [`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) on branch `${{ github.ref_name }}`.
+            **Draft** — publish this release on GitHub when you are ready for it to go live.
+
+            Built from commit [`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) on branch `${{ github.ref_name }}`.
 
             **Artifacts**
             - `system.json` — manifest (same as inside the zip)
             - `fvtt-cyberpunk-red-core-v${{ steps.pkg.outputs.version }}.zip` — installable system folder for Foundry VTT
 
-            Manifest URL for Foundry (uses **latest** after publish):
+            After you **publish** this release, the manifest URL for Foundry can use:
             `https://github.com/${{ github.repository }}/releases/latest/download/system.json`
           files: |
             system.json
