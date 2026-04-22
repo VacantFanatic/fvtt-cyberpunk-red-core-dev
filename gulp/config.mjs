@@ -28,7 +28,12 @@ export const SYSTEM_TITLE = process.env.SYSTEM_TITLE
 
 export const SYSTEM_VERSION = process.env.SYSTEM_VERSION
   ? process.env.SYSTEM_VERSION
-  : "v1.0.0";
+  : "v1.0.1";
+
+/** Base URL for GitHub Releases (manifest / download). Override with RELEASE_REPO_BASE. */
+export const RELEASE_REPO_BASE = process.env.RELEASE_REPO_BASE
+  ? process.env.RELEASE_REPO_BASE
+  : "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev";
 
 export const SOURCE_FILES = [
   { from: `${SRC_DIR}/cpr.js`, to: "" },

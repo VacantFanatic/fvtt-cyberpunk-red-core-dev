@@ -166,10 +166,21 @@ export default class CPRActor extends Actor {
    * The Active Effects do not have access to their parent at preparation time so we wait until
    * this stage to determine whether they are suppressed or not. Taken from dnd5e character code.
    *
+   * Foundry v14+ calls this twice per preparation (`initial` then `final`); suppression is
+   * resolved once on the `initial` phase.
+   *
    * @override
-   * @returns nothing, just applies effects to the actor
+   * @param {string} [phase] - v14+: {@link CONST.ACTIVE_EFFECT_CHANGE_PHASES}
    */
-  applyActiveEffects() {
+  applyActiveEffects(phase) {
+    if (game.release.generation >= 14) {
+      if (phase === "initial") {
+        for (const e of this.allApplicableEffects()) {
+          e.determineSuppression();
+        }
+      }
+      return super.applyActiveEffects(phase);
+    }
     for (const e of this.allApplicableEffects()) {
       e.determineSuppression();
     }

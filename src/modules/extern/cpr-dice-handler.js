@@ -24,7 +24,8 @@ export default class DiceHandler {
   static async _passRoll(roll, rollModeOverride) {
     let whisper = null;
     let blind = false;
-    const rollMode = rollModeOverride || game.settings.get("core", "rollMode");
+    const rollMode =
+      rollModeOverride || game.settings.get("core", "messageMode");
     switch (rollMode) {
       case "blindroll": {
         // GM only

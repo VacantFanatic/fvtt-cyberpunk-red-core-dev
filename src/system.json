@@ -14,7 +14,7 @@
   "authors": [
     {
       "name": "The Project Red Team",
-      "url": "https://github.com/cyberpunk-red-team/fvtt-cyberpunk-red-core"
+      "url": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev"
     }
   ],
   "esmodules": ["cpr.js"],
@@ -379,8 +379,8 @@
   "primaryTokenAttribute": "derivedStats.hp",
   "secondaryTokenAttribute": null,
   "background": "systems/cyberpunk-red-core/images/Foundry-Background.webp",
-  "url": "https://github.com/cyberpunk-red-team/fvtt-cyberpunk-red-core",
-  "manifest": "https://github.com/cyberpunk-red-team/fvtt-cyberpunk-red-core/releases/latest/download/system.json",
-  "download": "DUMMY_VALUE",
+  "url": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev",
+  "manifest": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev/releases/latest/download/system.json",
+  "download": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev/releases/download/v1.0.1/fvtt-cyberpunk-red-core-v1.0.1.zip",
   "license": "GPL v3"
 }
