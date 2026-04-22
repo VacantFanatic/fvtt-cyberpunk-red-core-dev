@@ -13,22 +13,23 @@ export default class ItemQualityMigration extends BaseMigrationScript {
   };
 
   async updateItem(doc) {
-    const itemName = doc.name.toLowerCase();
-    const itemDescription = doc.system.description.value.toLowerCase();
+    const itemName = String(doc.name || "").toLowerCase();
+    const itemDescription = String(doc.system?.description?.value || "").toLowerCase();
+    const systemData = doc.system || (doc.system = {});
 
     // Set to jammed on all attackables, not seen if the weapon
     // system.quality != poor but needs to be set.
-    doc.system.critFailEffect = "jammed";
+    systemData.critFailEffect = "jammed";
 
     if (itemName.includes("poor") || itemDescription.includes("poor")) {
-      doc.system.quality = "poor";
+      systemData.quality = "poor";
     } else if (
       itemName.includes("excellent") ||
       itemDescription.includes("excellent")
     ) {
-      doc.system.quality = "excellent";
+      systemData.quality = "excellent";
     } else {
-      doc.system.quality = "standard";
+      systemData.quality = "standard";
     }
   }
 }

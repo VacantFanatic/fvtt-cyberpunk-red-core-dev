@@ -25,15 +25,27 @@ export default class AmmoIsInstallable extends BaseMigrationScript {
   }
 
   static addAmmoAsInstallable(loadable) {
-    const { installedItems, isRanged } = loadable.system;
+    const systemData = loadable.system || (loadable.system = {});
+    const { isRanged } = systemData;
     if (!isRanged) return;
+    const installedItems =
+      systemData.installedItems || (systemData.installedItems = {});
+    if (!Array.isArray(installedItems.allowedTypes)) {
+      installedItems.allowedTypes = [];
+    }
     installedItems.allowed = true;
     if (installedItems.allowedTypes.includes("ammo")) return;
     installedItems.allowedTypes.push("ammo");
   }
 
   static addInstalledAmmo(loadable) {
-    const { magazine, installedItems } = loadable.system;
+    const systemData = loadable.system || (loadable.system = {});
+    const installedItems =
+      systemData.installedItems || (systemData.installedItems = {});
+    if (!Array.isArray(installedItems.list)) {
+      installedItems.list = [];
+    }
+    const magazine = systemData.magazine || (systemData.magazine = {});
     if (magazine.ammoData?.uuid) {
       installedItems.list.push(magazine.ammoData.uuid);
     }

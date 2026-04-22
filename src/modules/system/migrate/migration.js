@@ -24,7 +24,7 @@ export default class MigrationRunner {
    * and migration is cancelled before it starts.
    */
   static #MINIMUM_VERSION = {
-    dataModel: 34,
+    dataModel: 24,
     system: "0.89.2",
   };
 
