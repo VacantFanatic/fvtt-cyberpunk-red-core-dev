@@ -1,5 +1,5 @@
 # Build and create a draft GitHub Release on every push to main/master.
-# Tag format: v{package.json version}-{run_number}. Publish the draft in GitHub when ready.
+# Tag format: v{package.json version}. Publish the draft in GitHub when ready.
 # Drafts are not the "latest" release until published.
 
 name: Release (main / master)
@@ -51,8 +51,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           draft: true
-          tag_name: v${{ steps.pkg.outputs.version }}-${{ github.run_number }}
-          name: v${{ steps.pkg.outputs.version }} (build ${{ github.run_number }})
+          tag_name: v${{ steps.pkg.outputs.version }}
+          name: v${{ steps.pkg.outputs.version }}
           body: |
             **Draft** — publish this release on GitHub when you are ready for it to go live.
 

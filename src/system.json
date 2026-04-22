@@ -1,5 +1,5 @@
 {
-  "version": "DUMMY_VALUE",
+  "version": "1.2.0",
   "flags": {
     "featureVideoURL": ""
   },
@@ -403,6 +403,6 @@
   "background": "systems/cyberpunk-red-core/images/Foundry-Background.webp",
   "url": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev",
   "manifest": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev/releases/latest/download/system.json",
-  "download": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev/releases/download/v1.0.1/fvtt-cyberpunk-red-core-v1.0.1.zip",
+  "download": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev/releases/download/v1.2.0/fvtt-cyberpunk-red-core-v1.2.0.zip",
   "license": "GPL v3"
 }
