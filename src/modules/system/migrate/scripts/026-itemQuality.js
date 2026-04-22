@@ -14,7 +14,9 @@ export default class ItemQualityMigration extends BaseMigrationScript {
 
   async updateItem(doc) {
     const itemName = String(doc.name || "").toLowerCase();
-    const itemDescription = String(doc.system?.description?.value || "").toLowerCase();
+    const itemDescription = String(
+      doc.system?.description?.value || ""
+    ).toLowerCase();
     const systemData = doc.system || (doc.system = {});
 
     // Set to jammed on all attackables, not seen if the weapon
