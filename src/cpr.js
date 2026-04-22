@@ -22,7 +22,7 @@ import MigrationApp from "./modules/system/migrate/migration-app.js";
 import registerHooks from "./modules/system/hooks.js";
 import preloadHandlebarsTemplates from "./modules/system/preload-templates.js";
 import registerHandlebarsHelpers from "./modules/system/register-helpers.js";
-import overrideRulerFunctions from "./modules/system/overrides.js";
+import CPRRuler from "./modules/system/cpr-ruler.js";
 import initalizeAPI from "./modules/api/initialize.js";
 
 // System settings
@@ -146,6 +146,7 @@ Hooks.once("init", async () => {
   CONFIG.Combat.documentClass = CPRCombat;
   CONFIG.Item.documentClass = itemConstructor;
   CONFIG.Combatant.documentClass = CPRCombatant;
+  CONFIG.Canvas.rulerClass = CPRRuler;
 
   // Register Actor data models.
   CONFIG.Actor.dataModels.blackIce = BlackIceDataModel;
@@ -289,12 +290,6 @@ Hooks.once("init", async () => {
  * but then we moved to integers for maintainability's sake.
  */
 Hooks.once("ready", async () => {
-  overrideRulerFunctions();
-  const RulerClass = canvas.controls?.ruler?.constructor;
-  if (RulerClass && "WAYPOINT_LABEL_TEMPLATE" in RulerClass) {
-    RulerClass.WAYPOINT_LABEL_TEMPLATE = `systems/${game.system.id}/templates/hud/waypoint-label-dv.hbs`;
-  }
-
   if (!game.user.isGM) return;
   const { settings } = game;
 

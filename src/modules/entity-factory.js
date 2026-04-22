@@ -25,7 +25,7 @@ import CPRVehicleItem from "./item/types/cpr-vehicle.js";
 import CPRWeaponItem from "./item/types/cpr-weapon.js";
 
 // Utilities
-import { validateOverride } from "./system/overrides.js";
+import validateOverride from "./system/overrides.js";
 
 /**
  * This code is heavily borrowed from the Burning Wheel system module. The jist
