@@ -5,7 +5,7 @@
 code-localization:
   stage: test
   script:
-    - ./.gitlab/pipeline_tests/test-misc.sh
+    - ./.github/workflows/pipeline_tests/test-misc.sh
   needs:
     - job: init
       artifacts: true

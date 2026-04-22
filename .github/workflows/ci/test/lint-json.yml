@@ -3,7 +3,7 @@
 lint-json:
   stage: test
   script:
-    - ./.gitlab/pipeline_tests/test-json.sh
+    - ./.github/workflows/pipeline_tests/test-json.sh
   needs:
     - job: init
       artifacts: true

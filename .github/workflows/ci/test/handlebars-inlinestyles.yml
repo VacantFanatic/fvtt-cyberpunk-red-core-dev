@@ -2,7 +2,7 @@
 handlebars-inlinestyles:
   stage: test
   script:
-    - ./.gitlab/pipeline_tests/test-handlebars-inelinestyles.sh
+    - ./.github/workflows/pipeline_tests/test-handlebars-inelinestyles.sh
   needs:
     - job: init
       artifacts: true

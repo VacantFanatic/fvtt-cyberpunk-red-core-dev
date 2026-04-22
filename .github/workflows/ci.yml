@@ -1,5 +1,5 @@
-# GitHub Actions CI (primary). The legacy `.gitlab/` tree remains for reference
-# until release/publish jobs are fully ported to GitHub Releases + gh CLI.
+# GitHub Actions CI. Shell helpers live under `.github/workflows/pipeline_tests/`
+# and `.github/workflows/pipeline_utils/` (see also `.github/workflows/ci/*.yml` job fragments).
 name: CI
 
 on:

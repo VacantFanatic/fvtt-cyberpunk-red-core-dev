@@ -1,16 +1,16 @@
-# Initialize the GitLab CI system for the project.
+# Initialize CI for the project (legacy job definition format; scripts are under
+# `.github/workflows/pipeline_*`).
 #
-# This configures the Environment Variables and installs npm dependencies used
-# in other jobs.
+# Configures environment variables and installs npm dependencies used in other jobs.
 init:
   stage: init
   before_script:
     - apt-get update
     - apt-get install -y curl jq
   script:
-    - ./.gitlab/pipeline_tests/test-choombot-key.sh
-    - ./.gitlab/pipeline_tests/test-envar-exports.sh
-    - ./.gitlab/pipeline_utils/envars.sh
+    - ./.github/workflows/pipeline_tests/test-choombot-key.sh
+    - ./.github/workflows/pipeline_tests/test-envar-exports.sh
+    - ./.github/workflows/pipeline_utils/envars.sh
     - npm ci
   artifacts:
     expire_in: 1h

@@ -5,7 +5,7 @@ handlebars-compare:
   stage: test
   script:
     - echo "Checking useage of cprCompare to test booleans ..."
-    - ./.gitlab/pipeline_tests/test-handlebars-compare.sh
+    - ./.github/workflows/pipeline_tests/test-handlebars-compare.sh
   needs:
     - job: init
       artifacts: true

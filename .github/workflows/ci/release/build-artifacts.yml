@@ -1,12 +1,12 @@
-# Builds the system for release then uploads the artifacts to the GitLab
-# Package Registry.
+# Builds the system for release then uploads the artifacts (e.g. GitHub Releases
+# or generic package storage, depending on `pipeline_utils/build.sh`).
 build-artifacts:
   stage: build
   before_script:
     - apt-get update
     - apt-get install curl zip jq -y
   script:
-    - ./.gitlab/pipeline_utils/build.sh
+    - ./.github/workflows/pipeline_utils/build.sh
   needs:
     - job: init
       artifacts: true

@@ -3,7 +3,7 @@ language-babele:
   stage: test
   script:
     - npx gulp generateBabele
-    - ./.gitlab/pipeline_tests/test-lang-babele.sh
+    - ./.github/workflows/pipeline_tests/test-lang-babele.sh
   needs:
     - job: init
       artifacts: true

@@ -2,7 +2,7 @@
 handlebars-tooltips:
   stage: test
   script:
-    - ./.gitlab/pipeline_tests/test-handlebars-tooltips.sh
+    - ./.github/workflows/pipeline_tests/test-handlebars-tooltips.sh
   needs:
     - job: init
       artifacts: true

@@ -4,7 +4,7 @@ lint-yaml:
   script:
     - apt-get update
     - apt-get install yamllint --yes
-    - ./.gitlab/pipeline_tests/test-yaml.sh
+    - ./.github/workflows/pipeline_tests/test-yaml.sh
   needs:
     - job: init
       artifacts: true

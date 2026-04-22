@@ -3,7 +3,7 @@
 handlebars-attributes:
   stage: test
   script:
-    - ./.gitlab/pipeline_tests/test-handlebars-attributes.sh
+    - ./.github/workflows/pipeline_tests/test-handlebars-attributes.sh
   needs:
     - job: init
       artifacts: true

@@ -3,7 +3,7 @@
 handlebars-skill-localization:
   stage: test
   script:
-    - ./.gitlab/pipeline_tests/test-handlebars-skill-localization.sh
+    - ./.github/workflows/pipeline_tests/test-handlebars-skill-localization.sh
   needs:
     - job: init
       artifacts: true

@@ -15,8 +15,8 @@ IFS=$'\n\t'
 #   4. Upload the system/zip to the package registry: "${REPO_URL}/${VERSION}/*"
 #
 # Process:
-# 1. Create a Personal Access Token in gitlab
-#   * https://gitlab.com/-/profile/personal_access_tokens
+# 1. Create a Personal Access Token with API access (GitLab token if using GitLab Package
+#    Registry, or configure `REPO_URL` / upload target for GitHub — see script body).
 # 2. Export it as CI_JOB_TOKEN
 #   * `export CI_JOB_TOKEN="your_token_here"`
 # 3. Chekout the git tag you need to upload
@@ -26,7 +26,7 @@ IFS=$'\n\t'
 # 4. Export the CI_COMMIT_TAG
 #   * `export CI_COMMIT_TAG="vX.X.X"`
 # 5. Run this script
-#   * `./.gitlab/gitlab_utils/local-publish`
+#   * `./.github/workflows/pipeline_utils/local-publish.sh`
 # 6. Check GitHub Releases for the uploaded files
 #   * https://github.com/cyberpunk-red-team/fvtt-cyberpunk-red-core/releases
 # 7. Repeat on all tags that need rebuilding
@@ -39,7 +39,7 @@ IFS=$'\n\t'
 #
 #   You could also take the `system.json` and install in Foundry
 #
-# A oneliner: export CI_COMMIT_TAG="v0.85.0" && git co "${CI_COMMIT_TAG}" && npm i && ./.gitlab/pipeline_utils/local-publish.sh
+# A oneliner: export CI_COMMIT_TAG="v0.85.0" && git co "${CI_COMMIT_TAG}" && npm i && ./.github/workflows/pipeline_utils/local-publish.sh
 
 # NOTE: DO NOT delete the "unused variables" here, they are used by the
 #       build system!

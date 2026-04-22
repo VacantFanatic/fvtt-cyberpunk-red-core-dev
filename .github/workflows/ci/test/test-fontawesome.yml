@@ -8,7 +8,7 @@ test-fontawesome:
     - apk update
     - apk add bash curl jq
   script:
-    - ./.gitlab/pipeline_tests/test-fontawesome.sh
+    - ./.github/workflows/pipeline_tests/test-fontawesome.sh
   needs:
     - job: init
       artifacts: true

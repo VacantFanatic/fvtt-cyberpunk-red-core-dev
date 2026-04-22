@@ -2,7 +2,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-ENVAR_FILE=".gitlab/pipeline_utils/envars.sh"
+ENVAR_FILE=".github/workflows/pipeline_utils/envars.sh"
 ERRORS=0
 
 # Find all the ENVARS in the ENVAR_FILE.

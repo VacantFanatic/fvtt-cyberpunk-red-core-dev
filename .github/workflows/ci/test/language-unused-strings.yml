@@ -4,7 +4,7 @@ language-unused-strings:
   stage: test
   script:
     - echo "Checking language file for unused strings..."
-    - ./.gitlab/pipeline_tests/test-lang-file.sh
+    - ./.github/workflows/pipeline_tests/test-lang-file.sh
   needs:
     - job: init
       artifacts: true

@@ -2,18 +2,17 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-# This script sets ENVARS we'll use throughout the GitLab CI pipeline.
-# We set them during the 'init' job via this script rather than in
-# .gitlab-ci.yml so we can conditionally set them as needed and all the
-# logic is in one place.
+# This script sets ENVARS for CI jobs (shell scripts under `.github/workflows/`).
+# The `init` job runs this so conditional values live in one place instead of
+# duplicating them across job YAML.
 
 # NOTE: All exported ENVARs MUST be uppercase!
 #       Do NOT start ENVARs with 'CI_' as they are skipped in testing.
 
 ##################
-# GitLab Variables
+# CI provider variables
 ##################
-# Variables that are set by GitLab CI environment
+# Variables often set by GitLab-style runners (also mirrored when needed for GitHub)
 # CI_API_V4_URL, CI_PROJECT_ID, CI_COMMIT_TAG
 
 # Set CI_COMMIT_TAG to "" if it does not exist as we use this to

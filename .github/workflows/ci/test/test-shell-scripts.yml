@@ -7,7 +7,7 @@ test-shell-scripts:
     - apk update
     - apk add bash shellcheck
   script:
-    - ./.gitlab/pipeline_tests/test-shell-scripts.sh
+    - ./.github/workflows/pipeline_tests/test-shell-scripts.sh
   needs:
     - job: init
       artifacts: true

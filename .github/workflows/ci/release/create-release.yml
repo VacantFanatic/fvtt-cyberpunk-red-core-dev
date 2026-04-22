@@ -1,7 +1,7 @@
-# Creates a release in GitLab Releases with the build artifacts from the
+# Creates a release with the build artifacts from the
 # `build-artifacts` job.
 #
-# NOTE: This only creates the release in GitLab, this does not make it
+# NOTE: This only creates the release record; it does not make it
 # available in Foundry. This is done by the `publish` job.
 create-release:
   stage: build
@@ -9,7 +9,7 @@ create-release:
     - apt-get update
     - apt-get install curl jq -y
   script:
-    - ./.gitlab/pipeline_utils/release.sh
+    - ./.github/workflows/pipeline_utils/release.sh
   needs:
     - job: init
       artifacts: true
