@@ -11,7 +11,7 @@ babele-skills:
     - apt-get update
     - apt-get install jq --yes
   script:
-    - ./.gitlab/pipeline_tests/test-babele-skills.sh
+    - ./.github/workflows/pipeline_tests/test-babele-skills.sh
   needs:
     - job: init
       artifacts: true

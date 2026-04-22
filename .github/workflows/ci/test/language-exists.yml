@@ -7,7 +7,7 @@ language-exists:
     - apt-get update
     - apt-get install jq --yes
   script:
-    - ./.gitlab/pipeline_tests/test-lang-existence.sh
+    - ./.github/workflows/pipeline_tests/test-lang-existence.sh
   needs:
     - job: init
       artifacts: true

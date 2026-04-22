@@ -3,7 +3,7 @@
 lint-markdown:
   stage: test
   script:
-    - ./.gitlab/pipeline_tests/test-markdown.sh
+    - ./.github/workflows/pipeline_tests/test-markdown.sh
   needs:
     - job: init
       artifacts: true

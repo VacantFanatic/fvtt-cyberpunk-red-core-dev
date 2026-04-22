@@ -11,7 +11,7 @@ announce:
     # This doesn't work atm, just run /bin/true for now
     - /bin/true
     #- npm run build
-    #- ./.gitlab/pipeline_utils/discord-release.sh
+    #- ./.github/workflows/pipeline_utils/discord-release.sh
   needs:
     - job: init
       artifacts: true

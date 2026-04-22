@@ -1,5 +1,5 @@
-# Creates the `latest` system.json file and adds it to the GitLab Package
-# Registry which makes the release available to Foundry.
+# Creates the `latest` system.json and publishes artifacts (historically GitLab Package
+# Registry; prefer GitHub Releases for new workflows).
 #
 # TODO: Add a script/extend the script for updating the Foundry Releases API
 #       https://foundryvtt.com/article/package-release-api/
@@ -10,7 +10,7 @@ publish:
     - apt-get update
     - apt-get install curl jq -y
   script:
-    - ./.gitlab/pipeline_utils/publish.sh
+    - ./.github/workflows/pipeline_utils/publish.sh
   needs:
     - job: init
       artifacts: true

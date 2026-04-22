@@ -8,8 +8,8 @@ ERRORS=0
 # `dist`             Is the default build dir and we don't care abut it
 # `node_modules`     Is the not our code
 # `.vscode`          We don't care about
-# `.gitlab`          Doesn't need checking
-# `.gitlab-ci-local` Is just local stuff
+# `.github/workflows/pipeline_*` CI scripts — don't lint as project JSON
+# `.gitlab-ci-local`            Local GitLab CI emulator (if present)
 # `src/babele/*`     Are translation files that are machine generated
 #                    we check the en ones though as these being incorrect would
 #                    break a lot of stuff
@@ -21,7 +21,8 @@ mapfile -t DOCS < <(
     -not \( -path "./dist" -prune \) \
     -not \( -path "./node_modules" -prune \) \
     -not \( -path "./.vscode" -prune \) \
-    -not \( -path "./.gitlab" -prune \) \
+    -not \( -path "./.github/workflows/pipeline_tests" -prune \) \
+    -not \( -path "./.github/workflows/pipeline_utils" -prune \) \
     -not \( -path "./.gitlab-ci-local" -prune \) \
     -not \( -path "./src/babele/cz" -prune \) \
     -not \( -path "./src/babele/de" -prune \) \

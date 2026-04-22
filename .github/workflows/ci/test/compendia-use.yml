@@ -4,7 +4,7 @@
 compendia-use:
   stage: test
   script:
-    - ./.gitlab/pipeline_tests/test-compendia-use.sh
+    - ./.github/workflows/pipeline_tests/test-compendia-use.sh
   needs:
     - job: init
   rules:

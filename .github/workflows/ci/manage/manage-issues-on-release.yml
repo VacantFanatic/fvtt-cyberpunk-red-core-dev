@@ -10,7 +10,7 @@ manage-issues-on-release:
     - apk update
     - apk add bash jq curl
   script:
-    - ./.gitlab/pipeline_utils/manage-issues-on-release.sh
+    - ./.github/workflows/pipeline_utils/manage-issues-on-release.sh
   needs:
     - job: init
       artifacts: true

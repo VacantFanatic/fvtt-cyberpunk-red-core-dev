@@ -2,7 +2,7 @@ SYSTEM_FILE   ?= system.json
 TEMPLATE_FILE ?= template.json
 SYSTEM_NAME   ?= cyberpunk-red-core
 
-CI_JOBS ?= $(shell ./.gitlab/pipeline_utils/get-jobs.sh)
+CI_JOBS ?= $(shell ./.github/workflows/pipeline_utils/get-jobs.sh)
 CI_COMMIT_BRANCH = dev
 
 # Cleanly (re)install nodejs dependencies

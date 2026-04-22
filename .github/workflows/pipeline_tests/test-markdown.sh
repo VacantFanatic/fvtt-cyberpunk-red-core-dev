@@ -9,9 +9,9 @@ mapfile -t DOCS < <(
   find . \
     -not \( -path "./dist" -prune \) \
     -not \( -path "./node_modules" -prune \) \
-    -not \( -path "./.gitlab/pipeline_tests" -prune \) \
-    -not \( -path "./.gitlab/merge_request_templates" -prune \) \
-    -not \( -path "./.gitlab/issue_templates" -prune \) \
+    -not \( -path "./.github/workflows/pipeline_tests" -prune \) \
+    -not \( -path "./.github/PULL_REQUEST_TEMPLATE" -prune \) \
+    -not \( -path "./.github/ISSUE_TEMPLATE" -prune \) \
     -not \( -path "./.gitlab-ci-local" -prune \) \
     -not -name "CHANGELOG.*.md" \
     -iname "*.md"

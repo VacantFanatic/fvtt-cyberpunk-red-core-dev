@@ -11,7 +11,7 @@ manage-issues-on-mr:
     - apk update
     - apk add bash jq curl
   script:
-    - ./.gitlab/pipeline_utils/manage-issues-on-mr.sh
+    - ./.github/workflows/pipeline_utils/manage-issues-on-mr.sh
   needs:
     - job: init
       artifacts: true

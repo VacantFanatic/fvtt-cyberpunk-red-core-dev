@@ -3,7 +3,7 @@
 handlebars-tags:
   stage: test
   script:
-    - ./.gitlab/pipeline_tests/test-handlebars-tags.sh
+    - ./.github/workflows/pipeline_tests/test-handlebars-tags.sh
   needs:
     - job: init
       artifacts: true

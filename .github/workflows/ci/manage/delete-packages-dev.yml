@@ -1,4 +1,4 @@
-# Delete dev releases from the GitLab Package Repository
+# Delete old dev release artifacts (cleanup job; see `pipeline_utils/cleanup.sh`)
 #
 # As we build a new release each time we merge to `dev` for testers we need
 # some garbage collection of these releases so we don't have hundreds of old
@@ -10,7 +10,7 @@ delete-packages-dev:
     - apt-get update
     - apt-get install jq --yes
     - echo "Deleting old dev releases... "
-    - ./.gitlab/pipeline_utils/cleanup.sh
+    - ./.github/workflows/pipeline_utils/cleanup.sh
   needs:
     - job: init
       artifacts: true

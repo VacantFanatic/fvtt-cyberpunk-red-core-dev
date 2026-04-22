@@ -2,7 +2,7 @@ game-id:
   stage: test
   script:
     - echo "Making sure game.system.id is used appropriately..."
-    - ./.gitlab/pipeline_tests/test-game-ids.sh
+    - ./.github/workflows/pipeline_tests/test-game-ids.sh
   needs:
     - job: init
       artifacts: true

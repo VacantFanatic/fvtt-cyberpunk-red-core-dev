@@ -13,7 +13,7 @@ changelog-has-changed:
     - apk update
     - apk add bash jq curl git
   script:
-    - ./.gitlab/pipeline_tests/test-changelog-dev-changed.sh
+    - ./.github/workflows/pipeline_tests/test-changelog-dev-changed.sh
   needs:
     - job: init
       artifacts: true

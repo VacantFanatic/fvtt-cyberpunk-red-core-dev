@@ -2,7 +2,7 @@
 handlebars-templates:
   stage: test
   script:
-    - ./.gitlab/pipeline_tests/test-handlebars-templates.sh
+    - ./.github/workflows/pipeline_tests/test-handlebars-templates.sh
   needs:
     - job: init
       artifacts: true
