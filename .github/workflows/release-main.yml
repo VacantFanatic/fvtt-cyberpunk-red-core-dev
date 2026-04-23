@@ -5,21 +5,26 @@
 name: Release (main / master)
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
     branches: [main, master]
 
 permissions:
   contents: write
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ github.event.workflow_run.head_branch }}
   cancel-in-progress: true
 
 jobs:
   release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - uses: actions/setup-node@v4
         with:
@@ -65,7 +70,7 @@ jobs:
           body: |
             **Draft** — publish this release on GitHub when you are ready for it to go live.
 
-            Built from commit [`${{ github.sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) on branch `${{ github.ref_name }}`.
+            Built from commit [`${{ github.event.workflow_run.head_sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.workflow_run.head_sha }}) on branch `${{ github.event.workflow_run.head_branch }}`.
 
             **Artifacts**
             - `system.json` — manifest (same as inside the zip)
