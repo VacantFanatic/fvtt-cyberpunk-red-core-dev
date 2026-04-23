@@ -1,7 +1,139 @@
 {
-  "version": "1.3.0",
+  "version": "1.3.1",
   "flags": {
-    "featureVideoURL": ""
+    "featureVideoURL": "",
+    "statusEffects": [
+      {
+        "id": "cpr-radiation-high",
+        "name": "Radiation (High)",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/radiation_high.svg"
+      },
+      {
+        "id": "cpr-on-fire-strong",
+        "name": "On Fire (Strong)",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/on_fire_strong.svg"
+      },
+      {
+        "id": "cpr-on-fire-deadly",
+        "name": "On Fire (Deadly)",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/on_fire.svg"
+      },
+      {
+        "id": "cpr-radiation-low",
+        "name": "Radiation (Low)",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/radiation_low.svg"
+      },
+      {
+        "id": "cpr-readied-action",
+        "name": "Readied Action",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/readied_action.svg"
+      },
+      {
+        "id": "cpr-asphyxiating",
+        "name": "Asphyxiating",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/crushed_windpipe.svg"
+      },
+      {
+        "id": "cpr-on-fire-mild",
+        "name": "On Fire (Mild)",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/on_fire_mild.svg"
+      },
+      {
+        "id": "cpr-antibiotics",
+        "name": "Antibiotics",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/quickfix.svg"
+      },
+      {
+        "id": "cpr-human-shield",
+        "name": "Human Shield",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/foreign_object_body.svg"
+      },
+      {
+        "id": "cpr-suppressed",
+        "name": "Suppressed",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/concussion.svg"
+      },
+      {
+        "id": "cpr-netrunning",
+        "name": "Netrunning",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/netrunning.svg"
+      },
+      {
+        "id": "cpr-unconscious",
+        "name": "Unconscious",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/unconcious.svg"
+      },
+      {
+        "id": "cpr-rapidetox",
+        "name": "Rapidetox",
+        "img": "systems/cyberpunk-red-core/icons/compendium/drugs/rapidetox.svg"
+      },
+      {
+        "id": "cpr-speedheal",
+        "name": "Speedheal",
+        "img": "systems/cyberpunk-red-core/icons/compendium/drugs/speedheal.svg"
+      },
+      {
+        "id": "cpr-synthcoke",
+        "name": "Synthcoke",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/synthcoke.svg"
+      },
+      {
+        "id": "cpr-blue-glass",
+        "name": "Blue Glass",
+        "img": "systems/cyberpunk-red-core/icons/compendium/drugs/blue_glass.svg"
+      },
+      {
+        "id": "cpr-black-lace",
+        "name": "Black Lace",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/black_lace.svg"
+      },
+      {
+        "id": "cpr-grappled",
+        "name": "Grappled",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/grappled.svg"
+      },
+      {
+        "id": "cpr-blinded",
+        "name": "Blinded",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/damaged_eye.svg"
+      },
+      {
+        "id": "cpr-hidden",
+        "name": "Hidden",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/hidden.svg"
+      },
+      {
+        "id": "cpr-cover",
+        "name": "Cover",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/cover.svg"
+      },
+      {
+        "id": "cpr-prone",
+        "name": "Prone",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/prone.svg"
+      },
+      {
+        "id": "cpr-boost",
+        "name": "Boost",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/boost.svg"
+      },
+      {
+        "id": "cpr-smash",
+        "name": "Smash",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/smash.svg"
+      },
+      {
+        "id": "cpr-stim",
+        "name": "Stim",
+        "img": "systems/cyberpunk-red-core/icons/compendium/drugs/stim.svg"
+      },
+      {
+        "id": "cpr-emp",
+        "name": "EMP",
+        "img": "systems/cyberpunk-red-core/icons/compendium/status/emp.svg"
+      }
+    ]
   },
   "id": "cyberpunk-red-core",
   "title": "Cyberpunk RED - CORE",
@@ -403,6 +535,6 @@
   "background": "systems/cyberpunk-red-core/images/Foundry-Background.webp",
   "url": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev",
   "manifest": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev/releases/latest/download/system.json",
-  "download": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev/releases/download/v1.3.0/fvtt-cyberpunk-red-core-v1.3.0.zip",
+  "download": "https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev/releases/download/v1.3.1/fvtt-cyberpunk-red-core-v1.3.1.zip",
   "license": "GPL v3"
 }

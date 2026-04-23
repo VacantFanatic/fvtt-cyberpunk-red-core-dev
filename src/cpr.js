@@ -136,6 +136,23 @@ Hooks.once("init", async () => {
     api: initalizeAPI(),
   };
 
+  // Configure system status effects from system manifest flags.
+  const statusEffectsFromManifest = Array.isArray(game.system.flags?.statusEffects)
+    ? game.system.flags.statusEffects
+    : [];
+  CONFIG.statusEffects = Object.fromEntries(
+    statusEffectsFromManifest.map((effect, order) => [
+      effect.id,
+      {
+        id: effect.id,
+        name: effect.name,
+        img: effect.img,
+        hud: true,
+        order,
+      },
+    ])
+  );
+
   // Assign the actor class to the CONFIG
   CONFIG.ActiveEffect.documentClass = CPRActiveEffect;
   DocumentSheetConfig.registerSheet(

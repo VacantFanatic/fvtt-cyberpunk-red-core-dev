@@ -2,6 +2,22 @@
 
 # Changelog
 
+## Version 1.3.1
+
+### Action Needed
+
+- Worlds upgrading from data model `41` will run migration `42` to normalize legacy status IDs (`cpr-unconcious` -> `cpr-unconscious`) in active effects.
+
+### New Features
+
+- Add a system-defined status effect list in `system.json` and apply it to `CONFIG.statusEffects` at init.
+- Replace and reorder the token status list to match the current CPR set (including `Asphyxiating`, `Unconscious`, `Human Shield`, `Suppressed`, and drug states).
+
+### Bug Fixes
+
+- Ensure every configured status effect uses a unique icon.
+- Refine several status icons for clearer semantics while preserving uniqueness.
+
 ## Version 1.1.0
 
 ### Action Needed
