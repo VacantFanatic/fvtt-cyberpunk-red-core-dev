@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-param-reassign, class-methods-use-this */
 
 import BaseMigrationScript from "../base-migration-script.js";
 
@@ -19,13 +19,15 @@ function normalizeStatuses(statuses = []) {
 function normalizeEffectList(effects = []) {
   let changed = false;
   for (const effect of effects) {
-    if (!Array.isArray(effect.statuses) || effect.statuses.length === 0) continue;
-    const { normalized, changed: statusChanged } = normalizeStatuses(
-      effect.statuses
-    );
-    if (!statusChanged) continue;
-    effect.statuses = normalized;
-    changed = true;
+    if (Array.isArray(effect.statuses) && effect.statuses.length > 0) {
+      const { normalized, changed: statusChanged } = normalizeStatuses(
+        effect.statuses
+      );
+      if (statusChanged) {
+        effect.statuses = normalized;
+        changed = true;
+      }
+    }
   }
   return changed;
 }
