@@ -19,13 +19,13 @@ export default class CPRMookActor extends CPRActor {
    * @param {Object} options - not used here but passed up to the parent class
    */
   static async create(data, options) {
-    const createData = data;
+    const createData = foundry.utils.duplicate(data);
     if (typeof data.system === "undefined") {
       createData.prototypeToken = {
         "sight.enabled": true,
         bar1: { attribute: "derivedStats.hp" },
       };
     }
-    super.create(createData, options);
+    return super.create(createData, options);
   }
 }

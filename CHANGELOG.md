@@ -2,6 +2,21 @@
 
 # Changelog
 
+## Version 1.3.2
+
+### Action Needed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fix mook creation failing from the actor create dialog by returning the created document from `CPRMookActor.create`.
+- Guard new actor initialization against missing `data.items` so core skills and cyberware are still seeded without throwing.
+
 ## Version 1.3.1
 
 ### Action Needed
