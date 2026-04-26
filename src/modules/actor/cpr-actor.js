@@ -31,14 +31,15 @@ export default class CPRActor extends Actor {
    * @param {Object} options - not used here, but required by the parent class
    */
   static async create(data, options) {
-    const createData = data;
+    const createData = foundry.utils.duplicate(data);
     const newActor = typeof data.system === "undefined";
     if (!newActor) {
       return super.create(data, options);
     }
 
     createData.items = [];
-    const tmpItems = data.items.concat(
+    const existingItems = Array.isArray(data.items) ? data.items : [];
+    const tmpItems = existingItems.concat(
       await SystemUtils.GetCoreSkills(),
       await SystemUtils.GetCoreCyberware()
     );
