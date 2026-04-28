@@ -18,6 +18,18 @@
             <i class="fas fa-droplet red-fg"
                data-tooltip="{{localize "CPR.actorSheets.commonActions.rollDamage"}}"></i>
           </a>
+          {{#if rollCardExtraArgs.isExplosive }}
+            <a class="clickable"
+               data-action="bounceTemplate"
+               data-template-id="{{rollCardExtraArgs.explosiveTemplateId}}"
+               data-center-x="{{rollCardExtraArgs.explosiveCenterX}}"
+               data-center-y="{{rollCardExtraArgs.explosiveCenterY}}"
+               data-true-width="{{rollCardExtraArgs.explosiveTrueWidth}}"
+               data-grid-size="{{rollCardExtraArgs.explosiveGridSize}}">
+              <i class="fas fa-shuffle"
+                 data-tooltip="{{localize "CPR.additions.template.explosive.bounceButton"}}"></i>
+            </a>
+          {{/if}}
         </div>
         {{#if rollCardExtraArgs.ammoType }}
           <div class="rollcard-subtitle-2-center text-small">

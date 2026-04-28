@@ -36,5 +36,6 @@ export function getAdditionsApi() {
   return {
     createCover: AdditionsCover.createCover,
     createTemplate: AdditionsTemplate.createTemplate,
+    createExplosiveTemplate: AdditionsTemplate.createExplosiveTemplate,
   };
 }
