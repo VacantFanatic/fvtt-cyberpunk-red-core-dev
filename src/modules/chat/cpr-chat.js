@@ -2,6 +2,7 @@ import LOGGER from "../utils/cpr-logger.js";
 import { CPRRoll, CPRDamageRoll, CPRInitiative } from "../rolls/cpr-rolls.js";
 import SystemUtils from "../utils/cpr-systemUtils.js";
 import CPRDialog from "../dialog/cpr-dialog-application.js";
+import AdditionsTemplate from "../additions/template.js";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -377,6 +378,51 @@ export default class CPRChat {
             injuryName
           );
           injury.sheet.render(true, { editable: false });
+          break;
+        }
+
+        case "bounceTemplate": {
+          if (!canvas?.scene) {
+            SystemUtils.DisplayMessage(
+              "warn",
+              SystemUtils.Localize("CPR.additions.template.explosive.noScene")
+            );
+            break;
+          }
+          const templateId = SystemUtils.GetEventDatum(
+            event,
+            "data-template-id"
+          );
+          const centerX = parseFloat(
+            SystemUtils.GetEventDatum(event, "data-center-x")
+          );
+          const centerY = parseFloat(
+            SystemUtils.GetEventDatum(event, "data-center-y")
+          );
+          const trueWidth = parseFloat(
+            SystemUtils.GetEventDatum(event, "data-true-width")
+          );
+          const gridSize = parseFloat(
+            SystemUtils.GetEventDatum(event, "data-grid-size")
+          );
+
+          const bounceResult = await AdditionsTemplate.bounceExplosiveTemplate(
+            templateId,
+            centerX,
+            centerY,
+            trueWidth,
+            gridSize
+          );
+
+          ChatMessage.create({
+            content: SystemUtils.Format(
+              "CPR.additions.template.explosive.bounceResult",
+              {
+                direction: bounceResult.directionName,
+                distance: bounceResult.distSquares,
+              }
+            ),
+          });
           break;
         }
 

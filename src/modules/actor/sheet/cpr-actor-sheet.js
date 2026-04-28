@@ -8,6 +8,7 @@ import createImageContextMenu from "../../utils/cpr-imageContextMenu.js";
 import CPRMod from "../../rolls/cpr-modifiers.js";
 import CPRDialog from "../../dialog/cpr-dialog-application.js";
 import { ContainerUtils } from "../../item/mixins/cpr-container.js";
+import AdditionsTemplate from "../../additions/template.js";
 
 const { ActorSheet } = foundry.appv1.sheets;
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
@@ -557,6 +558,37 @@ export default class CPRActorSheet extends ActorSheet {
         item = this.actor.getOwnedItem(itemId);
         rollType = this._getFireCheckbox(event);
         cprRoll = item.createRoll(rollType, this.actor);
+
+        // For explosive weapons (grenade/rocket ammo), place the blast template
+        // before the roll so players can see the intended target area.
+        // On a miss the template can be bounced from the resulting chat card.
+        if (canvas?.scene) {
+          const ammoVariety = item._getLoadedAmmoProp
+            ? item._getLoadedAmmoProp("variety")
+            : undefined;
+          const { weaponType } = item.system;
+          const isExplosive =
+            ammoVariety === "grenade" ||
+            ammoVariety === "rocket" ||
+            weaponType === "grenadeLauncher" ||
+            weaponType === "rocketLauncher";
+
+          if (isExplosive) {
+            // eslint-disable-next-line no-await-in-loop
+            const templateData =
+              await AdditionsTemplate.createExplosiveTemplate();
+            if (templateData) {
+              cprRoll.rollCardExtraArgs.isExplosive = true;
+              cprRoll.rollCardExtraArgs.explosiveTemplateId = templateData.id;
+              cprRoll.rollCardExtraArgs.explosiveCenterX = templateData.centerX;
+              cprRoll.rollCardExtraArgs.explosiveCenterY = templateData.centerY;
+              cprRoll.rollCardExtraArgs.explosiveTrueWidth =
+                templateData.trueWidth;
+              cprRoll.rollCardExtraArgs.explosiveGridSize =
+                templateData.gridSize;
+            }
+          }
+        }
         break;
       }
       case CPRRolls.rollTypes.INTERFACEABILITY: {
