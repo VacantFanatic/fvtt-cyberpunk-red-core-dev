@@ -44,7 +44,10 @@ export default class ReincorporateDlcPacks extends BaseMigrationScript {
     const { results } = doc;
     for (const result of results) {
       const collection = result.documentCollection;
-      if (typeof collection === "string" && collection.startsWith("cyberpunk-red-dlc.")) {
+      if (
+        typeof collection === "string" &&
+        collection.startsWith("cyberpunk-red-dlc.")
+      ) {
         result.update({
           documentCollection: collection.replace(
             "cyberpunk-red-dlc.",
@@ -117,7 +120,10 @@ export default class ReincorporateDlcPacks extends BaseMigrationScript {
     }
 
     const tablesWorld = game.tables;
-    const tablesWorldComp = CPRSystemUtils.GetCompendiaByType("world", "RollTable");
+    const tablesWorldComp = CPRSystemUtils.GetCompendiaByType(
+      "world",
+      "RollTable"
+    );
     const tablesModuleComp = CPRSystemUtils.GetCompendiaByType(
       "module",
       "RollTable"
@@ -137,7 +143,10 @@ export default class ReincorporateDlcPacks extends BaseMigrationScript {
 
     const scenesWorld = game.scenes;
     const scenesWorldComp = CPRSystemUtils.GetCompendiaByType("world", "Scene");
-    const scenesModuleComp = CPRSystemUtils.GetCompendiaByType("module", "Scene");
+    const scenesModuleComp = CPRSystemUtils.GetCompendiaByType(
+      "module",
+      "Scene"
+    );
     const scenesComps = [...scenesWorldComp, ...scenesModuleComp];
 
     for await (const scene of scenesWorld) {
@@ -155,11 +164,11 @@ export default class ReincorporateDlcPacks extends BaseMigrationScript {
       for (const doc of docs) {
         for (const tile of doc.tiles) {
           const newImg = this._rewriteImagePath(tile.texture.src);
-          if (newImg !== tile.texture.src) tile.update({ "texture.src": newImg });
+          if (newImg !== tile.texture.src)
+            tile.update({ "texture.src": newImg });
         }
       }
       if (wasLocked) await pack.configure({ locked: true });
     }
   }
 }
-
