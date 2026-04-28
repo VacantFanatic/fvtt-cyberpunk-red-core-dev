@@ -137,7 +137,9 @@ Hooks.once("init", async () => {
   };
 
   // Configure system status effects from system manifest flags.
-  const statusEffectsFromManifest = Array.isArray(game.system.flags?.statusEffects)
+  const statusEffectsFromManifest = Array.isArray(
+    game.system.flags?.statusEffects
+  )
     ? game.system.flags.statusEffects
     : [];
   CONFIG.statusEffects = Object.fromEntries(
