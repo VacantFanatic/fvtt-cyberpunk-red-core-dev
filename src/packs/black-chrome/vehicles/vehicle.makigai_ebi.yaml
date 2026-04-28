@@ -1,0 +1,49 @@
+_id: rUOr6Yn2r6AZ91XW
+_key: "!items!rUOr6Yn2r6AZ91XW"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858755849
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333835
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/vehicles/makagai-ebi.svg
+name: Makigai Ebi
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  brand: Makigai
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>Small but well thought out Compact Groundcar.</p>
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  price:
+    market: 23000
+  sdp: 35
+  seats: 4
+  source:
+    book: BC
+    page: 72
+  speedCombat: 20
+  speedNarrative: 100 MPH / 161 KPH
+type: vehicle

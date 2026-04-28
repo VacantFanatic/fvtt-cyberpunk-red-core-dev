@@ -1,0 +1,79 @@
+_id: I0pjOnvHaJUFVz05
+_key: "!items!I0pjOnvHaJUFVz05"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764857832218
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334029
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/cyberpillow.svg
+name: Cyberpillow
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: true
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: <p>A comfortable Cyberarm popout pillow for naps on the go.</p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: "0"
+    static: 0
+  ignoreArmorPercent: 50
+  ignoreBelowSP: 0
+  installLocation: clinic
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: null
+    max: 0
+    value: 0
+  price:
+    market: 100
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: MHCD
+    page: 2
+  type: cyberArm
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: ""
+  weaponType: ""
+type: cyberware

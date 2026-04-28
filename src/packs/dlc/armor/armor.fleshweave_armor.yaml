@@ -1,0 +1,63 @@
+_id: q7x8ew6xdBFmBeVk
+_key: "!items!q7x8ew6xdBFmBeVk"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858051563
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333942
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/armor/sycust_fleshweave.svg
+name: FleshWeave (Armor)
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  bodyLocation:
+    ablation: 0
+    sp: 7
+  brand: Sycust
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>Armor Item for Sycust FleshWeave Cyberware.</p>
+  equipped: owned
+  favorite: false
+  headLocation:
+    ablation: 0
+    sp: 7
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isBodyLocation: true
+  isElectronic: false
+  isHeadLocation: true
+  isShield: false
+  penalty: 0
+  price:
+    market: 0
+  providesHardening: false
+  revealed: true
+  shieldHitPoints:
+    max: 0
+    value: 0
+  source:
+    book: 12DoC
+    page: 5
+  usage: toggled
+type: armor

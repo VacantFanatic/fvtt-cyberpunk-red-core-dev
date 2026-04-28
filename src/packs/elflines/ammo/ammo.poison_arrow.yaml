@@ -1,0 +1,58 @@
+_id: IZwINpYpfLLAq5zb
+_key: "!items!IZwINpYpfLLAq5zb"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764856826348
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334282
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: icons/weapons/ammunition/arrow-broadhead-green.webp
+name: Poison Arrow
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ablationValue: 1
+  amount: 10
+  brand: ""
+  concealable:
+    concealable: true
+    isConcealed: false
+  description:
+    value: |-
+      <p>
+       No immediate damage. If meat target hit,
+       <strong>DV13 Resist Torture/Drugs</strong> Check. On a fail 2d6 damage to HP.
+       No Ablation.
+      </p>
+  favorite: false
+  installLocation: mall
+  overrides:
+    autofire:
+      minimum: 3
+      mode: none
+      value: -1
+    damage:
+      minimum: 1d6
+      mode: set
+      value: 2d6
+  price:
+    market: 10
+  size: 0
+  source:
+    book: ELO
+    page: 3
+  type: poison
+  variety: arrow
+type: ammo

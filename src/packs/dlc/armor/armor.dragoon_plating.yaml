@@ -1,0 +1,67 @@
+_id: 8cIb7t0rAaC64HEt
+_key: "!items!8cIb7t0rAaC64HEt"
+_stats:
+  compendiumSource: Compendium.cyberpunk-red-core.core_armor.Item.M96Dfx18YqvhlIgb
+  coreVersion: "12.343"
+  createdTime: 1766622120940
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766622120940
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  core:
+    sourceId: Compendium.cyberpunk-red-core.core_armor.Item.M96Dfx18YqvhlIgb
+  scene-packer:
+    hash: 3f5b6add2830f72cb54f1723377bad9f60753b50
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/dragoon-plating.svg
+name: Dragoon Plating
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  V8F9A9hbCTVYRW7O: 3
+  default: 0
+sort: 0
+system:
+  bodyLocation:
+    ablation: 0
+    sp: 15
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: >-
+      <p>Armor plates compatible with Dragoon Plating cyberware. Dragoon Plating
+      can be removed, and summoned back within 6m/y as an
+      action.</p><p><em>Imposes -2 armor penalty while equiped.</em></p>
+  equipped: owned
+  favorite: false
+  headLocation:
+    ablation: 0
+    sp: 15
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isBodyLocation: true
+  isElectronic: false
+  isHeadLocation: true
+  isShield: false
+  penalty: 2
+  price:
+    market: 1000
+  providesHardening: false
+  revealed: true
+  shieldHitPoints:
+    max: 0
+    value: 0
+  source:
+    book: IRv3
+    page: 105
+  usage: equipped
+type: armor

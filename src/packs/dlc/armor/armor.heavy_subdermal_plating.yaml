@@ -1,0 +1,124 @@
+_id: kEMGWjMaYcA4rGyJ
+_key: "!items!kEMGWjMaYcA4rGyJ"
+_stats:
+  compendiumSource: Compendium.cyberpunk-red-core.core_armor.Item.M96Dfx18YqvhlIgb
+  coreVersion: "12.343"
+  createdTime: 1766622149124
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766622149124
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: 9PK2vj45rcvv0oMM
+    _key: "!items.effects!kEMGWjMaYcA4rGyJ.9PK2vj45rcvv0oMM"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.0.0dev
+    changes:
+      - key: system.stats.ref.value
+        mode: 2
+        priority: null
+        value: "-2"
+      - key: system.stats.dex.value
+        mode: 2
+        priority: null
+        value: "-2"
+      - key: system.stats.move.value
+        mode: 2
+        priority: null
+        value: "-2"
+    description: ""
+    disabled: false
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": stat
+            "1": stat
+            "2": stat
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+            "1":
+              isSituational: false
+              onByDefault: false
+            "2":
+              isSituational: false
+              onByDefault: false
+    img: icons/svg/aura.svg
+    name: Armor Penalty (Remove if in FBC or BODY 14)
+    origin: Item.1gDYsP4kTSAdctYF
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags:
+  core:
+    sourceId: Compendium.cyberpunk-red-core.core_armor.Item.M96Dfx18YqvhlIgb
+  scene-packer:
+    hash: fa0c28167fc7f58a6636bfc4ec4515e3573924af
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/heavy-subdermal-armor.svg
+name: Heavy Subdermal Plating
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  V8F9A9hbCTVYRW7O: 3
+  default: 0
+sort: 0
+system:
+  bodyLocation:
+    ablation: 0
+    sp: 13
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>Armor Item for Subdermal Armor Cyberware.</p>
+  equipped: owned
+  favorite: false
+  headLocation:
+    ablation: 0
+    sp: 13
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isBodyLocation: true
+  isElectronic: false
+  isHeadLocation: true
+  isShield: false
+  penalty: 0
+  price:
+    market: 0
+  providesHardening: false
+  revealed: true
+  shieldHitPoints:
+    max: 0
+    value: 0
+  source:
+    book: IRv3
+    page: 107
+  usage: equipped
+type: armor

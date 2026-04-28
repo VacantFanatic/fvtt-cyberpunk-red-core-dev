@@ -1,0 +1,124 @@
+_id: TVgFdyPTl0aVAQz5
+_key: "!items!TVgFdyPTl0aVAQz5"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1758760415166
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334031
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: zFdBYLMaOnE52EMH
+    _key: "!items.effects!TVgFdyPTl0aVAQz5.zFdBYLMaOnE52EMH"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.331"
+      createdTime: 1758840720027
+      duplicateSource: null
+      lastModifiedBy: pLIpYgHBYUznkgBy
+      modifiedTime: 1759629106266
+      systemId: cyberpunk-red-core
+      systemVersion: v0.89.2
+    changes:
+      - key: bonuses.acting
+        mode: 2
+        priority: null
+        value: "4"
+    description: ""
+    disabled: false
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": skill
+          situational:
+            "0":
+              isSituational: true
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/animal_behaviour_chip.svg
+    name: Animal Behavior Chip
+    origin: >-
+      Compendium.cyberpunk-red-dlc.dlc_mixing-drinks-changing-lives.Item.TVgFdyPTl0aVAQz5
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/animal_behaviour_chip.svg
+name: Animal Behavior Chip
+ownership:
+  default: 0
+  pLIpYgHBYUznkgBy: 3
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: >-
+      <p>Chipware. Each chip is imprinted with a single animal psyche. Provides
+      a +4 to Acting checks to impersonate animal's behavior.</p>
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 4d6
+    static: 14
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: notApplicable
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - cyberware
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: {}
+    max: 0
+    value: 0
+  price:
+    market: 1000
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: MD-CL
+    page: 15
+  type: neuralWare
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+type: cyberware

@@ -1,0 +1,120 @@
+_id: T6pocp9VStxtFPzP
+_key: "!tables!T6pocp9VStxtFPzP"
+_stats:
+  compendiumSource: >-
+    Compendium.cyberpunk-red-core.dlc_achievements-and-loot-boxes.RollTable.T6pocp9VStxtFPzP
+  coreVersion: "12.343"
+  createdTime: 1764855217580
+  duplicateSource: null
+  lastModifiedBy: rRCcEOJu9poJ2EaX
+  modifiedTime: 1764855217580
+  systemId: cyberpunk-red-core
+  systemVersion: v0.92.1
+description: >-
+  Source: Achievements and Loot Boxes pg.6
+
+  All weapons come fully loaded with a compatible ammo type of the GM's
+  choosing.
+displayRoll: true
+flags: {}
+folder: B1qjlWJWYKwXwdOD
+formula: 1d6
+img: icons/containers/boxes/crate-reinforced-green.webp
+name: A Box Marked With A Lime Green X
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+replacement: true
+results:
+  - _id: JMQL50Vwsp7AMmWo
+    _key: "!tables.results!T6pocp9VStxtFPzP.JMQL50Vwsp7AMmWo"
+    documentCollection: cyberpunk-red-dlc.elflines_gear
+    documentId: yobTPhOaGRpfkjz8
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/gear/memory_chip.svg
+    range:
+      - 1
+      - 1
+    text: Elflines Online
+    type: pack
+    weight: 1
+  - _id: r6fFsAFxIRq1HriP
+    _key: "!tables.results!T6pocp9VStxtFPzP.r6fFsAFxIRq1HriP"
+    documentCollection: ""
+    documentId: null
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/gear/disposable_cellphone.svg
+    range:
+      - 2
+      - 2
+    text: 2 Disposable Cell Phones
+    type: text
+    weight: 1
+  - _id: a6fZu5y7jIoTN38p
+    _key: "!tables.results!T6pocp9VStxtFPzP.a6fZu5y7jIoTN38p"
+    documentCollection: cyberpunk-red-dlc.black-chrome_cyberware
+    documentId: f9u0uhwRBcunP0gz
+    drawn: false
+    flags: {}
+    img: null
+    range:
+      - 3
+      - 3
+    text: Modular Finger Cyberhand
+    type: pack
+    weight: 1
+  - _id: g0YvDqhptZVY8bIh
+    _key: "!tables.results!T6pocp9VStxtFPzP.g0YvDqhptZVY8bIh"
+    documentCollection: cyberpunk-red-core.core_clothing
+    documentId: Q7LFdojJFEIRaLlN
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/clothing/generic_jewelry.svg
+    range:
+      - 4
+      - 4
+    text: Leisurewear Jewelry
+    type: pack
+    weight: 1
+  - _id: lcpBqFf1ztvwm6ZJ
+    _key: "!tables.results!T6pocp9VStxtFPzP.lcpBqFf1ztvwm6ZJ"
+    documentCollection: cyberpunk-red-core.core_gear
+    documentId: GqYz689ddSKQHMen
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/gear/agent.svg
+    range:
+      - 5
+      - 5
+    text: Agent
+    type: pack
+    weight: 1
+  - _id: X7XamnHpkEyA1BOt
+    _key: "!tables.results!T6pocp9VStxtFPzP.X7XamnHpkEyA1BOt"
+    documentCollection: cyberpunk-red-core.core_gear
+    documentId: it4Mfyti7WPpuuYE
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/gear/smart_glasses.svg
+    range:
+      - 6
+      - 6
+    text: Smart Glasses
+    type: pack
+    weight: 1
+  - _id: bEJSghOjTTcHngHW
+    _key: "!tables.results!T6pocp9VStxtFPzP.bEJSghOjTTcHngHW"
+    documentCollection: cyberpunk-red-core.core_gear
+    documentId: OjMJ2SyoMr4VWmnm
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/gear/disposable_cellphone.svg
+    range:
+      - 2
+      - 2
+    text: Disposable Cell Phone
+    type: pack
+    weight: 1
+sort: 0

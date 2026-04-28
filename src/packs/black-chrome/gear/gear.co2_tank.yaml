@@ -1,0 +1,55 @@
+_id: wSx9q7TVUJevCu8w
+_key: "!items!wSx9q7TVUJevCu8w"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858678420
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333779
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/gear/co2-tank.svg
+name: CO2 Tank
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  amount: 1
+  brand: Masetto Tech Clothing
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: |-
+      <p>
+       A CO<sub>2</sub> tank designed for usage with the Masetto AirRider armor. Must
+       be replaced after every usage.
+      </p>
+  equipped: owned
+  favorite: false
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: false
+  price:
+    market: 20
+  providesHardening: false
+  revealed: true
+  source:
+    book: BC
+    page: 33
+  usage: toggled
+type: gear

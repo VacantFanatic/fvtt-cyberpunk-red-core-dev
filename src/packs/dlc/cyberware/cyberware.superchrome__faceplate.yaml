@@ -1,0 +1,120 @@
+_id: dR7zepxVq2WGdpe8
+_key: "!items!dR7zepxVq2WGdpe8"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1766624201994
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766624201994
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: HgVu2KFavKqxcncN
+    _key: "!items.effects!dR7zepxVq2WGdpe8.HgVu2KFavKqxcncN"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.0.0dev
+    changes:
+      - key: bonuses.wardrobeAndStyle
+        mode: 2
+        priority: null
+        value: "2"
+    description: ""
+    disabled: false
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": skill
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+    img: icons/svg/aura.svg
+    name: Superchrome® Covering (Face)
+    origin: Item.6QVxlymN918dNgzi
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags: {}
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/superchrome-faceplate.svg
+name: Superchrome® Faceplate
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  default: 0
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: >-
+      <p>A personalized faceplate made of Superchrome®
+      alloys.</p><p><em>Compatible with your Cyberskull.</em></p>
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: "0"
+    static: 0
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: mall
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - cyberware
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: {}
+    max: 0
+    value: 0
+  price:
+    market: 1000
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: IRv3
+    page: 105
+  type: cyberwareInternal
+  unarmedAutomaticCalculation: true
+  usage: installed
+  usesType: magazine
+  weaponSkill: Handgun
+type: cyberware

@@ -18,3 +18,4 @@ export { default as SplitPacks } from "./039-split-packs.js";
 export { default as AmmoIconConversion } from "./040-ammo-icons.js";
 export { default as RemoveUnusedInstallFlag } from "./041-remove-unused-install-flag.js";
 export { default as NormalizeStatusEffectIds } from "./042-normalize-status-effect-ids.js";
+export { default as ReincorporateDlcPacks } from "./043-reincorporate-dlc-packs.js";

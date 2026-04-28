@@ -1,0 +1,43 @@
+_id: PZY9ZgIHheXBoMmo
+_key: "!items!PZY9ZgIHheXBoMmo"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1759614880407
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333991
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: OXuMYH1jqRNmGurK
+img: systems/cyberpunk-red-core/icons/compendium/default/default_drink.svg
+name: Mercuryblast
+ownership:
+  default: 0
+  pLIpYgHBYUznkgBy: 3
+sort: 0
+system:
+  amount: 1
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  consumed: None
+  description:
+    value: <p>One of a number of drinks the Drink Master 5000 can mix.</p>
+  equipped: owned
+  favorite: false
+  price:
+    market: 20
+  revealed: true
+  source:
+    book: MD-CL
+    page: 17
+  usage: toggled
+type: drug

@@ -1,0 +1,49 @@
+_id: qWIFkeCnwb0AVuPK
+_key: "!items!qWIFkeCnwb0AVuPK"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858773977
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333835
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/vehicles/zonda-sliver.svg
+name: Zonda Sliver
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  brand: Zonda
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>A Roadbike with all the gadgets you'd ever need.</p>
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  price:
+    market: 27000
+  sdp: 35
+  seats: 2
+  source:
+    book: BC
+    page: 84
+  speedCombat: 20
+  speedNarrative: 100 MPH / 161 KPH
+type: vehicle

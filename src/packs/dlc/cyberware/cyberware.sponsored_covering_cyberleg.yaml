@@ -1,0 +1,86 @@
+_id: ZgzEBlYC72NkbXkv
+_key: "!items!ZgzEBlYC72NkbXkv"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764857850369
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334031
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/default/Default_Cyberware.svg
+name: Sponsored Covering (Cyberleg)
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: true
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: |-
+      <p>
+       Earn 20eb monthly by sporting a light-up advertisement on your Cyberleg. User
+       may be responsible for paying the installation fee. Corporate sponsorship may
+       be revoked if the terms are violated, such as obscuring the advertisement with
+       clothing or engaging in “off-brand” activities.
+      </p>
+      <p>Can not be installed in Meat leg.</p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: "0"
+    static: 0
+  ignoreArmorPercent: 50
+  ignoreBelowSP: 0
+  installLocation: mall
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  isElectronic: false
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: null
+    max: 0
+    value: 0
+  price:
+    market: 50
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 0
+  source:
+    book: MHCD
+    page: 5
+  type: cyberLeg
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: ""
+  weaponType: ""
+type: cyberware

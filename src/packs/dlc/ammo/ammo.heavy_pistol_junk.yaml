@@ -1,0 +1,56 @@
+_id: 2yCAIxsvTactJtVF
+_key: "!items!2yCAIxsvTactJtVF"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764854458326
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333917
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/ammo/pistolheavy_junk.png
+name: Heavy Pistol (Junk)
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ablationValue: 1
+  amount: 50
+  brand: ""
+  concealable:
+    concealable: true
+    isConcealed: false
+  description:
+    value: |-
+      <p>
+       Junk ammo; cheap but deals 1d6 less damage against anyone with more than 1SP.
+      </p>
+  favorite: false
+  installLocation: mall
+  overrides:
+    autofire:
+      minimum: 3
+      mode: modify
+      value: -1
+    damage:
+      minimum: 1d6
+      mode: modify
+      value: "-1d6"
+  price:
+    market: 10
+  size: 0
+  source:
+    book: BC+
+    page: 3
+  type: special
+  variety: heavyPistol
+type: ammo

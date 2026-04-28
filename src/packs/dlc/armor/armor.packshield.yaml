@@ -1,0 +1,75 @@
+_id: cnI1LNiN3K45ZBrD
+_key: "!items!cnI1LNiN3K45ZBrD"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858132587
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333942
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/armor/skidrow_packshield.svg
+name: PackShield
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  bodyLocation:
+    ablation: 0
+    sp: 7
+  brand: SkidRow LTD
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: |-
+      <p>Businesswear Backpack Bulletproof Shield hybrid.</p>
+      <p>
+       Can carry items like a
+       @UUID[Compendium.cyberpunk-red-core.core_gear.Item.y2a4HDhIl7FlJyD7]{Carryall},
+       and be equipped in your hand like a shield.
+      </p>
+      <p>Only provides protection when equipped in a hand.</p>
+      <p>
+       Cannot be installed in
+       @UUID[Compendium.cyberpunk-red-core.core_cyberware.Item.I08f3hOEgAPNG4kJ]{Popup
+       Shield}.
+      </p>
+  equipped: owned
+  favorite: false
+  headLocation:
+    ablation: 0
+    sp: 0
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isBodyLocation: false
+  isElectronic: false
+  isHeadLocation: false
+  isShield: true
+  penalty: 0
+  price:
+    market: 100
+  providesHardening: false
+  revealed: true
+  shieldHitPoints:
+    max: 10
+    value: 10
+  source:
+    book: 12DoGear
+    page: 4
+  usage: toggled
+type: armor

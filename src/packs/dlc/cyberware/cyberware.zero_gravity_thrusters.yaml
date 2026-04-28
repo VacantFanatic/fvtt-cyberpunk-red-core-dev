@@ -1,0 +1,84 @@
+_id: 9M5ejkYuKFozoro7
+_key: "!items!9M5ejkYuKFozoro7"
+_stats:
+  compendiumSource: Compendium.cyberpunk-red-core.core_cyberware.Item.aEG91CA3amfU0Q8U
+  coreVersion: "12.343"
+  createdTime: 1766622603500
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766622603500
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  core:
+    sourceId: Compendium.cyberpunk-red-core.core_cyberware.Item.aEG91CA3amfU0Q8U
+  scene-packer:
+    hash: cc664b9af47a0aa06fcd7e8940d9266da7bb3b37
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/zero_gravity_thrusters.svg
+name: Zero Gravity Thrusters
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  V8F9A9hbCTVYRW7O: 3
+  default: 0
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: >-
+      <p>Negates all penalties related to movement in Zero Gravity. Runs off
+      fuel tanks that cost 100eb, must be replaced after 24 hours of
+      use.</p><p>Requires 2 Cyberlegs, and must be paired.</p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 1d6
+    static: 3
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: clinic
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData:
+      uuid: ""
+    max: 0
+    value: 0
+  price:
+    market: 1000
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 2
+  source:
+    book: IRv3
+    page: 108
+  type: cyberLeg
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: Archery
+  weaponType: assaultRifle
+type: cyberware

@@ -1,0 +1,80 @@
+_id: h8mS30jnIMvWNOst
+_key: "!items!h8mS30jnIMvWNOst"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1759518734284
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334032
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/extreme_biosculpting.svg
+name: Extreme Biosculpting
+ownership:
+  default: 0
+  pLIpYgHBYUznkgBy: 3
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: >-
+      <p>A physical conversion to a chosen animal type of human size. Few are
+      willing to carry out the surgery.</p><p>Procedure requires a <strong>DV21
+      Surgery Check</strong> and materials are 1,000eb</p>
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 8d6
+    static: 0
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: notApplicable
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - cyberware
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: false
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: {}
+    max: 0
+    value: 0
+  price:
+    market: 5000
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: MD-CL
+    page: 15
+  type: fashionware
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+type: cyberware

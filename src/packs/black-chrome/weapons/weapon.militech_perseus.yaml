@@ -1,0 +1,76 @@
+_id: rwfBQoEJu2uLnGeo
+_key: "!items!rwfBQoEJu2uLnGeo"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858807038
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333884
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: >-
+  systems/cyberpunk-red-core/icons/compendium/weapons/veryHeavyPistol_excellent.svg
+name: Militech Perseus
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ammoVariety:
+    - vHeavyPistol
+  attackmod: 1
+  brand: Militech
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  critFailEffect: jammed
+  damage: 4d6
+  description:
+    value: >-
+      <p>The Militech Perseus is an Excellent Quality Exotic Very Heavy
+      Pistol.</p>
+  dvTable: DV Pistol
+  equipped: owned
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  handsReq: 1
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+      - ammo
+    list: []
+    slots: 0
+    usedSlots: 0
+  isRanged: true
+  magazine:
+    ammoData: null
+    max: 11
+    value: 0
+  price:
+    market: 5000
+  quality: excellent
+  revealed: true
+  rof: 1
+  source:
+    book: BC
+    page: 112
+  unarmedAutomaticCalculation: true
+  usage: equipped
+  usesType: magazine
+  weaponSkill: Handgun
+  weaponType: vHeavyPistol
+type: weapon

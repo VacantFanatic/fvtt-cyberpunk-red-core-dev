@@ -1,0 +1,225 @@
+_id: ka6ccQeTt7ud3pFi
+_key: "!items!ka6ccQeTt7ud3pFi"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764857453266
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333993
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: bSalB1is9PwUW4HE
+    _key: "!items.effects!ka6ccQeTt7ud3pFi.bSalB1is9PwUW4HE"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.92.1
+    changes:
+      - key: system.stats.move.value
+        mode: 2
+        priority: null
+        value: "-2"
+      - key: system.stats.ref.value
+        mode: 2
+        priority: null
+        value: "-2"
+      - key: bonuses.speed
+        mode: 2
+        priority: null
+        value: "2"
+    description: ""
+    disabled: true
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": stat
+            "1": stat
+            "2": netrun
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+            "1":
+              isSituational: false
+              onByDefault: false
+            "2":
+              isSituational: false
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/status/sixgun.svg
+    name: Sixgun Primary
+    origin: null
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+  - _id: 6eJSLpqij03VxIFa
+    _key: "!items.effects!ka6ccQeTt7ud3pFi.6eJSLpqij03VxIFa"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.92.1
+    changes:
+      - key: bonuses.speed
+        mode: 2
+        priority: null
+        value: "-2"
+    description: ""
+    disabled: true
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": netrun
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/status/sixgun_addiction.svg
+    name: Sixgun Addiction
+    origin: null
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+  - _id: nvBX8WcPBua5cUWL
+    _key: "!items.effects!ka6ccQeTt7ud3pFi.nvBX8WcPBua5cUWL"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.92.1
+    changes:
+      - key: system.stats.move.value
+        mode: 2
+        priority: null
+        value: "2"
+      - key: system.stats.ref.value
+        mode: 2
+        priority: null
+        value: "2"
+      - key: bonuses.speed
+        mode: 2
+        priority: null
+        value: "4"
+    description: ""
+    disabled: true
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": stat
+            "1": stat
+            "2": netrun
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+            "1":
+              isSituational: false
+              onByDefault: false
+            "2":
+              isSituational: false
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/status/sixgun_addiction.svg
+    name: Sixgun Addiction Primary
+    origin: null
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/drugs/sixgun.svg
+name: Sixgun
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  amount: 1
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  consumed: Sixgun Primary
+  description:
+    value: |-
+      <p>Leave meatspace behind and supercharge your synapses.</p>
+      <p><strong>Primary Effect</strong></p>
+      <p>Dose lasts 4 hours.</p>
+      <ul>
+       <li>+2 to Speed while Netrunning</li>
+       <li>-2 To MOVE (Minimum 1)</li>
+       <li>-2 To REF to a (Minimum 1)</li>
+       <li>
+       User does not suffer the penalties of an Unsafe Jack Out unless forced to
+       Jack Out by a program.
+       </li>
+       <li>User can burn 1 Humanity for 1 additional NET Action once per turn.</li>
+      </ul>
+      <p><strong>Secondary (DV17)</strong></p>
+      <p>Unless under Primary Effect</p>
+      <ul>
+       <li>-2 to Speed while Netrunning</li>
+      </ul>
+  equipped: owned
+  favorite: false
+  price:
+    market: 100
+  revealed: true
+  source:
+    book: HP
+    page: 3
+  usage: snorted
+type: drug

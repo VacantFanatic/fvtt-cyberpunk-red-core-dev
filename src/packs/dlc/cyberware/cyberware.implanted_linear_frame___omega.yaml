@@ -1,0 +1,138 @@
+_id: jw0vFLgoAnSWMpNW
+_key: "!items!jw0vFLgoAnSWMpNW"
+_stats:
+  compendiumSource: Compendium.cyberpunk-red-core.core_cyberware.Item.2XhNJ80rCSvxAenP
+  coreVersion: "12.343"
+  createdTime: 1766622333986
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766622333986
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: sate0Jnbsdj9xuX7
+    _key: "!items.effects!jw0vFLgoAnSWMpNW.sate0Jnbsdj9xuX7"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.0.0dev
+    changes:
+      - key: system.stats.body.value
+        mode: 5
+        priority: null
+        value: "16"
+      - key: system.derivedStats.humanity.max
+        mode: 2
+        priority: null
+        value: "-4"
+    description: ""
+    disabled: false
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": stat
+            "1": custom
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+            "1":
+              isSituational: false
+              onByDefault: false
+    img: >-
+      systems/cyberpunk-red-core/icons/compendium/cyberware/implanted_linearframe_sigma.svg
+    name: Implanted Linear Frame Omega
+    origin: null
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags:
+  core:
+    sourceId: Compendium.cyberpunk-red-core.core_cyberware.Item.2XhNJ80rCSvxAenP
+  scene-packer:
+    hash: 5b867ff767d1e73ca87f69317d61cf69919e73a7
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/implanted_linearframe_omega.svg
+name: Implanted Linear Frame Ω (Omega)
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  V8F9A9hbCTVYRW7O: 3
+  default: 0
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: >-
+      <p>Increases your BODY stat to 16 (adjusting your HP and Wound Threshold
+      and Death Save). Counts as two installations for the purposes of Maximum
+      HL.</p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 8d6
+    static: 28
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: hospital
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+      - cyberware
+    list: []
+    slots: 3
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: true
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData:
+      uuid: ""
+    max: 0
+    value: 0
+  price:
+    market: 10000
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 0
+  source:
+    book: IRv3
+    page: 108
+  type: borgware
+  unarmedAutomaticCalculation: true
+  usage: installed
+  usesType: magazine
+  weaponSkill: Archery
+  weaponType: assaultRifle
+type: cyberware

@@ -1,0 +1,19 @@
+_id: B1qjlWJWYKwXwdOD
+_key: "!folders!B1qjlWJWYKwXwdOD"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764855217564
+  duplicateSource: null
+  lastModifiedBy: rRCcEOJu9poJ2EaX
+  modifiedTime: 1764855217608
+  systemId: cyberpunk-red-core
+  systemVersion: v0.92.1
+color: null
+description: ""
+flags: {}
+folder: null
+name: Achievements and Loot Boxes
+sort: 100000
+sorting: a
+type: RollTable

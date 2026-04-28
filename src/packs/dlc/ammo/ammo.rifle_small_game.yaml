@@ -1,0 +1,53 @@
+_id: DP2OBdCL01QtUk1p
+_key: "!items!DP2OBdCL01QtUk1p"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764854477816
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333917
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/ammo/rifle_small.png
+name: Rifle (Small Game)
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ablationValue: 1
+  amount: 100
+  brand: ""
+  concealable:
+    concealable: true
+    isConcealed: false
+  description:
+    value: <p>Small game ammo; not great for people. Deals 2d6 less damage.</p>
+  favorite: false
+  installLocation: mall
+  overrides:
+    autofire:
+      minimum: 3
+      mode: modify
+      value: -1
+    damage:
+      minimum: 1d6
+      mode: modify
+      value: "-2d6"
+  price:
+    market: 10
+  size: 0
+  source:
+    book: BC+
+    page: 3
+  type: special
+  variety: rifle
+type: ammo

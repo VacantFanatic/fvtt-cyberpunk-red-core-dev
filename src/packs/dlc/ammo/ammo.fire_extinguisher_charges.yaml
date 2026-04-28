@@ -1,0 +1,49 @@
+_id: Tuv9nHwCesf3Wchg
+_key: "!items!Tuv9nHwCesf3Wchg"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1766437879979
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766437879979
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags: {}
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/ammo/fire_extinguisher_charges.svg
+name: Fire Extinguisher Charges
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  default: 0
+sort: 0
+system:
+  ablationValue: 0
+  amount: 5
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>Requires access to a charging station, takes 5 minutes.</p>
+  favorite: false
+  installLocation: mall
+  overrides:
+    autofire:
+      minimum: 3
+      mode: none
+      value: -1
+    damage:
+      minimum: 1d6
+      mode: none
+      value: 3d6
+  price:
+    market: 20
+  size: 0
+  source:
+    book: Hope Reborn
+    page: 34
+  type: special
+  variety: custom
+type: ammo

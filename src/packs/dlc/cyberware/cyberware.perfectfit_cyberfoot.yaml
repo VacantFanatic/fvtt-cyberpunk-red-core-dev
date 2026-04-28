@@ -1,0 +1,85 @@
+_id: u9qz2RDLomNTMl2n
+_key: "!items!u9qz2RDLomNTMl2n"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764857842464
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334034
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/perfectfit_cyberfoot.svg
+name: PerfectFit Cyberfoot
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: true
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: |-
+      <p>
+       Adjust foot size to perfectly fit any footwear. User can ignore penalties for
+       wearing footwear that would otherwise be uncomfortable or impracticable.<br />Can
+       be installed in meat leg if it’s the only piece of cyberware in that
+       leg.
+      </p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 1d3
+    static: 2
+  ignoreArmorPercent: 50
+  ignoreBelowSP: 0
+  installLocation: clinic
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: null
+    max: 0
+    value: 0
+  price:
+    market: 100
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: MHCD
+    page: 4
+  type: cyberLeg
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: ""
+  weaponType: ""
+type: cyberware

@@ -1,0 +1,76 @@
+_id: jgSJKsyaqUANw0zL
+_key: "!items!jgSJKsyaqUANw0zL"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1766624199372
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766624199372
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags: {}
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/personalized-faceplate.svg
+name: Personalized Faceplate
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  default: 0
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: >-
+      <p>A personalized faceplate made of durable polymer.</p><p><em>Compatible
+      with your Cyberskull.</em></p>
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: "0"
+    static: 0
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: mall
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - cyberware
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: {}
+    max: 0
+    value: 0
+  price:
+    market: 100
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: IRv3
+    page: 105
+  type: cyberwareInternal
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: Handgun
+type: cyberware

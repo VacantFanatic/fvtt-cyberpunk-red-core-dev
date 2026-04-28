@@ -1,0 +1,80 @@
+_id: 8KE75GWYioRWNlfU
+_key: "!items!8KE75GWYioRWNlfU"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858635955
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333734
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/hardend_shielding.svg
+name: Hardened Shielding (Cybereye)
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: true
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: <p>The eye and installed options are not affected by EMP effects.</p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 1d6
+    static: 3
+  ignoreArmorPercent: 50
+  ignoreBelowSP: 0
+  installLocation: clinic
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+      - ammo
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: null
+    max: 0
+    value: 0
+  price:
+    market: 500
+  providesHardening: true
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: BC
+    page: 19
+  type: cyberEye
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: Archery
+  weaponType: assaultRifle
+type: cyberware

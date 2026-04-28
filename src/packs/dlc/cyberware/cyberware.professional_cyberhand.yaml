@@ -1,0 +1,79 @@
+_id: AUQradHgpwzsx7rS
+_key: "!items!AUQradHgpwzsx7rS"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1759456787551
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334028
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/professional_cyberhand.svg
+name: Professional Cyberhand
+ownership:
+  default: 0
+  pLIpYgHBYUznkgBy: 3
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: Dynalar
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: >-
+      <p>A cyberhand capable of wireless interface and up to 50% typing speed
+      increase.</p>
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 1d6
+    static: 3
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: clinic
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - cyberware
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: {}
+    max: 0
+    value: 0
+  price:
+    market: 100
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: MD-CL
+    page: 15
+  type: cyberArm
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+type: cyberware

@@ -1,0 +1,85 @@
+_id: YMu6SNA9VbtKHFL8
+_key: "!items!YMu6SNA9VbtKHFL8"
+_stats:
+  compendiumSource: Compendium.cyberpunk-red-core.core_cyberware.Item.O5GmxTYCrrs8uWAd
+  coreVersion: "12.343"
+  createdTime: 1766622560597
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766622560597
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  core:
+    sourceId: Compendium.cyberpunk-red-core.core_cyberware.Item.O5GmxTYCrrs8uWAd
+  scene-packer:
+    hash: 931e408a98ec11425bb72c2c9c41ea166689de88
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/dragoon-plating-metalgear.svg
+name: Dragoon Plating (Metalgear)
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  V8F9A9hbCTVYRW7O: 3
+  default: 0
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: >-
+      <p>Requires BODY 16 or higher unless using a Full Body Conversion.
+      Borgware. External Body Cyberware*. Head and Body Armor SP18 and recovers
+      1SP/day.</p><p>Comes with one set of detatchable Dragoon Armor Plates,
+      additonal plates sold seperately.</p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 4d6
+    static: 14
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: hospital
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData:
+      uuid: ""
+    max: 0
+    value: 0
+  price:
+    market: 15000
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: IRv3
+    page: 105
+  type: borgware
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: Archery
+  weaponType: assaultRifle
+type: cyberware

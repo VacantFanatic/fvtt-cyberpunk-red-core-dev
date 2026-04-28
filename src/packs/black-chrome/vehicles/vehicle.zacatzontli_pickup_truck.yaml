@@ -1,0 +1,49 @@
+_id: eIoxfi6GHKCnjAG5
+_key: "!items!eIoxfi6GHKCnjAG5"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858767560
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333834
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/vehicles/zacatzontil.svg
+name: Zacatzontli Pickup Truck
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  brand: Ortiz Automotives
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>A Compact Groundcar equipped for off-road travel.</p>
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  price:
+    market: 27000
+  sdp: 70
+  seats: 4
+  source:
+    book: BC
+    page: 74
+  speedCombat: 20
+  speedNarrative: 100 MPH / 161 KPH
+type: vehicle

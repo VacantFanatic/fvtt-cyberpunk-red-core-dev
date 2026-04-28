@@ -1,0 +1,130 @@
+_id: jSq3PCutxWhieWDS
+_key: "!items!jSq3PCutxWhieWDS"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764857836625
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334033
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: 1fWLaLfOgxS4KuFZ
+    _key: "!items.effects!jSq3PCutxWhieWDS.1fWLaLfOgxS4KuFZ"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.92.1
+    changes:
+      - key: bonuses.wardrobeAndStyle
+        mode: 2
+        priority: null
+        value: "2"
+    description: ""
+    disabled: false
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": skill
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+    img: >-
+      systems/cyberpunk-red-core/icons/compendium/must_have_cyberware_deals/kill_display.svg
+    name: Kill Display
+    origin: null
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/kill_display.svg
+name: Kill Display
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: true
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: |-
+      <p>
+       Subdermal Alphanumeric display that shines clearly through the skin. Use a
+       linked Agent to customize the output. Commonly used as “kill
+       counter.”<br />Qualifies as a Light Tattoo. +2 Wardrobe and Style when
+       the user has 3 or more Light Tattoos.
+      </p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: "0"
+    static: 0
+  ignoreArmorPercent: 50
+  ignoreBelowSP: 0
+  installLocation: mall
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: null
+    max: 0
+    value: 0
+  price:
+    market: 100
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: MHCD
+    page: 3
+  type: fashionware
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: ""
+  weaponType: ""
+type: cyberware

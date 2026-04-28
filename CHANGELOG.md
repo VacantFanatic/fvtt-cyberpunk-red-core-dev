@@ -2,6 +2,25 @@
 
 # Changelog
 
+## Version 1.3.3
+
+### Action Needed
+
+- Worlds upgrading from data model `42` will run migration `43` to repoint DLC compendium UUID/image references back to `cyberpunk-red-core`.
+
+### New Features
+
+- Re-incorporate non-core compendia directly into the system for v13/v14-era usage:
+  - Black Chrome (`black-chrome_*`)
+  - DLC (`dlc_*`)
+  - Elflines (`elflines_*`)
+- Add corresponding compendium icon assets under `systems/cyberpunk-red-core/icons/compendium`.
+- Register the restored pack folders and packs in `system.json`.
+
+### Bug Fixes
+
+- Normalize imported DLC pack image paths from `modules/cyberpunk-red-dlc/...` to `systems/cyberpunk-red-core/icons/compendium/...` to avoid missing image references.
+
 ## Version 1.3.2
 
 ### Action Needed

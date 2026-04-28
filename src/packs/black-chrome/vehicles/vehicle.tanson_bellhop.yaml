@@ -1,0 +1,52 @@
+_id: 5n9vsR9685ti1ffI
+_key: "!items!5n9vsR9685ti1ffI"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858761528
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333833
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/vehicles/tanson-bellhop.svg
+name: Tanson Bellhop
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  brand: Tanson Group
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: |-
+      <p>
+       A one seat Gyrocopter which can be folded to the size of a large suitcase.
+      </p>
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  price:
+    market: 16000
+  sdp: 35
+  seats: 1
+  source:
+    book: BC
+    page: 60
+  speedCombat: 20
+  speedNarrative: 100 MPH / 161 KPH
+type: vehicle

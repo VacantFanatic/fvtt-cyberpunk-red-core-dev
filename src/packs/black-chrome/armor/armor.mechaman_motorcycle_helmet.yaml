@@ -1,0 +1,71 @@
+_id: r3uE9rEiOK1PQ9kr
+_key: "!items!r3uE9rEiOK1PQ9kr"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858574473
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333679
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/armor/mechaman-helmet.svg
+name: MechaMan Motorcycle Helmet
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  bodyLocation:
+    ablation: 0
+    sp: 7
+  brand: Tokyo Dynamics
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: |-
+      <p>
+       A Kevlar motorcycle helmet with integrated smart glasses that come with Chyron
+       and Low Light / IR / UV pre-installed*.
+      </p>
+      <p>
+       <em>*Smart Glasses and associated cyberware must be manually added and
+       installed after acquring the armor.</em>
+      </p>
+  equipped: owned
+  favorite: false
+  headLocation:
+    ablation: 0
+    sp: 7
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 1
+    usedSlots: 0
+  isBodyLocation: false
+  isElectronic: true
+  isHeadLocation: true
+  isShield: false
+  penalty: 0
+  price:
+    market: 5000
+  providesHardening: false
+  revealed: true
+  shieldHitPoints:
+    max: 0
+    value: 0
+  source:
+    book: BC
+    page: 37
+  usage: toggled
+type: armor

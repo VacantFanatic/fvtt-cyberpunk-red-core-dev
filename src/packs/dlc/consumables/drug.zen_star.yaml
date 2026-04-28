@@ -1,0 +1,43 @@
+_id: yg40tc7NTyqXHaF7
+_key: "!items!yg40tc7NTyqXHaF7"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1759614905173
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333994
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: OXuMYH1jqRNmGurK
+img: systems/cyberpunk-red-core/icons/compendium/default/default_drink.svg
+name: Zen Star
+ownership:
+  default: 0
+  pLIpYgHBYUznkgBy: 3
+sort: 0
+system:
+  amount: 1
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  consumed: None
+  description:
+    value: <p>One of a number of drinks the Drink Master 5000 can mix.</p>
+  equipped: owned
+  favorite: false
+  price:
+    market: 10
+  revealed: true
+  source:
+    book: MD-CL
+    page: 18
+  usage: toggled
+type: drug

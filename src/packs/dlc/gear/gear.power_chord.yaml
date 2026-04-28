@@ -1,0 +1,104 @@
+_id: jvD8mIJNCkcUThFa
+_key: "!items!jvD8mIJNCkcUThFa"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1766443662754
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766443662754
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: DW6v2HX078ZpgcQU
+    _key: "!items.effects!jvD8mIJNCkcUThFa.DW6v2HX078ZpgcQU"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.0.0dev
+    changes:
+      - key: bonuses.playInstrument(Guitar)
+        mode: 2
+        priority: null
+        value: "2"
+    description: ""
+    disabled: true
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: 1766361727
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": skill
+            "1": skill
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+            "1":
+              isSituational: false
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/dlc/status/power-chord.svg
+    name: Rock Star
+    origin: Item.6o8Km7tlww9Luim4
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags: {}
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/gear/electric_guitar.svg
+name: Power Chord
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  default: 0
+sort: 0
+system:
+  amount: 1
+  brand: KillStrom
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: >-
+      <p>Shred righteous bars with this electric guitar.</p><ul><li><p>Enable
+      the supplied active effect only if your musician has a base skill rank of
+      16 in
+      @UUID[Compendium.cyberpunk-red-core.core_skills-play-instrument.Item.WS1dbopsk9h1uTSn]{Play
+      Instrument (Guitar)}.</p></li><li><p>Non-Rockerboys suffer the
+      @UUID[Compendium.cyberpunk-red-core.core_critical-injuries-body.Item.IKKcCgHU1lBJ4wVd]{Crushed
+      Fingers} injury if they play this instrument longer than 10
+      minutes.</p></li><li><p>Cannot be damaged by fire or any weapon that deals
+      less than 6d6.</p></li><li><p>Tech-Upgradable</p></li></ul>
+  equipped: owned
+  favorite: false
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: false
+  price:
+    market: 2500
+  providesHardening: false
+  revealed: true
+  source:
+    book: Hope Reborn+
+    page: 23
+  usage: toggled
+type: gear

@@ -1,0 +1,53 @@
+_id: qt96px3IUob27p9f
+_key: "!items!qt96px3IUob27p9f"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858749638
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333835
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/vehicles/chupacabra.svg
+name: Diego Motors Chupacabra
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  brand: Diego Motors
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: |-
+      <p>
+       Compact Groundcar built from recycled parts from older vehicles. Low-tech but
+       high-horse-power.
+      </p>
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  price:
+    market: 37000
+  sdp: 70
+  seats: 6
+  source:
+    book: BC
+    page: 66
+  speedCombat: 20
+  speedNarrative: 100 MPH / 161 KPH
+type: vehicle

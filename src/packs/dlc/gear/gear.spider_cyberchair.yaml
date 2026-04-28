@@ -1,0 +1,117 @@
+_id: YM2dXOMEhmYn3LKy
+_key: "!items!YM2dXOMEhmYn3LKy"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764855466572
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334100
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: cBI5wVXww67hC4qx
+    _key: "!items.effects!YM2dXOMEhmYn3LKy.cBI5wVXww67hC4qx"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.92.1
+    changes:
+      - key: system.stats.move.value
+        mode: 5
+        priority: null
+        value: "5"
+    description: ""
+    disabled: false
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": stat
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/cyberchairs/cyberchair.svg
+    name: Spider Cyberchair
+    origin: null
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/gear/cyberchair.svg
+name: Spider Cyberchair
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  amount: 1
+  brand: Rocklin Augmentics
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: |-
+      <p>
+       The top of the line cyberchair, giving the premier user many options. While
+       using it the operator's base MOVE becomes 5, with all regular movement options
+       remaining available.
+      </p>
+      <p>
+       Additionally, this cyberchair has room for 4 cyberlimb options*. Any options
+       installed always count as being paired.
+      </p>
+      <p>
+       Operation of the cyberchair requires either a free hand, or interface plugs.
+      </p>
+      <p>
+       If the operator suffers a critical injury that reduces their MOVE, the MOVE of
+       the cyberchair is instead effected.
+      </p>
+      <p>
+       The cyberchair cannot be targeted specifically, nor can it be disabled via EMP
+       effects.
+      </p>
+      <p><em>*Installing cyberlimb options currently not supported</em></p>
+  equipped: owned
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - cyberware
+      - itemUpgrade
+    list: []
+    slots: 5
+    usedSlots: 0
+  isElectronic: false
+  price:
+    market: 1000
+  providesHardening: false
+  revealed: true
+  source:
+    book: CC
+    page: 2
+  usage: equipped
+type: gear
