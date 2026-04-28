@@ -1,0 +1,102 @@
+_id: yK1OjwJXiEvjPnS5
+_key: "!items!yK1OjwJXiEvjPnS5"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858679948
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333779
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: Gf4ERKzJBc62fK3p
+    _key: "!items.effects!yK1OjwJXiEvjPnS5.Gf4ERKzJBc62fK3p"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.92.1
+    changes:
+      - key: system.stats.body.value
+        mode: 5
+        priority: null
+        value: "12"
+    description: ""
+    disabled: false
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": stat
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+    img: >-
+      systems/cyberpunk-red-core/icons/compendium/default/default-linearframe.svg
+    name: EL-F4-NT Linear Frame
+    origin: null
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/gear/linearframe_sigma.svg
+name: EL-F4-NT Linear Frame
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  amount: 1
+  brand: Zhirafa
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: |-
+      <p>Exoskeleton.</p>
+      <ul>
+       <li>Increases BODY to 12 while equipped</li>
+       <li>Does not affect HP or Deathsave</li>
+       <li>Has pre-installed pair of Techtools</li>
+      </ul>
+  equipped: owned
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 1
+    usedSlots: 0
+  isElectronic: true
+  price:
+    market: 5000
+  providesHardening: false
+  revealed: true
+  source:
+    book: BC
+    page: 55
+  usage: equipped
+type: gear

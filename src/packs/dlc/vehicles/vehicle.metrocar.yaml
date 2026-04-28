@@ -1,0 +1,49 @@
+_id: cpFm1nJT5GQoERj4
+_key: "!items!cpFm1nJT5GQoERj4"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858123180
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334218
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/vehicles/zonda_metrocar.svg
+name: Metrocar
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  brand: Zonda
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>A Cheap Compact Groundcar built for city driving.</p>
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  price:
+    market: 1000
+  sdp: 25
+  seats: 2
+  source:
+    book: 12DoGear
+    page: 4
+  speedCombat: 10
+  speedNarrative: 30 MPH / 48 KPH
+type: vehicle

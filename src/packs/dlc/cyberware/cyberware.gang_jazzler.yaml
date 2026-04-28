@@ -1,0 +1,91 @@
+_id: U8SdGzK5sIdWHaQ1
+_key: "!items!U8SdGzK5sIdWHaQ1"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858057783
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334031
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/cybermatrix_gang_jazzler.svg
+name: Gang Jazzler
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: Cybermatrix
+  canIgnoreArmor: true
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: |-
+      <p>
+       Use a Choke Action to stab a grappled target with a popout electrified needle.
+       The target takes no damage but must make a
+       <strong>DV13 Resist Torture/Drugs</strong> Check. On failed check, target
+       falls Unconscious for 1 minute.
+      </p>
+      <p>
+       Powered by a rechargeable battery pack (50eb). Battery pack must be recharged
+       for 1 hour after each use. No check is necessary to conceal Gang Jazzler and
+       battery pack. Can be installed in meat arm if it's the only piece of cyberware
+       in that arm.
+      </p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 2d6
+    static: 7
+  ignoreArmorPercent: 50
+  ignoreBelowSP: 0
+  installLocation: clinic
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: true
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: null
+    max: 0
+    value: 0
+  price:
+    market: 500
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: 12DoC
+    page: 3
+  type: cyberArm
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: ""
+  weaponType: ""
+type: cyberware

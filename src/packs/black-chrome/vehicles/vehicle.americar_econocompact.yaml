@@ -1,0 +1,49 @@
+_id: ESkB5MZNBQ9Kh5bw
+_key: "!items!ESkB5MZNBQ9Kh5bw"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858747153
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333833
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/vehicles/econocompact.svg
+name: AmeriCar EconoCompact
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  brand: AmeriCar
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>Small and low-cost Compact Groundcar.</p>
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  price:
+    market: 20000
+  sdp: 50
+  seats: 3
+  source:
+    book: BC
+    page: 64
+  speedCombat: 20
+  speedNarrative: 100 MPH / 161 KPH
+type: vehicle

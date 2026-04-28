@@ -1,0 +1,53 @@
+_id: OCEWvjde4ZKq78ao
+_key: "!items!OCEWvjde4ZKq78ao"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764854455382
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333917
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/ammo/pistolheavy_basic.png
+name: Big Dreem Rounds
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ablationValue: 1
+  amount: 10
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>Custom Ammo for the Teen Dreem.</p>
+  favorite: false
+  installLocation: mall
+  overrides:
+    autofire:
+      minimum: 3
+      mode: none
+      value: -1
+    damage:
+      minimum: 1d6
+      mode: none
+      value: 3d6
+  price:
+    market: 100
+  size: 0
+  source:
+    book: BC+
+    page: 3
+  type: basic
+  variety: custom
+type: ammo

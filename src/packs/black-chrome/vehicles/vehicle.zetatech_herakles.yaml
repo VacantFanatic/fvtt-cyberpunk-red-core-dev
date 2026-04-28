@@ -1,0 +1,49 @@
+_id: wRaA0B8aAjqntqsX
+_key: "!items!wRaA0B8aAjqntqsX"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858771290
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333836
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/vehicles/zetatech-herakles.svg
+name: Zetatech Herakles
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  brand: Zetatech
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>AV4 type troop transport, armored and armed.</p>
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  price:
+    market: 63000
+  sdp: 120
+  seats: 8
+  source:
+    book: BC
+    page: 63
+  speedCombat: 40
+  speedNarrative: 200 MPH / 322 KPH
+type: vehicle

@@ -1,0 +1,57 @@
+_id: rRM8ArZ4RlX7EnBh
+_key: "!items!rRM8ArZ4RlX7EnBh"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858068626
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333918
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/ammo/battery.png
+name: MagnaSlot BatteryBrick
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ablationValue: 0
+  amount: 32
+  brand: Radline Laboratories
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: |-
+      <p>
+       Battery pack that only fits the Radline Blitzkrieg Arc-Thrower Cyberarm. Can
+       be recharged in 1 hour.
+      </p>
+  favorite: false
+  installLocation: mall
+  overrides:
+    autofire:
+      minimum: 3
+      mode: none
+      value: -1
+    damage:
+      minimum: 1d6
+      mode: none
+      value: 3d6
+  price:
+    market: 100
+  size: 0
+  source:
+    book: 12DoC
+    page: 4
+  type: basic
+  variety: custom
+type: ammo

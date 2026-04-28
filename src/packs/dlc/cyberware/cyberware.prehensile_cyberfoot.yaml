@@ -1,0 +1,132 @@
+_id: bg4RE0OZvNBUshSL
+_key: "!items!bg4RE0OZvNBUshSL"
+_stats:
+  compendiumSource: Compendium.cyberpunk-red-core.core_cyberware.Item.aEG91CA3amfU0Q8U
+  coreVersion: "12.343"
+  createdTime: 1766622594268
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766622594268
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: OYXxOcbgjNEOsE16
+    _key: "!items.effects!bg4RE0OZvNBUshSL.OYXxOcbgjNEOsE16"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.0.0dev
+    changes:
+      - key: system.stats.move.value
+        mode: 2
+        priority: null
+        value: "-4"
+    description: ""
+    disabled: true
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": stat
+            "1": stat
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+            "1":
+              isSituational: false
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/prehensile-cyberfoot.svg
+    name: Prehensile Feet
+    origin: Item.6aOF9KaUCHusFxsM
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags:
+  core:
+    sourceId: Compendium.cyberpunk-red-core.core_cyberware.Item.aEG91CA3amfU0Q8U
+  scene-packer:
+    hash: 486043fce142d484977e02e1d874038a9774bc8a
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/prehensile-cyberfoot.svg
+name: Prehensile Cyberfoot
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  V8F9A9hbCTVYRW7O: 3
+  default: 0
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: >-
+      <p>Transform a Cyberleg into a Cyberarm as an action.</p><p><em>-4 MOVE
+      penalty while transformed unless in Zero-G. Cannot install cyberarm
+      upgrades.</em></p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 1d6
+    static: 3
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: clinic
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData:
+      uuid: ""
+    max: 0
+    value: 0
+  price:
+    market: 1000
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: IRv3
+    page: 108
+  type: cyberLeg
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: Archery
+  weaponType: assaultRifle
+type: cyberware

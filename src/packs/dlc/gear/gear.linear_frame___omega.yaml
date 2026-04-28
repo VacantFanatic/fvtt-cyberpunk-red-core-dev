@@ -1,0 +1,98 @@
+_id: EvQjgP6wtaF9n5vU
+_key: "!items!EvQjgP6wtaF9n5vU"
+_stats:
+  compendiumSource: Compendium.cyberpunk-red-core.core_gear.Item.xH9lmDC4oWAt9l4P
+  coreVersion: "12.343"
+  createdTime: 1766622216216
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766622216216
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: fby6eAZaHGBFcK1v
+    _key: "!items.effects!EvQjgP6wtaF9n5vU.fby6eAZaHGBFcK1v"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.0.0dev
+    changes:
+      - key: system.stats.body.value
+        mode: 5
+        priority: null
+        value: "16"
+    description: ""
+    disabled: false
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": stat
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/gear/linearframe_beta.svg
+    name: Linear Frame Omega
+    origin: null
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags:
+  core:
+    sourceId: Compendium.cyberpunk-red-core.core_gear.Item.xH9lmDC4oWAt9l4P
+  scene-packer:
+    hash: cb1cce27d7b2f6ba4eb651b1808108c620eaf7dc
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/gear/linearframe_omega.svg
+name: Linear Frame Ω (Omega)
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  V8F9A9hbCTVYRW7O: 3
+  default: 0
+sort: 0
+system:
+  amount: 1
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: >-
+      <p>Exoskeleton. Requires 3 Interface Plugs. Increases BODY to 16 while
+      plugged in. No changes to your HP or Deathsave.</p>
+  equipped: owned
+  favorite: false
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: true
+  price:
+    market: 10000
+  providesHardening: false
+  revealed: true
+  source:
+    book: Core
+    page: 351
+  usage: equipped
+type: gear

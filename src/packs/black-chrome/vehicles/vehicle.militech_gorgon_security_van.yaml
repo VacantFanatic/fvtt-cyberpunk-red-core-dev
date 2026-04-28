@@ -1,0 +1,49 @@
+_id: vlIGLZxqhZHEdxqg
+_key: "!items!vlIGLZxqhZHEdxqg"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858756645
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333835
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/vehicles/gorgon-security-van.svg
+name: Militech Gorgon Security Van
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  brand: Militech
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>A monster of an armored van.</p>
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  price:
+    market: 37000
+  sdp: 50
+  seats: 6
+  source:
+    book: BC
+    page: 73
+  speedCombat: 20
+  speedNarrative: 100 MPH / 161KPH
+type: vehicle

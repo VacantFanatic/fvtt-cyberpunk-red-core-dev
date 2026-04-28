@@ -1,0 +1,49 @@
+_id: gGfQhTIQwjSoLeOX
+_key: "!items!gGfQhTIQwjSoLeOX"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858747911
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333835
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/vehicles/family-star-van.svg
+name: AmeriCar Family Star Van
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  brand: AmeriCar
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>Comfortable family Compact Groundcar.</p>
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  price:
+    market: 31000
+  sdp: 50
+  seats: 6
+  source:
+    book: BC
+    page: 65
+  speedCombat: 20
+  speedNarrative: 100 MPH / 161 KPH
+type: vehicle

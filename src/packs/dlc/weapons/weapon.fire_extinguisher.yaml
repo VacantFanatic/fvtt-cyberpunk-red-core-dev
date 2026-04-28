@@ -1,0 +1,121 @@
+_id: aTCQwWjguMnKhegG
+_key: "!items!aTCQwWjguMnKhegG"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1766437902666
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766437902666
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cprInstallTree:
+    - _id: F9fBoKdi9eZgCPfF
+      _stats:
+        compendiumSource: Item.0U66iWQvfkZx3Y8y
+        coreVersion: "12.343"
+        createdTime: 1766437820534
+        duplicateSource: null
+        lastModifiedBy: IMREvhAZtigyN7Gy
+        modifiedTime: 1766437860233
+        systemId: cyberpunk-red-core
+        systemVersion: v0.0.0dev
+      effects: []
+      flags: {}
+      folder: null
+      img: systems/cyberpunk-red-core/icons/compendium/dlc/ammo/fire_extinguisher_charges.svg
+      name: Fire Extinguisher Charges
+      ownership:
+        IMREvhAZtigyN7Gy: 3
+        default: 0
+      sort: 0
+      system:
+        ablationValue: 0
+        amount: 0
+        brand: ""
+        concealable:
+          concealable: false
+          isConcealed: false
+        description:
+          value: <p>Requires access to a charging station, takes 5 minutes.</p>
+        favorite: false
+        installLocation: mall
+        overrides:
+          autofire:
+            minimum: 3
+            mode: none
+            value: -1
+          damage:
+            minimum: 1d6
+            mode: none
+            value: 3d6
+        price:
+          market: 20
+        size: 0
+        source:
+          book: Hope Reborn
+          page: 34
+        type: special
+        variety: custom
+      type: ammo
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/weapons/fire-extinguisher.svg
+name: Fire Extinguisher
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  default: 0
+sort: 0
+system:
+  ammoVariety:
+    - custom
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  critFailEffect: jammed
+  damage: 4d6
+  description:
+    value: >-
+      <p>A two-handed exotic very heavy pistol that extinguishes burning objects
+      and edgerunners.</p><p><em>Maximum Range 6m/yds, roll combat damage only
+      when fighting fires.</em></p>
+  dvTable: DV Pistol
+  equipped: owned
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  handsReq: 2
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - ammo
+    list:
+      - F9fBoKdi9eZgCPfF
+    slots: 0
+    usedSlots: 0
+  isRanged: true
+  magazine:
+    ammoData: {}
+    max: 5
+    value: 5
+  price:
+    market: 50
+  quality: standard
+  revealed: true
+  rof: 1
+  source:
+    book: Hope Reborn
+    page: 34
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: Handgun
+  weaponType: vHeavyPistol
+type: weapon

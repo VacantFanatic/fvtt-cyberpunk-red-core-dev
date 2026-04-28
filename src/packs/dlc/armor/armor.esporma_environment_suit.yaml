@@ -1,0 +1,69 @@
+_id: EPsdOtdiTfe50lFB
+_key: "!items!EPsdOtdiTfe50lFB"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858103649
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333942
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/armor/esporma_enviroment_suit.svg
+name: Esporma Environment Suit
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  bodyLocation:
+    ablation: 0
+    sp: 8
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: |-
+      <p>
+       Armored Radiation Suit. Protects the wearer from Radiation and comes with an
+       Oxygen Tank that lasts for 30 minutes which can be refilled by spending an
+       hour in clean air.
+      </p>
+      <p>Nanomachines restore 1SP every hour SP isn't lost on the armor</p>
+  equipped: owned
+  favorite: false
+  headLocation:
+    ablation: 0
+    sp: 8
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isBodyLocation: true
+  isElectronic: false
+  isHeadLocation: true
+  isShield: false
+  penalty: 0
+  price:
+    market: 5000
+  providesHardening: false
+  revealed: true
+  shieldHitPoints:
+    max: 0
+    value: 0
+  source:
+    book: 12DoGear
+    page: 3
+  usage: toggled
+type: armor

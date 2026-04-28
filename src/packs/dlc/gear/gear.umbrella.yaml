@@ -1,0 +1,59 @@
+_id: qLpYhxmPD1u2lMG8
+_key: "!items!qLpYhxmPD1u2lMG8"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764857884077
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334101
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/gear/umbrella.svg
+name: Umbrella
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  amount: 1
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: |-
+      <p>
+       Protects against Acid Rain. For every minute exposed to Acid Rain, all armor
+       ablates by 1 SP (NCW pg 4).
+      </p>
+      <p>
+       +2 to Resist Torture/Drugs Checks from Blood Rain exposure. Severe Blood Rain
+       applies the effects of a Vial of Biotoxin on failed check (NCW pg 4).
+      </p>
+  equipped: owned
+  favorite: false
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: false
+  price:
+    market: 10
+  providesHardening: false
+  revealed: true
+  source:
+    book: NCW
+    page: 6
+  usage: toggled
+type: gear

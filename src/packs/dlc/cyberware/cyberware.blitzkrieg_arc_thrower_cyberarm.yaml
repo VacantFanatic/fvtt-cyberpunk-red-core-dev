@@ -1,0 +1,98 @@
+_id: mqxZ6A9U0LhaDwJm
+_key: "!items!mqxZ6A9U0LhaDwJm"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858022264
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334033
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: >-
+  systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/radline_blitzkrieg-arc-thrower_cyberarm.svg
+name: Blitzkrieg Arc-Thrower Cyberarm
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ammoVariety:
+    - custom
+  attackmod: 0
+  brand: Radline Laboratories
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 4d6
+  description:
+    value: |-
+      <p>
+       An "arm" in name only, the Arc-Thrower is a massive electricity cannon. 0
+       option slots.
+      </p>
+      <p>
+       The Arc-Thrower is One-Handed Exotic Poor Quality Shotgun that uses Heavy
+       Weapons Skill. Fires "Shotgun Shell" electricity blast with 4d6 damage.
+       Critical Injuries are not possible. Armor is not ablated. If target goes under
+       1HP from the blast, target has 1HP and is Unconscious.
+      </p>
+      <p>
+       Firing the Arc-Thrower consumes a charge from the included Radline MagnaSlot
+       BatteryBrick (100eb). BatteryBrick has a 32 shot capacity and can be recharged
+       in 1 hour. Use an Action to swap in a fresh battery pack even if user has no
+       free hands available. Arc-Thrower does not have a hand attachment.
+      </p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 4d6
+    static: 14
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: hospital
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+      - ammo
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: true
+  isRanged: true
+  isWeapon: true
+  magazine:
+    ammoData: null
+    max: 32
+    value: 0
+  price:
+    market: 1000
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 1
+  source:
+    book: 12DoC
+    page: 4
+  type: cyberArm
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: Heavy Weapons
+  weaponType: shotgun
+type: cyberware

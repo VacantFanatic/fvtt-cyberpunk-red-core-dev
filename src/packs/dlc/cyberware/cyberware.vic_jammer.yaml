@@ -1,0 +1,122 @@
+_id: D7TFt1EHP20nKr8S
+_key: "!items!D7TFt1EHP20nKr8S"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1759594810415
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334029
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: E8qjwBDZmIVYcCdw
+    _key: "!items.effects!D7TFt1EHP20nKr8S.E8qjwBDZmIVYcCdw"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.331"
+      createdTime: 1759594935536
+      duplicateSource: null
+      lastModifiedBy: pLIpYgHBYUznkgBy
+      modifiedTime: 1759684951667
+      systemId: cyberpunk-red-core
+      systemVersion: v0.89.2
+    changes:
+      - key: bonuses.stealth
+        mode: 2
+        priority: null
+        value: "2"
+    description: ""
+    disabled: false
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": skill
+          situational:
+            "0":
+              isSituational: true
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/vic_jammer.svg
+    name: VIC Jammer
+    origin: >-
+      Compendium.cyberpunk-red-dlc.dlc_mixing-drinks-changing-lives.Item.D7TFt1EHP20nKr8S
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/vic_jammer.svg
+name: VIC Jammer
+ownership:
+  default: 0
+  pLIpYgHBYUznkgBy: 3
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: <p>An eye jammer that scrambles digital optics.</p>
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 2d6
+    static: 7
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: clinic
+  installedItems:
+    allowed: false
+    allowedTypes:
+      - cyberware
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  isElectronic: true
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData: {}
+    max: 0
+    value: 0
+  price:
+    market: 100
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 2
+  source:
+    book: MD-CL
+    page: 16
+  type: cyberEye
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+type: cyberware

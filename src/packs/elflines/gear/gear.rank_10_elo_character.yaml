@@ -1,0 +1,54 @@
+_id: E0eXW07wzBlBYytp
+_key: "!items!E0eXW07wzBlBYytp"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764856766093
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813334331
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/gear/memory_chip.svg
+name: Rank 10 ELO Character
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  amount: 1
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: |-
+      <p>
+       A power-leveled Rank 10 ELO character. (ELO Character must be created via the
+       Macro and ranked up manually.)
+      </p>
+  equipped: owned
+  favorite: false
+  installedItems:
+    allowed: false
+    allowedTypes: []
+    list: []
+    slots: 0
+    usedSlots: 0
+  isElectronic: false
+  price:
+    market: 500
+  providesHardening: false
+  revealed: true
+  source:
+    book: ELO
+    page: 5
+  usage: toggled
+type: gear

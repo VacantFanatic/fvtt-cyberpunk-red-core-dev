@@ -1,0 +1,19 @@
+_id: OXuMYH1jqRNmGurK
+_key: "!folders!OXuMYH1jqRNmGurK"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1759182421486
+  duplicateSource: null
+  lastModifiedBy: rRCcEOJu9poJ2EaX
+  modifiedTime: 1765135254059
+  systemId: cyberpunk-red-core
+  systemVersion: v0.89.2
+color: "#e64539"
+description: ""
+flags: {}
+folder: null
+name: Alcohol
+sort: 0
+sorting: a
+type: Item

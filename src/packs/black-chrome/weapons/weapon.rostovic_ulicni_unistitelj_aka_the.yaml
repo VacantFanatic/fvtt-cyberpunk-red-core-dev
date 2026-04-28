@@ -1,0 +1,77 @@
+_id: s72mTsiZhAJHvLg5
+_key: "!items!s72mTsiZhAJHvLg5"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858818530
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333884
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/weapons/Shotgun_poor.svg
+name: Rostović Ulični Uništitelj (aka the Street Destroyer)
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  ammoVariety:
+    - shotgunShell
+  attackmod: 0
+  brand: Rostović
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  critFailEffect: jammed
+  damage: 3d6
+  description:
+    value: |-
+      <p>
+       The Rostović Ulični Uništitelj (Street Destroyer) is a Poor Quality Exotic
+       Shotgun. The magazine only holds 3 shots. It can only shoot Shotgun Shells.
+      </p>
+  dvTable: DV Shotgun (Slug)
+  equipped: owned
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  handsReq: 2
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+      - ammo
+    list: []
+    slots: 0
+    usedSlots: 0
+  isRanged: true
+  magazine:
+    ammoData: null
+    max: 3
+    value: 0
+  price:
+    market: 1000
+  quality: poor
+  revealed: true
+  rof: 1
+  source:
+    book: BC
+    page: 117
+  unarmedAutomaticCalculation: true
+  usage: equipped
+  usesType: magazine
+  weaponSkill: Shoulder Arms
+  weaponType: shotgun
+type: weapon

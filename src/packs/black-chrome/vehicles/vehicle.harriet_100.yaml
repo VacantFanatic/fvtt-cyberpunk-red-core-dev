@@ -1,0 +1,49 @@
+_id: eTdomqPYaFg1CAp5
+_key: "!items!eTdomqPYaFg1CAp5"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764858751987
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333834
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/vehicles/harriet.svg
+name: Harriet 100
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  brand: AmeriCar
+  concealable:
+    concealable: false
+    isConcealed: false
+  description:
+    value: <p>A classic Roadbike with a more feminine look.</p>
+  favorite: false
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list: []
+    slots: 3
+    usedSlots: 0
+  price:
+    market: 21000
+  sdp: 35
+  seats: 2
+  source:
+    book: BC
+    page: 69
+  speedCombat: 20
+  speedNarrative: 100 MPH / 161 KPH
+type: vehicle

@@ -1,0 +1,161 @@
+_id: KLdu0wuFwC95vtss
+_key: "!items!KLdu0wuFwC95vtss"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1766624195957
+  duplicateSource: null
+  lastModifiedBy: IMREvhAZtigyN7Gy
+  modifiedTime: 1766624195957
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cprInstallTree:
+    - _id: 0kVTGIpsZhHVUKOU
+      _stats:
+        compendiumSource: null
+        coreVersion: "12.343"
+        createdTime: 1766624172147
+        duplicateSource: null
+        lastModifiedBy: IMREvhAZtigyN7Gy
+        modifiedTime: 1766624172147
+        systemId: cyberpunk-red-core
+        systemVersion: v0.0.0dev
+      effects: []
+      flags: {}
+      folder: yTTqcTGaNYJWUR2I
+      img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/personalized-faceplate.svg
+      name: Personalized Faceplate
+      ownership:
+        IMREvhAZtigyN7Gy: 3
+        default: 0
+      sort: 0
+      system:
+        ammoVariety: []
+        attackmod: 0
+        brand: ""
+        canIgnoreArmor: false
+        concealable:
+          concealable: false
+          isConcealed: false
+        core: false
+        critFailEffect: jammed
+        damage: 1d6
+        description:
+          value: >-
+            <p>A personalized faceplate made of durable
+            polymer.</p><p><em>Compatible with your Cyberskull.</em></p>
+        favorite: false
+        fireModes:
+          autoFire: 0
+          suppressiveFire: false
+        humanityLoss:
+          roll: "0"
+          static: 0
+        ignoreArmorPercent: 0
+        ignoreBelowSP: 0
+        installLocation: mall
+        installedItems:
+          allowed: false
+          allowedTypes:
+            - cyberware
+            - itemUpgrade
+          list: []
+          slots: 0
+          usedSlots: 0
+        isElectronic: true
+        isFoundational: false
+        isRanged: false
+        isWeapon: false
+        magazine:
+          ammoData: {}
+          max: 0
+          value: 0
+        price:
+          market: 100
+        providesHardening: false
+        revealed: true
+        rof: 1
+        size: 1
+        source:
+          book: IRv3
+          page: 105
+        type: cyberwareInternal
+        unarmedAutomaticCalculation: true
+        usage: toggled
+        usesType: magazine
+        weaponSkill: Handgun
+      type: cyberware
+  scene-packer:
+    hash: 24b1e428373ab648c629f0506102b045b9a37a41
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/cyberskull.svg
+name: Cyberskull
+ownership:
+  IMREvhAZtigyN7Gy: 3
+  V8F9A9hbCTVYRW7O: 3
+  default: 0
+sort: 0
+system:
+  ammoVariety: []
+  attackmod: 0
+  brand: ""
+  canIgnoreArmor: false
+  concealable:
+    concealable: false
+    isConcealed: false
+  core: false
+  critFailEffect: jammed
+  damage: 1d6
+  description:
+    value: >-
+      <p>User's head is now no longer a 2x weak point. Additionally, user is
+      immune to the Cracked Skull and Broken Jaw critical injuries, both in
+      effect and extra damage. See more info on pg.105 of Interface RED Volume
+      3.</p>
+  dvTable: ""
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  humanityLoss:
+    roll: 4d6
+    static: 14
+  ignoreArmorPercent: 0
+  ignoreBelowSP: 0
+  installLocation: hospital
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - cyberware
+      - itemUpgrade
+    list:
+      - 0kVTGIpsZhHVUKOU
+    slots: 1
+    usedSlots: 1
+  isElectronic: false
+  isFoundational: false
+  isRanged: false
+  isWeapon: false
+  magazine:
+    ammoData:
+      uuid: ""
+    max: 0
+    value: 0
+  price:
+    market: 5000
+  providesHardening: false
+  revealed: true
+  rof: 1
+  size: 3
+  source:
+    book: IRv3
+    page: 105
+  type: cyberwareInternal
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: ""
+  weaponType: ""
+type: cyberware

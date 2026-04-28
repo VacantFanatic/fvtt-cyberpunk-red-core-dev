@@ -1,0 +1,192 @@
+_id: 8nOTvNR4qZP54nKy
+_key: "!items!8nOTvNR4qZP54nKy"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1764857470391
+  duplicateSource: null
+  lastModifiedBy: 5YFn3II1rTe7RKGq
+  modifiedTime: 1765813333990
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects:
+  - _id: LAZqZygBveSMgiOG
+    _key: "!items.effects!8nOTvNR4qZP54nKy.LAZqZygBveSMgiOG"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.92.1
+    changes:
+      - key: bonuses.initiative
+        mode: 2
+        priority: null
+        value: "3"
+    description: ""
+    disabled: true
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": combat
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/status/readied_action.svg
+    name: Timewarp Primary
+    origin: null
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+  - _id: vehnLbHCsPpLEcaK
+    _key: "!items.effects!8nOTvNR4qZP54nKy.vehnLbHCsPpLEcaK"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.92.1
+    changes:
+      - key: bonuses.initiative
+        mode: 2
+        priority: null
+        value: "-2"
+    description: ""
+    disabled: true
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": combat
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/status/timewarp_addiction.svg
+    name: Timewarp Addiction
+    origin: null
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+  - _id: 2UFkxrs6fI3cmpNz
+    _key: "!items.effects!8nOTvNR4qZP54nKy.2UFkxrs6fI3cmpNz"
+    _stats:
+      compendiumSource: null
+      coreVersion: "12.343"
+      createdTime: null
+      duplicateSource: null
+      lastModifiedBy: null
+      modifiedTime: null
+      systemId: cyberpunk-red-core
+      systemVersion: v0.92.1
+    changes:
+      - key: bonuses.initiative
+        mode: 2
+        priority: null
+        value: "5"
+    description: ""
+    disabled: true
+    duration:
+      combat: null
+      rounds: null
+      seconds: null
+      startRound: null
+      startTime: null
+      startTurn: null
+      turns: null
+    flags:
+      cyberpunk-red-core:
+        changes:
+          cats:
+            "0": combat
+          situational:
+            "0":
+              isSituational: false
+              onByDefault: false
+    img: systems/cyberpunk-red-core/icons/compendium/status/timewarp_addiction.svg
+    name: Timewarp Addiction Primary
+    origin: null
+    sort: 0
+    statuses: []
+    system: {}
+    tint: "#ffffff"
+    transfer: true
+    type: base
+flags:
+  cyberpunk-red-core:
+    _migration:
+      current: 38
+      previous: "37"
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/drugs/timewarp.svg
+name: Timewarp
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+sort: 0
+system:
+  amount: 1
+  brand: ""
+  concealable:
+    concealable: false
+    isConcealed: false
+  consumed: Timewarp Primary
+  description:
+    value: |-
+      <p><strong>Primary Effect</strong></p>
+      <p>Dose lasts 1 minute.</p>
+      <ul>
+       <li>
+       +3 to any Initiative Rolls. If already in combat, +3 to current Initiative.
+       </li>
+      </ul>
+      <p><strong>Secondary (DV17)</strong></p>
+      <p>
+       When the dose wears off, the user rolls
+       <strong>WILL + Resist Torture/Drugs + 1d10 against Secondary DV</strong>.
+      </p>
+      <ul>
+       <li>
+       -2 to Initiative Rolls while addicted if not currently dosed with TimeWarp.
+       </li>
+      </ul>
+  equipped: owned
+  favorite: false
+  price:
+    market: 100
+  revealed: true
+  source:
+    book: HP
+    page: 3
+  usage: snorted
+type: drug

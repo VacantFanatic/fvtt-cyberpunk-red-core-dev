@@ -1,0 +1,257 @@
+_id: UnVRX1UNOtUtN5xz
+_key: "!items!UnVRX1UNOtUtN5xz"
+_stats:
+  compendiumSource: null
+  coreVersion: "12.343"
+  createdTime: 1766187052612
+  duplicateSource: null
+  lastModifiedBy: Oh50kk1fqzkpjwxb
+  modifiedTime: 1766187059919
+  systemId: cyberpunk-red-core
+  systemVersion: v0.0.0dev
+effects: []
+flags:
+  cprInstallTree:
+    - _id: zXOHUzaT3fZZKUof
+      _stats:
+        compendiumSource: Item.fvetLZaah9I68JR0
+        coreVersion: "12.343"
+        createdTime: 1766187032071
+        duplicateSource: null
+        lastModifiedBy: Oh50kk1fqzkpjwxb
+        modifiedTime: 1766187032091
+        systemId: cyberpunk-red-core
+        systemVersion: v0.0.0dev
+      effects: []
+      flags:
+        cprInstallTree:
+          - _id: 1sbYIBxUenY7NJZI
+            _stats:
+              compendiumSource: Item.dUAA2eWhAtwuQOAW
+              coreVersion: "12.343"
+              createdTime: 1766187032082
+              duplicateSource: null
+              lastModifiedBy: Oh50kk1fqzkpjwxb
+              modifiedTime: 1766187032082
+              systemId: cyberpunk-red-core
+              systemVersion: v0.0.0dev
+            effects: []
+            flags: {}
+            folder: null
+            img: >-
+              systems/cyberpunk-red-core/icons/compendium/default/Default_Ammo.svg
+            name: Harpoons
+            ownership:
+              Oh50kk1fqzkpjwxb: 3
+              default: 0
+            sort: 0
+            system:
+              ablationValue: 1
+              amount: 0
+              brand: SlamDance
+              concealable:
+                concealable: false
+                isConcealed: false
+              description:
+                value: >-
+                  <p>Additional harpoons for use with the SlamDance Ballistic
+                  Harpoon Launcher.</p>
+              favorite: false
+              installLocation: mall
+              overrides:
+                autofire:
+                  minimum: 3
+                  mode: none
+                  value: -1
+                damage:
+                  minimum: 1d6
+                  mode: none
+                  value: 3d6
+              price:
+                market: 1000
+              size: 0
+              source:
+                book: WCG
+                page: 5
+              type: special
+              variety: custom
+            type: ammo
+      folder: null
+      img: >-
+        systems/cyberpunk-red-core/icons/compendium/dlc/upgrades/ballistic-harpoon-launcher.svg
+      name: Harpoon Launcher
+      ownership:
+        Oh50kk1fqzkpjwxb: 3
+        default: 0
+      sort: 0
+      system:
+        ammoVariety:
+          - custom
+        attackmod: 0
+        brand: SlamDance
+        canIgnoreArmor: true
+        concealable:
+          concealable: false
+          isConcealed: false
+        critFailEffect: jammed
+        damage: 4d6
+        description:
+          value: >-
+            <p>A heavy weapons platform that allows you to launch SlamDance
+            Ballistic Harpoons as a ranged attack. </p>
+        dvTable: DV Bows & Crossbows
+        favorite: false
+        fireModes:
+          autoFire: 0
+          suppressiveFire: false
+        handsReq: 0
+        ignoreArmorPercent: 50
+        ignoreBelowSP: 0
+        installLocation: mall
+        installedItems:
+          allowed: true
+          allowedTypes:
+            - ammo
+          list:
+            - 1sbYIBxUenY7NJZI
+          slots: 3
+          usedSlots: 0
+        isElectronic: false
+        isRanged: true
+        magazine:
+          ammoData: {}
+          max: 1
+          value: 1
+        modifiers:
+          Wardrobe & Style:
+            isSituational: false
+            onByDefault: false
+            value: null
+          attackmod:
+            isSituational: false
+            onByDefault: false
+            type: modifier
+            value: null
+          bodySp:
+            isSituational: false
+            onByDefault: false
+            value: null
+          cool:
+            isSituational: false
+            onByDefault: false
+            value: null
+          damage:
+            isSituational: false
+            onByDefault: false
+            type: modifier
+            value: null
+          headSp:
+            isSituational: false
+            onByDefault: false
+            value: null
+          magazine:
+            isSituational: false
+            onByDefault: false
+            type: modifier
+            value: null
+          rof:
+            isSituational: false
+            onByDefault: false
+            type: modifier
+            value: null
+          sdp:
+            isSituational: false
+            onByDefault: false
+            value: null
+          seats:
+            isSituational: false
+            onByDefault: false
+            value: null
+          secondaryWeapon:
+            configured: true
+          shieldHp:
+            isSituational: false
+            onByDefault: false
+            value: null
+          slots:
+            isSituational: false
+            onByDefault: false
+            value: null
+          speedCombat:
+            isSituational: false
+            onByDefault: false
+            value: null
+        price:
+          market: 0
+        providesHardening: false
+        revealed: true
+        rof: 1
+        size: 0
+        source:
+          book: WCG
+          page: 5
+        type: weapon
+        unarmedAutomaticCalculation: true
+        usage: toggled
+        usesType: magazine
+        weaponSkill: Heavy Weapons
+        weaponType: bow
+      type: itemUpgrade
+folder: null
+img: systems/cyberpunk-red-core/icons/compendium/dlc/weapons/ballistic-harpoon.svg
+name: Ballistic Harpoon
+ownership:
+  Oh50kk1fqzkpjwxb: 3
+  default: 0
+sort: 0
+system:
+  ammoVariety:
+    - custom
+  attackmod: 0
+  brand: SlamDance
+  canIgnoreArmor: true
+  concealable:
+    concealable: false
+    isConcealed: false
+  critFailEffect: jammed
+  damage: 4d6
+  description:
+    value: >-
+      <p>A very heavy exotic melee weapon that may also be launched as a ranged
+      weapon as if it were a crossbow.</p>
+  dvTable: DV Bows & Crossbows
+  equipped: owned
+  favorite: false
+  fireModes:
+    autoFire: 0
+    suppressiveFire: false
+  handsReq: 2
+  ignoreArmorPercent: 50
+  ignoreBelowSP: 0
+  installedItems:
+    allowed: true
+    allowedTypes:
+      - itemUpgrade
+    list:
+      - zXOHUzaT3fZZKUof
+    slots: 0
+    usedSlots: 0
+  isRanged: false
+  magazine:
+    ammoData: {}
+    max: 1
+    value: 0
+  price:
+    market: 1000
+  quality: standard
+  revealed: true
+  rof: 1
+  source:
+    book: WCG
+    page: 5
+  unarmedAutomaticCalculation: true
+  usage: toggled
+  usesType: magazine
+  weaponSkill: Melee Weapon
+  weaponType: vHeavyMelee
+type: weapon

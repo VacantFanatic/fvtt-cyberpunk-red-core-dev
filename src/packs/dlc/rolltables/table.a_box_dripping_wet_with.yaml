@@ -1,0 +1,133 @@
+_id: zRHyYnlEqNlTA4l5
+_key: "!tables!zRHyYnlEqNlTA4l5"
+_stats:
+  compendiumSource: >-
+    Compendium.cyberpunk-red-core.dlc_achievements-and-loot-boxes.RollTable.zRHyYnlEqNlTA4l5
+  coreVersion: "12.343"
+  createdTime: 1764855217580
+  duplicateSource: null
+  lastModifiedBy: rRCcEOJu9poJ2EaX
+  modifiedTime: 1764855217580
+  systemId: cyberpunk-red-core
+  systemVersion: v0.92.1
+description: >-
+  Source: Achievements and Loot Boxes pg.5
+
+  All weapons come fully loaded with a compatible ammo type of the GM's
+  choosing.
+displayRoll: true
+flags: {}
+folder: B1qjlWJWYKwXwdOD
+formula: 1d6
+img: icons/containers/boxes/crate-wooden-beige-red.webp
+name: A Box Dripping Wet With Fluid
+ownership:
+  default: 0
+  rRCcEOJu9poJ2EaX: 3
+replacement: true
+results:
+  - _id: 0OxDAp5vfbStfplq
+    _key: "!tables.results!zRHyYnlEqNlTA4l5.0OxDAp5vfbStfplq"
+    documentCollection: ""
+    documentId: null
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/drugs/smash.svg
+    range:
+      - 1
+      - 1
+    text: 5 Cans of Smash
+    type: text
+    weight: 1
+  - _id: qVtkRbxUNz2Mr1GB
+    _key: "!tables.results!zRHyYnlEqNlTA4l5.qVtkRbxUNz2Mr1GB"
+    documentCollection: cyberpunk-red-core.core_gear
+    documentId: Th74cfC87RqEJKAb
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/gear/air_hypo.svg
+    range:
+      - 2
+      - 2
+    text: Airhypo
+    type: pack
+    weight: 1
+  - _id: MWZd45k1dIhuy8If
+    _key: "!tables.results!zRHyYnlEqNlTA4l5.MWZd45k1dIhuy8If"
+    documentCollection: cyberpunk-red-dlc.dlc_cyberware
+    documentId: 9rKtuQcxsOmHjKyT
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/default/Default_Cyberware.svg
+    range:
+      - 3
+      - 3
+    text: Bodyweight AutoInjector
+    type: pack
+    weight: 1
+  - _id: Bo75utxjeKLNgn1m
+    _key: "!tables.results!zRHyYnlEqNlTA4l5.Bo75utxjeKLNgn1m"
+    documentCollection: cyberpunk-red-dlc.black-chrome_gear
+    documentId: Ogmb7zTfss6Kz54C
+    drawn: false
+    flags: {}
+    img: null
+    range:
+      - 4
+      - 4
+    text: AirWell 50
+    type: pack
+    weight: 1
+  - _id: oFcPdGyZZq79XTja
+    _key: "!tables.results!zRHyYnlEqNlTA4l5.oFcPdGyZZq79XTja"
+    documentCollection: cyberpunk-red-core.core_ammo
+    documentId: OufLzsBG6w0CUp81
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/ammo/grenade_poison.png
+    range:
+      - 5
+      - 5
+    text: Grenade (Poison)
+    type: pack
+    weight: 1
+  - _id: u8xCSLXpmliqK5eZ
+    _key: "!tables.results!zRHyYnlEqNlTA4l5.u8xCSLXpmliqK5eZ"
+    documentCollection: cyberpunk-red-dlc.black-chrome_weapons
+    documentId: my1ugVO4a5VjJSuH
+    drawn: false
+    flags: {}
+    img: null
+    range:
+      - 6
+      - 6
+    text: TR-4 Detonator Fluid
+    type: pack
+    weight: 1
+  - _id: hk0ZG2Yyj1OXXEQE
+    _key: "!tables.results!zRHyYnlEqNlTA4l5.hk0ZG2Yyj1OXXEQE"
+    documentCollection: cyberpunk-red-dlc.dlc_consumables
+    documentId: PRLDaeBVeMuBBIeO
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/drugs/smash.svg
+    range:
+      - 1
+      - 1
+    text: Smash
+    type: pack
+    weight: 1
+  - _id: xJR1fxROS011EkKi
+    _key: "!tables.results!zRHyYnlEqNlTA4l5.xJR1fxROS011EkKi"
+    documentCollection: cyberpunk-red-core.core_drugs
+    documentId: 6BM5WFyCyIM8lZib
+    drawn: false
+    flags: {}
+    img: systems/cyberpunk-red-core/icons/compendium/drugs/black_lace.svg
+    range:
+      - 2
+      - 2
+    text: Black Lace
+    type: pack
+    weight: 1
+sort: 0
