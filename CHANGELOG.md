@@ -2,6 +2,22 @@
 
 # Changelog
 
+## Version 1.3.4
+
+### Action Needed
+
+- None.
+
+### New Features
+
+- Explosive weapons (grenade launchers, rocket launchers, and weapons loaded with grenade/rocket ammo) now automatically place a 10m×10m blast template on the canvas before the attack roll, using the Portal module.
+- The attack roll chat card for explosive weapons gains a **bounce button** (↔). If the attack misses its DV, clicking it rolls 1d8 for scatter direction and 1d4 for distance (1–2 squares), moves the template within the original blast area, and posts the result to chat — implementing the CPR miss/scatter rules.
+- `game.cpr.api.createExplosiveTemplate()` is now exposed for use by macros or the Automated Animations module.
+
+### Bug Fixes
+
+- None.
+
 ## Version 1.3.3
 
 ### Action Needed
