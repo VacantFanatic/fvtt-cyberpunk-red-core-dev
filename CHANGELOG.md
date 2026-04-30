@@ -2,7 +2,7 @@
 
 # Changelog
 
-## Version 1.3.4
+## Version 1.3.5
 
 ### Action Needed
 
@@ -11,6 +11,20 @@
 ### Changed
 
 - CPR actor sheets (base, character, mook, container) now wire DOM listeners on the native sheet root (`HTMLElement`) instead of wrapping `this.element` in jQuery, matching Application V2 expectations.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- None.
+
+## Version 1.3.4
+
+### Action Needed
+
+- None.
 
 ### New Features
 
