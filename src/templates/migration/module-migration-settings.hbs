@@ -1,4 +1,4 @@
-<form class="dialog-sheet">
+<section class="dialog-sheet">
   <div class="dialog-grid flexcol">
     <ol class="dialog-list">
       <li class="dialog-item dialog-item-header flexrow">
@@ -15,7 +15,12 @@
             {{modTitle}}
           </div>
           <div class="dialog-item-input text-nowrap text-semi text-space-around">
-            <input type="checkbox" name="modIds" value="{{modId}}" {{checked (cprListContains ../selectedMods modId)}}/>
+            <input
+              type="checkbox"
+              name="modIds"
+              value="{{modId}}"
+              {{checked (cprListContains ../selectedMods modId)}}
+            />
           </div>
         </li>
       {{/each}}
@@ -24,4 +29,4 @@
   <button type="submit">
     <i class="fas fa-floppy-disk"></i> {{localize "CPR.settings.saveSettings"}}
   </button>
-</form>
+</section>
