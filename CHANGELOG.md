@@ -8,6 +8,10 @@
 
 - None.
 
+### Changed
+
+- CPR actor sheets (base, character, mook, container) now wire DOM listeners on the native sheet root (`HTMLElement`) instead of wrapping `this.element` in jQuery, matching Application V2 expectations.
+
 ### New Features
 
 - Explosive weapons (grenade launchers, rocket launchers, and weapons loaded with grenade/rocket ammo) now automatically place a 10m×10m blast template on the canvas before the attack roll, using the Portal module.

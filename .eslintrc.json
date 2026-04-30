@@ -43,6 +43,7 @@
     "Babele": "readonly",
     "CONFIG": "readonly",
     "CONST": "readonly",
+    "CSS": "readonly",
     "ChatMessage": "readonly",
     "Combat": "readonly",
     "Combatant": "readonly",
@@ -78,7 +79,10 @@
     "setProperty": "readonly",
     "ui": "readonly",
     "window": "readonly",
-    "getComputedStyle": "readonly"
+    "getComputedStyle": "readonly",
+    "globalThis": "readonly",
+    "HTMLElement": "readonly",
+    "Node": "readonly"
   },
   "settings": {
     "import/extensions": [".js"]

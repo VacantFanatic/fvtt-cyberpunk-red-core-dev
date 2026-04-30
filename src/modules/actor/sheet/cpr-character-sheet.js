@@ -1,4 +1,4 @@
-import CPRActorSheet from "./cpr-actor-sheet.js";
+import CPRActorSheet, { resolveSheetRoot } from "./cpr-actor-sheet.js";
 import LOGGER from "../../utils/cpr-logger.js";
 import Rules from "../../utils/cpr-rules.js";
 import SystemUtils from "../../utils/cpr-systemUtils.js";
@@ -75,89 +75,66 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
    * @param {*} html - the DOM object
    */
   activateListeners(html) {
-    html.find(".navtabs-right").click(() => this._clearContentFilter());
+    const root =
+      resolveSheetRoot(html) ?? resolveSheetRoot(this.element) ?? null;
+    if (!(root instanceof HTMLElement)) return;
 
-    // calculate max Hp
-    html.find(".calculate-hp").click(() => this._setMaxHp());
+    const on = (type, selector, listener, options) => {
+      for (const el of root.querySelectorAll(selector)) {
+        el.addEventListener(type, listener, options);
+      }
+    };
 
-    // calculate max Hp
-    html.find(".calculate-humanity").click(() => this._setMaxHumanity());
-
-    // Cycle equipment status
-    html.find(".equip").click((event) => this._cycleEquipState(event));
-
-    // Repair Armor
-    html.find(".repair").click((event) => this._repairArmor(event));
-
-    // Install Cyberware
-    html
-      .find(".install-remove-cyberware")
-      .click((event) => this._installUninstallCyberwareAction(event));
-
-    // Set Lifepath for Character
-    html.find(".set-lifepath").click(() => this._setLifepath());
-
-    // toggle "favorite" skills and items
-    html
-      .find(".toggle-section-visibility")
-      .click((event) => this._toggleSectionVisibility(event));
+    on("click", ".navtabs-right", () => this._clearContentFilter());
+    on("click", ".calculate-hp", () => this._setMaxHp());
+    on("click", ".calculate-humanity", () => this._setMaxHumanity());
+    on("click", ".equip", (event) => this._cycleEquipState(event));
+    on("click", ".repair", (event) => this._repairArmor(event));
+    on("click", ".install-remove-cyberware", (event) =>
+      this._installUninstallCyberwareAction(event)
+    );
+    on("click", ".set-lifepath", () => this._setLifepath());
+    on("click", ".toggle-section-visibility", (event) =>
+      this._toggleSectionVisibility(event)
+    );
 
     if (!this.options.editable) return;
-    // Listeners for editable fields under go here. Fields might not be editable because
-    // the user viewing the sheet might not have permission to. They may not be the owner.
 
-    // update a skill level
-    html
-      .find(".skill-input")
-      .click((event) => event.target.select())
-      .change((event) => this._updateSkill(event));
+    for (const el of root.querySelectorAll(".skill-input")) {
+      el.addEventListener("click", (event) => event.target.select());
+      el.addEventListener("change", (event) => this._updateSkill(event));
+    }
+    for (const el of root.querySelectorAll(".gear-amount-input")) {
+      el.addEventListener("click", (event) => event.target.select());
+      el.addEventListener("change", (event) => this._updateAmount(event));
+    }
+    for (const el of root.querySelectorAll(".ability-input")) {
+      el.addEventListener("click", (event) => event.target.select());
+      el.addEventListener("change", (event) => this._updateRoleAbility(event));
+    }
 
-    // update the ammount of an item in the gear tab
-    html
-      .find(".gear-amount-input")
-      .click((event) => event.target.select())
-      .change((event) => this._updateAmount(event));
+    on("click", ".improvement-points-open-ledger", () =>
+      this.showLedger("improvementPoints")
+    );
+    on("click", ".eurobucks-input-button", (event) =>
+      this._updateEurobucks(event)
+    );
+    on("click", ".eurobucks-open-ledger", () => this.showLedger("wealth"));
 
-    // update a role ability
-    html
-      .find(".ability-input")
-      .click((event) => event.target.select())
-      .change((event) => this._updateRoleAbility(event));
+    for (const el of root.querySelectorAll(".weapon-input")) {
+      el.addEventListener("click", (event) => event.target.select());
+      el.addEventListener("change", (event) => this._updateWeaponAmmo(event));
+    }
 
-    // IP related listeners
-    html
-      .find(".improvement-points-open-ledger")
-      .click(() => this.showLedger("improvementPoints"));
+    on("click", ".toggle-fight-state", (event) =>
+      this._toggleFightState(event)
+    );
+    on("click", ".program-execution", (event) =>
+      this._cyberdeckProgramExecution(event)
+    );
+    on("click", ".effect-control", (event) => this.manageEffect(event));
 
-    // Listeners for eurobucks (in gear tab)
-    html
-      .find(".eurobucks-input-button")
-      .click((event) => this._updateEurobucks(event));
-    html.find(".eurobucks-open-ledger").click(() => this.showLedger("wealth"));
-
-    // Fight tab listeners
-
-    // update the amount of loaded ammo in the Fight tab
-    html
-      .find(".weapon-input")
-      .click((event) => event.target.select())
-      .change((event) => this._updateWeaponAmmo(event));
-
-    // Switch between meat and net fight states
-    html
-      .find(".toggle-fight-state")
-      .click((event) => this._toggleFightState(event));
-
-    // Execute a program on a Cyberdeck
-    html
-      .find(".program-execution")
-      .click((event) => this._cyberdeckProgramExecution(event));
-
-    // Effects tab listeners
-    // Create Active Effect
-    html.find(".effect-control").click((event) => this.manageEffect(event));
-
-    super.activateListeners(html);
+    super.activateListeners(root);
   }
 
   /**
@@ -373,32 +350,49 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
    * @param {*} event - object with details of the event
    */
   _toggleSectionVisibility(event) {
-    const collapsibleElement = $(event.currentTarget).parents(".collapsible");
-    const skillCategory = event.currentTarget.id.replace("-showFavorites", "");
-    const categoryTarget = $(collapsibleElement.find(`#${skillCategory}`));
+    const trigger = event.currentTarget;
+    const collapsibleElement = trigger.closest(".collapsible");
+    if (!collapsibleElement) return;
 
-    if ($(collapsibleElement).find(".collapse-icon").hasClass("hide")) {
-      $(categoryTarget).click();
+    const skillCategory = trigger.id.replace("-showFavorites", "");
+    const categoryTarget = collapsibleElement.querySelector(
+      `#${CSS.escape(skillCategory)}`
+    );
+
+    const collapseIcon = collapsibleElement.querySelector(".collapse-icon");
+    if (collapseIcon?.classList.contains("hide")) {
+      categoryTarget?.click();
     }
-    $(collapsibleElement).find(".show-favorites").toggleClass("hide");
-    $(collapsibleElement).find(".hide-favorites").toggleClass("hide");
-    const itemOrderedList = $(collapsibleElement).children("ol");
-    const itemList = $(itemOrderedList).children("li");
-    itemList.each((lineIndex) => {
-      const lineItem = itemList[lineIndex];
-      if ($(lineItem).hasClass("item") && $(lineItem).hasClass("favorite")) {
-        $(lineItem).toggleClass("hide");
+
+    for (const el of collapsibleElement.querySelectorAll(".show-favorites")) {
+      el.classList.toggle("hide");
+    }
+    for (const el of collapsibleElement.querySelectorAll(".hide-favorites")) {
+      el.classList.toggle("hide");
+    }
+
+    const itemOrderedList = collapsibleElement.querySelector(":scope > ol");
+    if (itemOrderedList) {
+      for (const lineItem of itemOrderedList.querySelectorAll(":scope > li")) {
+        if (
+          lineItem.classList.contains("item") &&
+          lineItem.classList.contains("favorite")
+        ) {
+          lineItem.classList.toggle("hide");
+        }
       }
-    });
-    if ($(collapsibleElement).find(".show-favorites").hasClass("hide")) {
-      if (!this.options.collapsedSections.includes(event.currentTarget.id)) {
-        this.options.collapsedSections.push(event.currentTarget.id);
+    }
+
+    const showFavorites = collapsibleElement.querySelector(".show-favorites");
+    if (showFavorites?.classList.contains("hide")) {
+      if (!this.options.collapsedSections.includes(trigger.id)) {
+        this.options.collapsedSections.push(trigger.id);
       }
     } else {
       this.options.collapsedSections = this.options.collapsedSections.filter(
-        (sectionName) => sectionName !== event.currentTarget.id
+        (sectionName) => sectionName !== trigger.id
       );
-      $(categoryTarget).click();
+      categoryTarget?.click();
     }
   }
 

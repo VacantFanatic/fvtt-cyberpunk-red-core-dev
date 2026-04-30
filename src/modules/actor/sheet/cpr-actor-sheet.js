@@ -10,6 +10,19 @@ import CPRDialog from "../../dialog/cpr-dialog-application.js";
 import { ContainerUtils } from "../../item/mixins/cpr-container.js";
 import AdditionsTemplate from "../../additions/template.js";
 
+/**
+ * Normalize sheet root to an HTMLElement (Application V2 passes `this.element`;
+ * legacy call sites may still pass a jQuery-like collection).
+ *
+ * @param {unknown} html
+ * @returns {HTMLElement|null}
+ */
+export function resolveSheetRoot(html) {
+  if (html instanceof HTMLElement) return html;
+  const el = html?.[0];
+  return el instanceof HTMLElement ? el : null;
+}
+
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
@@ -252,8 +265,7 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
 
   _onRender(context, options) {
     super._onRender(context, options);
-    // Compatibility bridge while migrating listener wiring to V2 actions.
-    this.activateListeners($(this.element));
+    this.activateListeners(this.element);
   }
 
   /**
@@ -366,112 +378,93 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
    * @param {Object} html - the DOM object
    */
   activateListeners(html) {
-    // allow navigation for non owned actors
-    this._tabs.forEach((t) => t.bind(html[0]));
+    const root =
+      resolveSheetRoot(html) ?? resolveSheetRoot(this.element) ?? null;
+    if (!(root instanceof HTMLElement)) return;
 
-    // Make a roll
-    html.find(".rollable").click((event) => this._onRoll(event));
-
-    // Ablate Armor
-    html.find(".ablate").click((event) => this._ablateArmor(event));
-
-    // Track armor and set armor values as current
-    html
-      .find(".armor-current-untrack")
-      .click((event) => this._makeArmorCurrentTrack(event));
-
-    // Untrack armor and remove armor values from token
-    html
-      .find(".armor-current-track")
-      .click((event) => this._makeArmorCurrentUntrack(event));
-
-    // Generic item action
-    html.find(".item-action").click((event) => this._itemAction(event));
-
-    // bring up read-only versions of the item card (sheet), used with installed cyberware
-    html
-      .find(".item-view")
-      .click((event) => this._renderReadOnlyItemCard(event));
-
-    // Create item in inventory
-    html
-      .find(".item-create")
-      .click((event) => this._createInventoryItem(event));
-
-    // Reset Death Penalty
-    html.find(".reset-deathsave-value").click(() => this._resetDeathSave());
-
-    // Increase Death Penalty
-    html
-      .find(".increase-deathsave-value")
-      .click(() => this._increaseDeathSave());
-
-    // Filter contents of skills or gear
-    html.find(".filter-contents").bind("keyup", (event) => {
-      this._applyContentFilter(event);
-    });
-
-    // Reset content filter
-    html.find(".reset-content-filter").click(() => this._clearContentFilter());
-
-    // toggle the expand/collapse buttons for skill and item categories
-    html.find(".expand-button").click((event) => this._expandButton(event));
-
-    // toggle display of nested installed items in the gear tab
-    html
-      .find(".toggle-installed-visibility")
-      .click((event) => this._toggleInstalledVisibility(event));
-
-    // Uninstall a single item from its parent.
-    html
-      .find(".uninstall-single-item")
-      .click((event) => this._uninstallSingleItem(event));
-
-    // Show edit and delete buttons
-    html.find(".row.item").hover(
-      (event) => {
-        // show edit and delete buttons
-        $(event.currentTarget).contents().contents().addClass("show");
-      },
-      (event) => {
-        // hide edit and delete buttons
-        $(event.currentTarget).contents().contents().removeClass("show");
+    const on = (type, selector, listener, options) => {
+      for (const el of root.querySelectorAll(selector)) {
+        el.addEventListener(type, listener, options);
       }
+    };
+
+    // allow navigation for non owned actors
+    this._tabs?.forEach?.((t) => t.bind(root));
+
+    on("click", ".rollable", (event) => this._onRoll(event));
+    on("click", ".ablate", (event) => this._ablateArmor(event));
+    on("click", ".armor-current-untrack", (event) =>
+      this._makeArmorCurrentTrack(event)
+    );
+    on("click", ".armor-current-track", (event) =>
+      this._makeArmorCurrentUntrack(event)
+    );
+    on("click", ".item-action", (event) => this._itemAction(event));
+    on("click", ".item-view", (event) => this._renderReadOnlyItemCard(event));
+    on("click", ".item-create", (event) => this._createInventoryItem(event));
+    on("click", ".reset-deathsave-value", () => this._resetDeathSave());
+    on("click", ".increase-deathsave-value", () => this._increaseDeathSave());
+    on("keyup", ".filter-contents", (event) => this._applyContentFilter(event));
+    on("click", ".reset-content-filter", () => this._clearContentFilter());
+    on("click", ".expand-button", (event) => this._expandButton(event));
+    on("click", ".toggle-installed-visibility", (event) =>
+      this._toggleInstalledVisibility(event)
+    );
+    on("click", ".uninstall-single-item", (event) =>
+      this._uninstallSingleItem(event)
     );
 
-    // Item Dragging
-    const handler = (ev) => this._onDragItemStart(ev);
-    html.find(".item").each((i, li) => {
-      li.setAttribute("draggable", true);
-      li.addEventListener("dragstart", handler, false);
-    });
+    for (const row of root.querySelectorAll(".row.item")) {
+      row.addEventListener("mouseenter", (event) => {
+        const { currentTarget } = event;
+        for (const child of currentTarget.children) {
+          if (child.nodeType === Node.ELEMENT_NODE) {
+            for (const nested of child.children) {
+              if (nested.nodeType === Node.ELEMENT_NODE) {
+                nested.classList.add("show");
+              }
+            }
+          }
+        }
+      });
+      row.addEventListener("mouseleave", (event) => {
+        const { currentTarget } = event;
+        for (const child of currentTarget.children) {
+          if (child.nodeType === Node.ELEMENT_NODE) {
+            for (const nested of child.children) {
+              if (nested.nodeType === Node.ELEMENT_NODE) {
+                nested.classList.remove("show");
+              }
+            }
+          }
+        }
+      });
+    }
 
-    // Set up right click context menu when clicking on Actor's image
-    this._createActorImageContextMenu(html);
+    const dragHandler = (ev) => this._onDragItemStart(ev);
+    for (const li of root.querySelectorAll(".item")) {
+      li.setAttribute("draggable", "true");
+      li.addEventListener("dragstart", dragHandler, false);
+    }
+
+    this._createActorImageContextMenu(root);
 
     if (!this.options.editable) return;
     // Listeners for editable fields under here. Fields might not be editable because
     // the user viewing the sheet might not have permission to. They may not be the owner.
 
-    $("input[type=text]").focusin(() => $(this).select());
+    for (const input of root.querySelectorAll(
+      'input[type="text"], input[type=text]'
+    )) {
+      input.addEventListener("focusin", () => input.select());
+    }
 
-    // Render Item Card
-    html.find(".item-edit").click((event) => this._renderItemCard(event));
+    on("click", ".item-edit", (event) => this._renderItemCard(event));
+    on("click", ".roll-critical-injury", () => this._rollCriticalInjury());
+    on("click", ".fire-checkbox", (event) => this._fireCheckboxToggle(event));
+    on("click", ".reputation-open-ledger", () => this.showLedger("reputation"));
 
-    // Roll critical injuries and add to sheet
-    html.find(".roll-critical-injury").click(() => this._rollCriticalInjury());
-
-    // set/unset "checkboxes" used with fire modes
-    html
-      .find(".fire-checkbox")
-      .click((event) => this._fireCheckboxToggle(event));
-
-    // Reputation related listeners
-    html
-      .find(".reputation-open-ledger")
-      .click(() => this.showLedger("reputation"));
-
-    super.activateListeners?.(html);
+    super.activateListeners?.(root);
   }
 
   /**
@@ -483,24 +476,35 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
    * @param {*} event - object with details of the event
    */
   _expandButton(event) {
-    const collapsibleElement = $(event.currentTarget).parents(".collapsible");
-    $(collapsibleElement).find(".collapse-icon").toggleClass("hide");
-    $(collapsibleElement).find(".expand-icon").toggleClass("hide");
-    const itemOrderedList = $(collapsibleElement).children("ol");
-    const itemList = $(itemOrderedList).children("li");
-    itemList.each((lineIndex) => {
-      const lineItem = itemList[lineIndex];
-      if ($(lineItem).hasClass("item") && !$(lineItem).hasClass("favorite")) {
-        $(lineItem).toggleClass("hide");
-      }
-    });
+    const btn = event.currentTarget;
+    const collapsibleElement = btn.closest(".collapsible");
+    if (!collapsibleElement) return;
 
-    if (this.options.collapsedSections.includes(event.currentTarget.id)) {
+    for (const el of collapsibleElement.querySelectorAll(".collapse-icon")) {
+      el.classList.toggle("hide");
+    }
+    for (const el of collapsibleElement.querySelectorAll(".expand-icon")) {
+      el.classList.toggle("hide");
+    }
+
+    const itemOrderedList = collapsibleElement.querySelector(":scope > ol");
+    if (itemOrderedList) {
+      for (const lineItem of itemOrderedList.querySelectorAll(":scope > li")) {
+        if (
+          lineItem.classList.contains("item") &&
+          !lineItem.classList.contains("favorite")
+        ) {
+          lineItem.classList.toggle("hide");
+        }
+      }
+    }
+
+    if (this.options.collapsedSections.includes(btn.id)) {
       this.options.collapsedSections = this.options.collapsedSections.filter(
-        (sectionName) => sectionName !== event.currentTarget.id
+        (sectionName) => sectionName !== btn.id
       );
     } else {
-      this.options.collapsedSections.push(event.currentTarget.id);
+      this.options.collapsedSections.push(btn.id);
     }
   }
 
@@ -898,22 +902,22 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
    * @param {CPRItem} item - item we are activating the DV Ruler for
    */
   async _setDvIconState(item) {
-    const dvGlyphs = this.element[0].querySelectorAll(".dv-glyph");
+    const sheetRoot = resolveSheetRoot(this.element);
+    if (!sheetRoot) return this.render();
 
+    const dvGlyphs = sheetRoot.querySelectorAll(".dv-glyph");
     const dvFlag = this.token.getFlag(game.system.id, "cprDvTable");
-
     const dvFlagSet = dvFlag?.name !== "";
 
     for (const glyphNode of dvGlyphs) {
-      const weaponId = $(glyphNode).attr("data-item-id");
+      const weaponId = glyphNode.getAttribute("data-item-id");
       if (weaponId === item._id && dvFlagSet) {
-        $(glyphNode).addClass("dv-active");
+        glyphNode.classList.add("dv-active");
       } else {
-        $(glyphNode).removeClass("dv-active");
+        glyphNode.classList.remove("dv-active");
       }
     }
 
-    // Rerender the sheet
     return this.render();
   }
 
@@ -1735,7 +1739,9 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
    * @returns {ContextMenu} The created ContextMenu
    */
   _createActorImageContextMenu(html) {
-    return createImageContextMenu(html, ".image-block", this.actor);
+    const root = resolveSheetRoot(html) ?? resolveSheetRoot(this.element);
+    if (!root) return undefined;
+    return createImageContextMenu([root], ".image-block", this.actor);
   }
 
   /**
@@ -1747,10 +1753,21 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
    */
   async _applyContentFilter(event) {
     const filterValue = event.currentTarget.value;
-    const num = $(".filter-contents").val();
+    const sheetRoot =
+      resolveSheetRoot(this.element) ??
+      (this.element instanceof HTMLElement ? this.element : null);
+    const num = sheetRoot?.querySelector(".filter-contents")?.value ?? "";
     this.options.cprContentFilter = filterValue;
     await this._render();
-    $(".filter-contents").focus().val("").val(num);
+    const sheetRootAfter =
+      resolveSheetRoot(this.element) ??
+      (this.element instanceof HTMLElement ? this.element : null);
+    const inp = sheetRootAfter?.querySelector(".filter-contents");
+    if (inp) {
+      inp.focus();
+      inp.value = "";
+      inp.value = num;
+    }
   }
 
   /**
