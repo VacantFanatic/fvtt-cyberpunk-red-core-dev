@@ -25,9 +25,13 @@ export default class CPRMookActorSheet extends CPRActorSheet {
     );
 
     return foundry.utils.mergeObject(super.defaultOptions, {
-      height: resizeCPRSheets ? 600 : "auto",
-      resizable: true,
-      width: 800,
+      position: {
+        width: 800,
+        height: resizeCPRSheets ? 600 : "auto",
+      },
+      window: {
+        resizable: true,
+      },
     });
   }
 
@@ -57,8 +61,8 @@ export default class CPRMookActorSheet extends CPRActorSheet {
    * @override
    * @returns {Object} data - a curated structure of actorSheet data
    */
-  async getData() {
-    const foundryData = await super.getData();
+  async _prepareContext(options) {
+    const foundryData = await super._prepareContext(options);
     const cprActorData = foundryData.actor.system;
     cprActorData.equippedArmor = this.actor.itemTypes.armor.filter(
       (item) => item.system.equipped === "equipped"

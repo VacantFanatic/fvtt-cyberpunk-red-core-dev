@@ -16,6 +16,13 @@ const TextEditor = foundry.applications.ux.TextEditor.implementation;
  * @extends {CPRActorSheet}
  */
 export default class CPRContainerActorSheet extends CPRActorSheet {
+  static PARTS = {
+    sheet: {
+      template:
+        "systems/cyberpunk-red-core/templates/actor/cpr-container-sheet.hbs",
+    },
+  };
+
   /**
    * See https://foundryvtt.com/api/v12/classes/client.Application.html for the complete list of options available.
    *
@@ -29,10 +36,13 @@ export default class CPRContainerActorSheet extends CPRActorSheet {
     );
 
     return foundry.utils.mergeObject(super.defaultOptions, {
-      height: resizeCPRSheets ? 750 : "auto",
-      resizable: true,
-      template: `systems/${game.system.id}/templates/actor/cpr-container-sheet.hbs`,
-      width: 1000,
+      position: {
+        width: 1000,
+        height: resizeCPRSheets ? 750 : "auto",
+      },
+      window: {
+        resizable: true,
+      },
     });
   }
 
@@ -44,8 +54,8 @@ export default class CPRContainerActorSheet extends CPRActorSheet {
    * @override
    * @returns {Object} data - a curated structure of actorSheet data
    */
-  async getData() {
-    const foundryData = await super.getData();
+  async _prepareContext(options) {
+    const foundryData = await super._prepareContext(options);
     const cprActorData = {};
 
     cprActorData.userOwnedActors = [];
