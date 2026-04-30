@@ -1,23 +1,32 @@
 /* eslint-disable class-methods-use-this */
-import SystemUtils from "../../utils/cpr-systemUtils.js";
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-export default class ModuleMigrationSettings extends FormApplication {
-  /**
-   * set up default things like the html template and window size
-   *
-   * @override
-   * @static
-   */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      title: SystemUtils.Localize("CPR.settings.moduleMigrationMenu.name"),
-      id: "module-migration-config",
-      template: `systems/${game.system.id}/templates/migration/module-migration-settings.hbs`,
+export default class ModuleMigrationSettings extends HandlebarsApplicationMixin(
+  ApplicationV2
+) {
+  static DEFAULT_OPTIONS = {
+    id: "module-migration-config",
+    tag: "form",
+    position: {
       width: "auto",
       height: "auto",
+    },
+    window: {
+      title: "CPR.settings.moduleMigrationMenu.name",
+    },
+    form: {
+      handler: ModuleMigrationSettings.#onSubmitForm,
       closeOnSubmit: true,
-    });
-  }
+      submitOnChange: false,
+    },
+  };
+
+  static PARTS = {
+    form: {
+      template:
+        "systems/cyberpunk-red-core/templates/migration/module-migration-settings.hbs",
+    },
+  };
 
   /**
    * When this application (read: form window) is launched, create the data object that is
@@ -26,8 +35,8 @@ export default class ModuleMigrationSettings extends FormApplication {
    * @override
    * @returns {Object}
    */
-  async getData() {
-    const data = await super.getData();
+  async _prepareContext(options) {
+    const data = await super._prepareContext(options);
 
     const moduleIdSet = new Set(
       game.settings.get(game.system.id, "moduleMigrationIds")
@@ -58,10 +67,14 @@ export default class ModuleMigrationSettings extends FormApplication {
    * @param {*} event (not used here)
    * @param {Object} formData - object containing module ids corresponding to choices
    */
-  async _updateObject(event, formData) {
+  static async #onSubmitForm(_event, _form, formData) {
+    const expandedData = foundry.utils.expandObject(formData.object);
+    const { modIds: submittedModIds } = expandedData;
+    let modIds = submittedModIds;
+
     // Cast to an array if not.
-    if (!Array.isArray(formData.modIds)) formData.modIds = [formData.modIds];
-    const modIdList = formData.modIds.filter((id) => id); // remove null values
+    if (!Array.isArray(modIds)) modIds = [modIds];
+    const modIdList = modIds.filter((id) => id); // remove null values
     await game.settings.set(game.system.id, "moduleMigrationIds", modIdList);
   }
 }
