@@ -1,18 +1,96 @@
 import LOGGER from "../utils/cpr-logger.js";
 import SystemUtils from "../utils/cpr-systemUtils.js";
 
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
 /**
- * Form application to handle dialogs more generally.
+ * Base dialog application used by most CPR prompt windows.
  */
-export default class CPRDialog extends FormApplication {
+export default class CPRDialog extends HandlebarsApplicationMixin(
+  ApplicationV2
+) {
+  static DEFAULT_OPTIONS = {
+    id: "cpr-dialog",
+    classes: ["dialog"],
+    tag: "form",
+    position: {
+      width: 400,
+      height: "auto",
+    },
+    window: {
+      resizable: true,
+      title: "CPR.global.generic.title",
+    },
+    form: {
+      handler: CPRDialog.#onSubmitForm,
+      submitOnChange: true,
+      closeOnSubmit: false,
+    },
+    buttonDefault: "confirm",
+    buttons: {
+      confirm: {
+        icon: "fas fa-check",
+        label: "CPR.dialog.common.confirm",
+        callback: CPRDialog.#onConfirm,
+      },
+      cancel: {
+        icon: "fas fa-xmark",
+        label: "CPR.dialog.common.cancel",
+        callback: CPRDialog.#onCancel,
+      },
+    },
+    overwriteButtons: false,
+    actions: {
+      dialogButton: CPRDialog.#onDialogButton,
+      itemCheckboxToggle: CPRDialog.#onItemCheckboxToggle,
+      selectInput: CPRDialog.#onSelectInput,
+      closeDialog: CPRDialog.#onCloseAction,
+    },
+  };
+
+  static PARTS = {
+    form: {
+      template: `systems/${game.system.id}/templates/dialog/cpr-default-prompt.hbs`,
+    },
+  };
+
+  constructor(dialogData, options = {}) {
+    super(options);
+    this.dialogData = dialogData;
+    this.objectData = dialogData?.object;
+
+    if (options.template) {
+      this.options.parts = {
+        form: { template: options.template },
+      };
+    }
+    if (options.title) {
+      this.options.window = this.options.window ?? {};
+      this.options.window.title = options.title;
+    }
+    if (this.options.overwriteButtons && options.buttons) {
+      this.options.buttons = options.buttons;
+    }
+    if (this.options?.buttons) {
+      Object.keys(this.options.buttons).forEach((buttonName) => {
+        const dialogButton = this.options.buttons[buttonName];
+        if (dialogButton?.label?.startsWith?.("CPR.")) {
+          dialogButton.label = SystemUtils.Localize(dialogButton.label);
+        }
+      });
+    }
+  }
+
+  get object() {
+    return this.dialogData;
+  }
+
   /**
-   * Foundry v14+ `DialogV2` calls button callbacks as
-   * `(event, button, dialogV2)`. Older code and our manual `.callback(this)` pass
-   * the FormApplication as the only argument. Resolve the CPRDialog instance.
+   * Compatibility helper used by existing callbacks in child dialogs.
    *
    * @param {PointerEvent|SubmitEvent|CPRDialog} event
    * @param {HTMLButtonElement} [button]
-   * @param {*} [dialogV2] - Foundry `DialogV2` when invoked from v14+ dialog submit
+   * @param {*} [dialogV2]
    * @returns {CPRDialog|undefined}
    */
   static _resolveFormApplication(event, button, dialogV2) {
@@ -59,110 +137,11 @@ export default class CPRDialog extends FormApplication {
     return undefined;
   }
 
-  constructor(dialogData, options) {
-    super(dialogData, options);
-
-    // Overwrite default buttons if indicated.
-    if (this.options.overwriteButtons) {
-      this.options.buttons = options.buttons;
-    }
-    this.objectData = dialogData.object;
+  static #onSelectInput(event) {
+    event.currentTarget?.select?.();
   }
 
-  /**
-   * Set default options for the ledger.
-   * See https://foundryvtt.com/api/v12/classes/client.Application.html for the complete list of options available.
-   *
-   * @static
-   * @override
-   */
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      buttonDefault: "confirm",
-      buttons: {
-        confirm: {
-          icon: "fas fa-check",
-          label: SystemUtils.Localize("CPR.dialog.common.confirm"),
-          callback: (event, button, dialogV2) => {
-            const app = CPRDialog._resolveFormApplication(
-              event,
-              button,
-              dialogV2
-            );
-            return app?.confirmDialog();
-          },
-        },
-        cancel: {
-          icon: "fas fa-xmark",
-          label: SystemUtils.Localize("CPR.dialog.common.cancel"),
-          callback: (event, button, dialogV2) => {
-            const app = CPRDialog._resolveFormApplication(
-              event,
-              button,
-              dialogV2
-            );
-            return app?.closeDialog();
-          },
-        },
-      },
-      classes: super.defaultOptions.classes.concat(["dialog"]),
-      closeOnSubmit: false,
-      height: "auto",
-      overwriteButtons: false, // If calling showDialog with custom buttons, override defaults or not.
-      resizable: true,
-      submitOnChange: true,
-      submitOnClose: false,
-      template: `systems/${game.system.id}/templates/dialog/cpr-default-prompt.hbs`,
-      title: "CPR.global.generic.title",
-      width: 400,
-    });
-  }
-
-  /**
-   * Prepares data for roll dialog sheet.
-   *
-   * @override
-   */
-  async getData() {
-    const data = await super.getData();
-    Object.entries(this.object).forEach(([key, value]) => {
-      data[key] = value;
-    });
-    return data;
-  }
-
-  /* -------------------------------------------- */
-  /** @override */
-  activateListeners(html) {
-    super.activateListeners(html);
-    if (!this.options.editable) return;
-
-    // Select all text when grabbing text input.
-    $("input[type=text]").focusin(() => $(this).select());
-    $("input[type=number]").focusin(() => $(this).select());
-
-    html
-      .find(".item-checkbox")
-      .click((event) => this._itemCheckboxToggle(event)); // Currently unused, see below.
-
-    // Handle button presses.
-    html.find(".cpr-dialog-button").click((event) => {
-      const buttonName = event.currentTarget.name;
-      // Execute callback function when dialog buttons are pressed.
-      this.options.buttons[buttonName].callback(this);
-    });
-    this.element
-      .find(".header-button.close")
-      .click((event) => this.closeDialog(event));
-  }
-
-  /**
-   * This works in the same way it does on the item sheets.
-   * It can turn anything into a pseudo checkbox, which look nicer than the default ones.
-   *
-   * @param {*} event
-   */
-  _itemCheckboxToggle(event) {
+  static #onItemCheckboxToggle(event) {
     const dialogData = this.object;
     const target = SystemUtils.GetEventDatum(event, "data-target");
     const value = !foundry.utils.getProperty(dialogData, target);
@@ -174,15 +153,92 @@ export default class CPRDialog extends FormApplication {
         dialogData
       );
     }
-    this.render();
+    this.render(true);
   }
 
-  /**
-   * This will confirm the roll and resolve the Promise originally created when CPRDialog.showDialog is called.
-   *
-   * @param {Object} options - potential options to pass to this.close; currently unused;
-   */
-  async confirmDialog(event, options) {
+  static #onDialogButton(event, target) {
+    event.preventDefault();
+    const buttonName = target.name;
+    const button = this.options.buttons?.[buttonName];
+    if (!button?.callback) return;
+    button.callback(this);
+  }
+
+  static #onCloseAction(event) {
+    event.preventDefault();
+    this.closeDialog();
+  }
+
+  static #onConfirm(dialog) {
+    return dialog?.confirmDialog();
+  }
+
+  static #onCancel(dialog) {
+    return dialog?.closeDialog();
+  }
+
+  static async #onSubmitForm(_event, _form, formData) {
+    const fd = foundry.utils.duplicate(formData.object);
+    foundry.utils.mergeObject(this.object, fd);
+    this.render(true);
+  }
+
+  async _prepareContext(options) {
+    const data = await super._prepareContext(options);
+    Object.entries(this.object ?? {}).forEach(([key, value]) => {
+      data[key] = value;
+    });
+    return data;
+  }
+
+  static get defaultOptions() {
+    const options = foundry.utils.mergeObject(super.defaultOptions, {
+      window: {
+        title: "CPR.global.generic.title",
+      },
+      position: {
+        width: 400,
+        height: "auto",
+      },
+      form: {
+        submitOnChange: true,
+        closeOnSubmit: false,
+      },
+      buttonDefault: "confirm",
+      buttons: {
+        confirm: {
+          icon: "fas fa-check",
+          label: "CPR.dialog.common.confirm",
+          callback: CPRDialog.#onConfirm,
+        },
+        cancel: {
+          icon: "fas fa-xmark",
+          label: "CPR.dialog.common.cancel",
+          callback: CPRDialog.#onCancel,
+        },
+      },
+      overwriteButtons: false,
+    });
+    if (options?.buttons) {
+      Object.keys(options.buttons).forEach((buttonName) => {
+        const dialogButton = options.buttons[buttonName];
+        if (dialogButton?.label?.startsWith?.("CPR.")) {
+          dialogButton.label = SystemUtils.Localize(dialogButton.label);
+        }
+      });
+    }
+    return options;
+  }
+
+  async getData() {
+    return this._prepareContext({});
+  }
+
+  activateListeners(html) {
+    super.activateListeners?.(html);
+  }
+
+  async confirmDialog(_event, options) {
     // Taken from Starfinder: Fire callback that resolves original promise.
     this.options.confirmDialog();
     return this.close(options);
@@ -193,7 +249,7 @@ export default class CPRDialog extends FormApplication {
    *
    * @param {Object} options - potential options to pass to this.close; currently unused;
    */
-  async closeDialog(event, options) {
+  async closeDialog(_event, options) {
     this.options.closeDialog();
     return this.close(options);
   }
@@ -213,18 +269,5 @@ export default class CPRDialog extends FormApplication {
       dialog.options.closeDialog = () => reject(args[0]);
       dialog.render(true);
     });
-  }
-
-  /**
-   * Foundry provides this function, which is necessary to override for FormApplications.
-   *
-   * @param {*} event
-   * @param {Object} formData - Updated dialog data to be merged with the original object.
-   * @override
-   */
-  async _updateObject(event, formData) {
-    const fd = foundry.utils.duplicate(formData);
-    foundry.utils.mergeObject(this.object, fd);
-    this.render(true); // rerenders the FormApp with the new data.
   }
 }
