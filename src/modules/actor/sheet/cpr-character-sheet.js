@@ -10,6 +10,13 @@ import CPRDialog from "../../dialog/cpr-dialog-application.js";
  * @extends {CPRActorSheet}
  */
 export default class CPRCharacterActorSheet extends CPRActorSheet {
+  static PARTS = {
+    sheet: {
+      template:
+        "systems/cyberpunk-red-core/templates/actor/cpr-character-sheet.hbs",
+    },
+  };
+
   /**
    * Set default options for character sheets, which include making sure vertical scrollbars do not
    * get reset when re-rendering.
@@ -25,8 +32,13 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
     );
 
     return foundry.utils.mergeObject(super.defaultOptions, {
-      height: resizeCPRSheets ? 850 : "auto",
-      resizable: true,
+      position: {
+        width: 1050,
+        height: resizeCPRSheets ? 850 : "auto",
+      },
+      window: {
+        resizable: true,
+      },
       scrollY: [".right-content-section", ".top-pane-gear"],
       tabs: [
         {
@@ -40,13 +52,11 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
           initial: "fight",
         },
       ],
-      template: `systems/${game.system.id}/templates/actor/cpr-character-sheet.hbs`,
-      width: 1050,
     });
   }
 
-  async getData() {
-    const actorSheetData = await super.getData();
+  async _prepareContext(options) {
+    const actorSheetData = await super._prepareContext(options);
     const characterSheetData = {};
 
     // Prepare options for selecting a net role.
