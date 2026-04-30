@@ -1,4 +1,4 @@
-<form autocomplete="off" onsubmit="event.preventDefault()">
+<section>
   <div class="directory flexcol">
     <header class="directory-header flexcol">
       <b>{{ localize "CPR.additions.settings.soundSelect.hint" }}</b>
@@ -11,23 +11,23 @@
         <input type="text" class="diw-audiopath" value="{{.}}" readonly />
       </th>
       <th>
-        <a>
+        <a data-action="removeRow" data-index="{{@index}}">
           <i class="fa-solid fa-trash"></i>
         </a>
       </th>
     </tr>
     {{/each}}
-    <tr class="add-row">
+    <tr>
       <th>
-        <a>
+        <a data-action="addRow">
           <i class="fa-solid fa-add" style="display: contents"></i>
           {{ localize "CPR.additions.settings.addSound" }}
         </a>
       </th>
     </tr>
   </table>
-  <button type="button" id="save-hit-sounds">
+  <button type="button" data-action="saveSounds">
     <i class="far fa-save"></i>
     {{ localize "CPR.additions.settings.submit" }}
   </button>
-</form>
+</section>

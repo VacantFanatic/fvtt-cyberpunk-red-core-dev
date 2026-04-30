@@ -2,69 +2,78 @@
 /* global FilePicker */
 import { ADDITIONS_SETTINGS } from "./constants.js";
 
-export default class SoundMenu extends FormApplication {
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      id: "cpr-additions-sounds-menu",
-      title: game.i18n.localize("CPR.additions.settings.soundSelect.name"),
-      template: `systems/${game.system.id}/templates/additions/soundmenu.html`,
-      classes: ["sheet"],
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+export default class SoundMenu extends HandlebarsApplicationMixin(
+  ApplicationV2
+) {
+  static DEFAULT_OPTIONS = {
+    id: "cpr-additions-sounds-menu",
+    classes: ["sheet"],
+    tag: "section",
+    position: {
       width: 500,
       height: 500,
-      closeOnSubmit: true,
-      submitOnClose: false,
+    },
+    window: {
+      title: "CPR.additions.settings.soundSelect.name",
       resizable: true,
-    });
-  }
+    },
+    actions: {
+      addRow: SoundMenu.#onAddRow,
+      removeRow: SoundMenu.#onRemoveRow,
+      saveSounds: SoundMenu.#onSaveSounds,
+    },
+  };
 
-  async getData() {
-    const data = (await super.getData()).object;
-    data.userSounds = game.settings.get(
-      game.system.id,
-      ADDITIONS_SETTINGS.configuredSounds
+  static PARTS = {
+    body: {
+      template: "systems/cyberpunk-red-core/templates/additions/soundmenu.html",
+    },
+  };
+
+  constructor(options = {}) {
+    super(options);
+    this.userSounds = foundry.utils.deepClone(
+      game.settings.get(game.system.id, ADDITIONS_SETTINGS.configuredSounds)
     );
-    return data;
   }
 
-  activateListeners(html) {
-    super.activateListeners(html);
-    html.find("th a .fa-trash").click((event) => {
-      event.target.parentElement.parentElement.parentElement.remove();
-    });
-
-    html.find(".add-row").click((event) => {
-      const target = event.currentTarget;
-      new FilePicker({
-        type: "audio",
-        current: target.getAttribute("src"),
-        callback: (path) => this.newRow(target, path),
-        top: this.position.top + 40,
-        left: this.position.left + 10,
-      }).browse(target.getAttribute("src"));
-    });
-
-    html.find("#save-hit-sounds").click(() => {
-      const pathInputs = $(".diw-audiopath");
-      const paths = [];
-      for (let i = 0; i < pathInputs.length; i += 1) {
-        paths.push(pathInputs[i].value);
-      }
-      game.settings.set(
-        game.system.id,
-        ADDITIONS_SETTINGS.configuredSounds,
-        paths
-      );
-    });
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.userSounds = this.userSounds;
+    return context;
   }
 
-  async newRow(target, path) {
-    const newRow = $(`<tr>
-      <th><input type="text" class="diw-audiopath" value="${path}" readonly/></th>
-      <th><a><i class="fa-solid fa-trash"></i></a></th>
-    </tr>`);
-    newRow.insertBefore(target);
-    newRow.find("a .fa-trash").click((event) => {
-      event.target.parentElement.parentElement.parentElement.remove();
-    });
+  static #onAddRow() {
+    const current = this.userSounds?.at?.(-1) ?? "";
+    new FilePicker({
+      type: "audio",
+      current,
+      callback: (path) => {
+        this.userSounds.push(path);
+        this.render(true);
+      },
+      top: this.position.top + 40,
+      left: this.position.left + 10,
+    }).browse(current);
+  }
+
+  static #onRemoveRow(event, target) {
+    event.preventDefault();
+    const index = Number(target.dataset.index);
+    if (Number.isNaN(index)) return;
+    this.userSounds.splice(index, 1);
+    this.render(true);
+  }
+
+  static async #onSaveSounds(event) {
+    event.preventDefault();
+    await game.settings.set(
+      game.system.id,
+      ADDITIONS_SETTINGS.configuredSounds,
+      this.userSounds
+    );
+    this.close();
   }
 }
