@@ -2,17 +2,37 @@ import CPRChat from "../../chat/cpr-chat.js";
 import SystemUtils from "../../utils/cpr-systemUtils.js";
 import createImageContextMenu from "../../utils/cpr-imageContextMenu.js";
 
-const { ActorSheet } = foundry.appv1.sheets;
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const { ActorSheetV2 } = foundry.applications.sheets;
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
 /**
  * Implement the Demon sheet, which extends ActorSheet directly from Foundry. This does
  * not extend CPRActor, as there is very little overlap between Demons and mooks/characters.
  *
- * @extends {ActorSheet}
+ * @extends {ActorSheetV2}
  */
-export default class CPRDemonActorSheet extends ActorSheet {
-  /** @override */
+export default class CPRDemonActorSheet extends HandlebarsApplicationMixin(
+  ActorSheetV2
+) {
+  static DEFAULT_OPTIONS = {
+    classes: ["sheet", "actor"],
+    position: {
+      width: 600,
+      height: "auto",
+    },
+    window: {
+      resizable: true,
+    },
+  };
+
+  static PARTS = {
+    sheet: {
+      template:
+        "systems/cyberpunk-red-core/templates/actor/cpr-demon-sheet.hbs",
+    },
+  };
+
   static get defaultOptions() {
     const resizeCPRSheets = game.settings.get(
       game.system.id,
@@ -20,10 +40,13 @@ export default class CPRDemonActorSheet extends ActorSheet {
     );
 
     return foundry.utils.mergeObject(super.defaultOptions, {
-      height: resizeCPRSheets ? 275 : "auto",
-      resizable: true,
-      template: `systems/${game.system.id}/templates/actor/cpr-demon-sheet.hbs`,
-      width: 600,
+      position: {
+        width: 600,
+        height: resizeCPRSheets ? 275 : "auto",
+      },
+      window: {
+        resizable: true,
+      },
     });
   }
 
@@ -35,9 +58,9 @@ export default class CPRDemonActorSheet extends ActorSheet {
    * @override
    * @returns {Object} data - a curated structure of actorSheet data
    */
-  async getData() {
-    const sheetData = await super.getData();
-    sheetData.enrichedHTML = [];
+  async _prepareContext(options) {
+    const sheetData = await super._prepareContext(options);
+    sheetData.enrichedHTML = sheetData.enrichedHTML ?? {};
     sheetData.enrichedHTML.notes = await TextEditor.enrichHTML(
       this.actor.system.notes,
       { async: true }
@@ -52,10 +75,12 @@ export default class CPRDemonActorSheet extends ActorSheet {
    * @override
    * @param {Object} html - the DOM object
    */
-  activateListeners(html) {
-    html.find(".rollable").click((event) => this._onRoll(event));
-    this._createDemonImageContextMenu(html);
-    super.activateListeners(html);
+  _onRender(context, options) {
+    super._onRender(context, options);
+    this.element.querySelectorAll(".rollable").forEach((element) => {
+      element.addEventListener("click", (event) => this._onRoll(event));
+    });
+    this._createDemonImageContextMenu([this.element]);
   }
 
   /**

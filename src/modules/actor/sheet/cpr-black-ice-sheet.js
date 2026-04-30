@@ -4,16 +4,40 @@ import SystemUtils from "../../utils/cpr-systemUtils.js";
 import createImageContextMenu from "../../utils/cpr-imageContextMenu.js";
 import CPRDialog from "../../dialog/cpr-dialog-application.js";
 
-const { ActorSheet } = foundry.appv1.sheets;
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const { ActorSheetV2 } = foundry.applications.sheets;
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
 /**
  * Implement the Black-ICE sheet, which extends ActorSheet directly from Foundry. This does
  * not extend CPRActor, as there is very little overlap between Black-ICE and mooks/characters.
  *
- * @extends {ActorSheet}
+ * @extends {ActorSheetV2}
  */
-export default class CPRBlackIceActorSheet extends ActorSheet {
+export default class CPRBlackIceActorSheet extends HandlebarsApplicationMixin(
+  ActorSheetV2
+) {
+  static DEFAULT_OPTIONS = {
+    classes: ["sheet", "actor"],
+    position: {
+      width: 575,
+      height: "auto",
+    },
+    window: {
+      resizable: true,
+    },
+    actions: {
+      configureFromProgram: CPRBlackIceActorSheet.#onConfigureFromProgram,
+    },
+  };
+
+  static PARTS = {
+    sheet: {
+      template:
+        "systems/cyberpunk-red-core/templates/actor/cpr-black-ice-sheet.hbs",
+    },
+  };
+
   /**
    * Set up the default options for this Foundry "app".
    * See https://foundryvtt.com/api/v12/classes/client.Application.html for the complete list of options available.
@@ -28,10 +52,13 @@ export default class CPRBlackIceActorSheet extends ActorSheet {
     );
 
     return foundry.utils.mergeObject(super.defaultOptions, {
-      height: resizeCPRSheets ? 250 : "auto",
-      resizable: true,
-      template: `systems/${game.system.id}/templates/actor/cpr-black-ice-sheet.hbs`,
-      width: 575,
+      position: {
+        width: 575,
+        height: resizeCPRSheets ? 250 : "auto",
+      },
+      window: {
+        resizable: true,
+      },
     });
   }
 
@@ -43,10 +70,10 @@ export default class CPRBlackIceActorSheet extends ActorSheet {
    * @override
    * @returns {Object} data - a curated structure of actorSheet data
    */
-  async getData() {
-    const foundryData = await super.getData();
+  async _prepareContext(options) {
+    const foundryData = await super._prepareContext(options);
 
-    foundryData.enrichedHTML = [];
+    foundryData.enrichedHTML = foundryData.enrichedHTML ?? {};
     foundryData.enrichedHTML.notes = await TextEditor.enrichHTML(
       this.actor.system.notes,
       { async: true }
@@ -112,13 +139,12 @@ export default class CPRBlackIceActorSheet extends ActorSheet {
    * @override
    * @param {Object} html - the DOM object
    */
-  activateListeners(html) {
-    html.find(".rollable").click((event) => this._onRoll(event));
-    html
-      .find(".configure-from-program")
-      .click((event) => this._configureFromProgram(event));
-    this._createBlackIceImageContextMenu(html);
-    super.activateListeners(html);
+  _onRender(context, options) {
+    super._onRender(context, options);
+    this.element.querySelectorAll(".rollable").forEach((element) => {
+      element.addEventListener("click", (event) => this._onRoll(event));
+    });
+    this._createBlackIceImageContextMenu([this.element]);
   }
 
   /**
@@ -180,6 +206,11 @@ export default class CPRBlackIceActorSheet extends ActorSheet {
    * @private
    * @returns {null}
    */
+  static async #onConfigureFromProgram(event) {
+    event.preventDefault();
+    return this._configureFromProgram();
+  }
+
   async _configureFromProgram() {
     // Only configure Black ICE from a token.
     if (!this.actor.isToken) {
