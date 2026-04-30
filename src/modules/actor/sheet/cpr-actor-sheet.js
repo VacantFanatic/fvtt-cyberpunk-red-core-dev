@@ -10,27 +10,57 @@ import CPRDialog from "../../dialog/cpr-dialog-application.js";
 import { ContainerUtils } from "../../item/mixins/cpr-container.js";
 import AdditionsTemplate from "../../additions/template.js";
 
-const { ActorSheet } = foundry.appv1.sheets;
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const { ActorSheetV2 } = foundry.applications.sheets;
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
 /**
  * Extend the basic ActorSheet, which comes from Foundry. Not all sheets used in
  * this system module may extend from this. Others also extend ActorSheet. CPRActor
  * is used for common code between Mook sheets and Character sheets.
- * @extends {ActorSheet}
+ * @extends {ActorSheetV2}
  */
-export default class CPRActorSheet extends ActorSheet {
+export default class CPRActorSheet extends HandlebarsApplicationMixin(
+  ActorSheetV2
+) {
+  static DEFAULT_OPTIONS = {
+    classes: ["sheet", "actor"],
+    tag: "form",
+    position: {
+      width: 800,
+      height: "auto",
+    },
+    window: {
+      resizable: true,
+    },
+    form: {
+      submitOnChange: true,
+      closeOnSubmit: false,
+    },
+  };
+
+  static PARTS = {
+    sheet: {
+      template: "",
+    },
+  };
+
   /**
    * We extend the constructor to initialize data structures used for tracking parts of the sheet
    * being collapsed or opened, such as skill categories. These structures are later loaded from
    * User Settings if they exist.
    *
    * @constructor
-   * @param {*} actor - the actor object associated with this sheet
    * @param {*} options - entity options passed up the chain
    */
-  constructor(actor, options) {
-    super(actor, options);
+  constructor(options = {}) {
+    super(options);
+    const legacyTemplate = this.template || this.options.template;
+    if (legacyTemplate) {
+      this.options.parts = {
+        sheet: { template: legacyTemplate },
+      };
+    }
     this.options.collapsedSections = [];
     const collapsedSections = SystemUtils.GetUserSetting(
       "sheetConfig",
@@ -58,11 +88,19 @@ export default class CPRActorSheet extends ActorSheet {
     );
 
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: super.defaultOptions.classes.concat(["sheet", "actor"]),
-      height: resizeCPRSheets ? 500 : "auto",
-      resizable: true,
+      classes: ["sheet", "actor"],
+      position: {
+        width: 800,
+        height: resizeCPRSheets ? 500 : "auto",
+      },
+      window: {
+        resizable: true,
+      },
       scrollY: [".right-content-section", ".top-pane-gear"],
-      width: 800,
+      form: {
+        submitOnChange: true,
+        closeOnSubmit: false,
+      },
     });
   }
 
@@ -76,7 +114,7 @@ export default class CPRActorSheet extends ActorSheet {
    * @returns {Object} data - a curated structure of actorSheet data
    */
   async getData() {
-    const foundryData = await super.getData();
+    const foundryData = await super._prepareContext({});
     const cprData = {};
 
     cprData.fightData = {};
@@ -206,6 +244,16 @@ export default class CPRActorSheet extends ActorSheet {
     }
 
     return { ...foundryData, ...cprData };
+  }
+
+  async _prepareContext(options) {
+    return this.getData(options);
+  }
+
+  _onRender(context, options) {
+    super._onRender(context, options);
+    // Compatibility bridge while migrating listener wiring to V2 actions.
+    this.activateListeners($(this.element));
   }
 
   /**
@@ -423,7 +471,7 @@ export default class CPRActorSheet extends ActorSheet {
       .find(".reputation-open-ledger")
       .click(() => this.showLedger("reputation"));
 
-    super.activateListeners(html);
+    super.activateListeners?.(html);
   }
 
   /**
