@@ -1006,7 +1006,13 @@ export default function registerHandlebarsHelpers() {
    *    5 (OVERRIDE) - replace the current value with this one
    */
   Handlebars.registerHelper("cprEffectModMode", (mode, value) => {
-    switch (mode) {
+    let numericMode = mode;
+    if (typeof mode === "string") {
+      const modes = CONST.ACTIVE_EFFECT_MODES;
+      const key = mode.toUpperCase();
+      numericMode = modes[key] ?? modes.ADD;
+    }
+    switch (numericMode) {
       case 1:
         return `*${value}`;
       case 2:
