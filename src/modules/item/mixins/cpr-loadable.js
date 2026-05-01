@@ -42,8 +42,20 @@ const Loadable = function Loadable() {
       `flags.${game.system.id}.firetype-${this._id}`
     );
     const activeTable = flag === "autofire" ? `${dvTable} (Autofire)` : dvTable;
-    if (actor.sheet.token !== null)
-      return SystemUtils.SetDvTable(actor.sheet.token.object, activeTable);
+
+    let targetToken = actor?.sheet?.token?.object ?? null;
+    if (!targetToken) {
+      const matchingControlled = canvas?.tokens?.controlled?.filter(
+        (token) => token.actor?.id === actor?.id
+      );
+      if (matchingControlled?.length === 1) {
+        [targetToken] = matchingControlled;
+      }
+    }
+    if (targetToken) {
+      return SystemUtils.SetDvTable(targetToken, activeTable);
+    }
+
     return Promise.resolve();
   };
 

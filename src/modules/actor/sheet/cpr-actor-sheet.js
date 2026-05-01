@@ -173,6 +173,7 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     cprData.isGM = game.user.isGM;
 
     cprData.isTokenSheet = !!this.token;
+    cprData.measureDvInteractive = !!this._resolveDvTargetToken();
 
     cprData.enrichedHTML = [];
     if (this.actor.type !== "container") {
@@ -443,6 +444,21 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
         this._onRoll(wrapped);
       });
     }
+    if (!root.dataset.cprItemActionBound) {
+      root.dataset.cprItemActionBound = "1";
+      root.addEventListener("click", (event) => {
+        const matched = event.target?.closest?.(".item-action");
+        if (!matched || !root.contains(matched)) return;
+        const wrapped = new Proxy(event, {
+          get(target, prop) {
+            if (prop === "currentTarget") return matched;
+            const value = target[prop];
+            return typeof value === "function" ? value.bind(target) : value;
+          },
+        });
+        this._itemAction(wrapped);
+      });
+    }
     on("click", ".ablate", (event) => this._ablateArmor(event));
     on("click", ".armor-current-untrack", (event) =>
       this._makeArmorCurrentTrack(event)
@@ -450,7 +466,6 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     on("click", ".armor-current-track", (event) =>
       this._makeArmorCurrentUntrack(event)
     );
-    on("click", ".item-action", (event) => this._itemAction(event));
     on("click", ".item-view", (event) => this._renderReadOnlyItemCard(event));
     on("click", ".item-create", (event) => this._createInventoryItem(event));
     on("click", ".reset-deathsave-value", () => this._resetDeathSave());
@@ -911,15 +926,7 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
           if (item.system?.dvTable !== "") {
             await item.doAction(this.actor, event.currentTarget.attributes);
             await this._setDvIconState(item);
-            if (
-              canvas.tokens.controlled.filter((t) => t.id === this.token.id)
-                .length === 0 &&
-              canvas.tokens.ownedTokens.filter(
-                (t) =>
-                  t.actor.constructor.name === "CPRCharacterActor" ||
-                  t.actor.constructor.name === "CPRMookActor"
-              ).length !== 1
-            ) {
+            if (!this._resolveDvTargetToken()) {
               SystemUtils.DisplayMessage(
                 "warn",
                 SystemUtils.Localize(
@@ -957,7 +964,9 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     if (!sheetRoot) return this.render();
 
     const dvGlyphs = sheetRoot.querySelectorAll(".dv-glyph");
-    const dvFlag = this.token.getFlag(game.system.id, "cprDvTable");
+    const targetToken = this._resolveDvTargetToken();
+    const tokenDocument = targetToken?.document ?? this.token ?? null;
+    const dvFlag = tokenDocument?.getFlag(game.system.id, "cprDvTable");
     const dvFlagSet = dvFlag?.name !== "";
 
     for (const glyphNode of dvGlyphs) {
@@ -970,6 +979,22 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     }
 
     return this.render();
+  }
+
+  _resolveDvTargetToken() {
+    const sheetTokenId = this.token?.id ?? this.token?._id;
+    if (sheetTokenId) {
+      return canvas.tokens?.get(sheetTokenId) ?? this.token?.object ?? null;
+    }
+
+    const matchingControlled = canvas?.tokens?.controlled?.filter(
+      (token) => token.actor?.id === this.actor?.id
+    );
+    if (matchingControlled?.length === 1) {
+      return matchingControlled[0];
+    }
+
+    return null;
   }
 
   /**
@@ -1631,6 +1656,9 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     const dragData = TextEditor.getDragEventData(event);
     let sourceActor;
     const sourceItem = fromUuidSync(dragData.uuid);
+    if (!sourceItem) {
+      return super._onDrop(event);
+    }
     if (sourceItem.type === "cyberware" && sourceItem.system?.isInstalled) {
       SystemUtils.DisplayMessage(
         "error",
@@ -1677,20 +1705,25 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
 
     const deleteList = transferItem ? [sourceItem._id] : [];
     const containerTypes = SystemUtils.getDocTypesFromMixin("container");
+    const safeContainerTypes = Array.isArray(containerTypes) ? containerTypes : [];
 
-    const [newItem] = await super._onDrop(event);
+    const dropResult = await super._onDrop(event);
+    const newItem = Array.isArray(dropResult) ? dropResult[0] : dropResult ?? null;
 
     // If we created a new item and the sourceItem is a container type the createItem hook ensures all of the
     // installed items are also created on the target actor. We need to ensure that those items are
     // deleted from the source actor.
     if (
       newItem &&
-      containerTypes.includes(sourceItem.type) &&
+      safeContainerTypes.includes(sourceItem.type) &&
       sourceItem.isOwned &&
       sourceItem.system.hasInstalled
     ) {
       const deleteItemList = sourceItem.recursiveGetAllInstalledItems();
-      for (const item of deleteItemList) {
+      const safeDeleteItemList = Array.isArray(deleteItemList)
+        ? deleteItemList
+        : [];
+      for (const item of safeDeleteItemList) {
         // Delete non-ammo items.
         if (item.type !== "ammo") deleteList.push(item._id);
         // Only delete ammo items if they have a non-zero stack size.

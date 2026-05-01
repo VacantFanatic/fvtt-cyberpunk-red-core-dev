@@ -185,6 +185,43 @@ optgroup {
   }
 }
 
+/*
+ * Keep chat message flow above controls/input in both sidebar and popout.
+ * V13/V14 layout changes can otherwise let the input stack over the newest
+ * message rows when the panel is short.
+ */
+#chat,
+#chat-popout {
+  .window-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  #chat-log {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  #chat-controls,
+  #chat-form {
+    position: static !important;
+    inset: auto !important;
+    flex: 0 0 auto;
+  }
+}
+
+/*
+ * When the right sidebar is collapsed, Foundry may keep the chat input stack as an
+ * overlay on top of the log. Reserve space so newest messages never render under it.
+ */
+body.sidebar-collapsed #ui-right #chat-log,
+#ui-right.collapsed #chat-log {
+  padding-bottom: 7.5rem;
+  box-sizing: border-box;
+}
+
 input[type="text"],
 input[type="number"],
 input[type="password"],

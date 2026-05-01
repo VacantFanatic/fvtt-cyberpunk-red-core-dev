@@ -168,6 +168,7 @@
   "CPR.chat.damageApplication.rezReducedBy": "REZ reduced by:",
   "CPR.chat.humanityLoss.static": "Static Loss",
   "CPR.chat.initiative": "Initiative",
+  "COMBATANT.InitiativeRoll": "Roll Initiative",
   "CPR.chat.rollDamage.warningProgramDmg": "This program is not configured to deal damage.",
   "CPR.chat.self": "Self",
   "CPR.chat.whisper": "Whisper",
