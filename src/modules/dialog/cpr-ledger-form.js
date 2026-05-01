@@ -6,16 +6,47 @@ import CPRDialog from "./cpr-dialog-application.js";
  * Dialog which extends CPRDialog to display and modify the ledger property.
  */
 export default class CPRLedger extends CPRDialog {
+  // Application V2 reads the rendered template from `static PARTS`, NOT from
+  // an `options.template` key (that was V1). Without our own `form` part the
+  // ledger fell back to the base CPRDialog prompt template, which is why
+  // ledger windows opened with only the confirm bar visible.
+  static PARTS = {
+    form: {
+      // `game.system.id` is unsafe at module load time; use the literal id.
+      template:
+        "systems/cyberpunk-red-core/templates/dialog/cpr-ledger-form.hbs",
+    },
+  };
+
+  // Ledger-specific V2 options. These are deep-merged with CPRDialog's
+  // DEFAULT_OPTIONS by the framework, so the parent's actions / buttons /
+  // form handler are still available.
+  static DEFAULT_OPTIONS = {
+    position: { width: 600 },
+    form: { submitOnChange: false },
+    actions: {
+      add: CPRLedger.#onLedgerAdd,
+      subtract: CPRLedger.#onLedgerSubtract,
+      set: CPRLedger.#onLedgerSet,
+      deleteLedgerLine: CPRLedger.#onDeleteLedgerLineAction,
+    },
+  };
+
   constructor(actor, propName, options = {}) {
     const ledgername = "CPR.ledger.".concat(propName.toLowerCase());
-    // Merge title into options BEFORE super so the frozen `this.options`
-    // contract on Application V2 is respected.
+    const resizeCPRSheets = game.settings.get(
+      game.system.id,
+      "resizeCPRSheets"
+    );
+    // Application V2 freezes `this.options` after `super()`. Per-instance
+    // overrides (title, settings-driven height) must be merged BEFORE super.
     const merged = foundry.utils.mergeObject(
       options,
       {
         title: SystemUtils.Format("CPR.ledger.title", {
           property: SystemUtils.Localize(ledgername),
         }),
+        position: { height: resizeCPRSheets ? 340 : "auto" },
       },
       { inplace: false }
     );
@@ -36,29 +67,6 @@ export default class CPRLedger extends CPRDialog {
   }
 
   /**
-   * Set default options for the ledger.
-   * See https://foundryvtt.com/api/v12/classes/client.Application.html for the complete list of options available.
-   *
-   * @static
-   * @override
-   */
-  static get defaultOptions() {
-    const resizeCPRSheets = game.settings.get(
-      game.system.id,
-      "resizeCPRSheets"
-    );
-
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      // The title is set in the constructor above.
-      closeOnSubmit: false,
-      height: resizeCPRSheets ? 340 : "auto",
-      submitOnChange: false,
-      template: `systems/${game.system.id}/templates/dialog/cpr-ledger-form.hbs`,
-      width: 600,
-    });
-  }
-
-  /**
    * Set the data used for the ledger template.
    *
    * @return {Object} - a structured object representing ledger data.
@@ -72,101 +80,104 @@ export default class CPRLedger extends CPRDialog {
     return data;
   }
 
-  /**
-   * Add listeners specific to the Ledger.
-   *
-   * @param {*} html - the DOM object
-   */
-  activateListeners(html) {
-    html
-      .find(".delete-ledger-line")
-      .click((event) => this._deleteLedgerLine(event));
+  // V2 action handlers receive (event, target) and are bound to the
+  // application instance. Each one delegates to `_updateLedger` with the
+  // explicit action string instead of reading `data-action` back off the DOM.
+  static #onLedgerAdd(_event, _target) {
+    return this._updateLedger("add");
+  }
 
-    html
-      .find(".ledger-edit-button")
-      .click((event) => this._updateLedger(this.propName, event));
+  static #onLedgerSubtract(_event, _target) {
+    return this._updateLedger("subtract");
+  }
 
-    super.activateListeners(html);
+  static #onLedgerSet(_event, _target) {
+    return this._updateLedger("set");
+  }
+
+  static #onDeleteLedgerLineAction(_event, target) {
+    // `_deleteLedgerLine` is async and reads `data-line` via
+    // `event.currentTarget`; build a minimal event-like object so the
+    // existing helper continues to work without a separate refactor.
+    return this._deleteLedgerLine({ currentTarget: target });
   }
 
   /**
-   * Called when any of the 3 glyphs to change the ledger is clicked. This saves the change and a reason
-   * if provided to the actor in the form of a ledger-line.
+   * Apply an Eurobucks/IP/Reputation modification to the actor's ledger.
    *
-   * @callback
-   * @private
-   * @param {string} ledgerProp - currently can be "wealth", "reputation", or "improvementPoints"
-   * @param {*} event - object with details of the event
+   * The action string is supplied by the V2 action dispatcher (no longer
+   * read via `GetEventDatum`), and the form values are read from the live
+   * application root (`this.element`) instead of the deprecated
+   * `this.form[i]` jQuery accessor.
+   *
+   * @param {string} action - one of "add", "subtract", "set"
    */
-  _updateLedger(ledgerProp, event) {
-    let { value } = this.form[0];
-    const reason = this.form[1].value;
-    let action = SystemUtils.GetEventDatum(event, "data-action");
-    if (value !== "") {
-      value = parseInt(value, 10);
-      if (Number.isNaN(value)) {
-        action = "error";
-      }
-      switch (action) {
-        case "add": {
-          // Update actor's ledger.
-          this.actor.sheet._gainLedger(
-            ledgerProp,
-            value,
-            `${reason} - ${game.user.name}`
-          );
-          // Update the ledger application's total.
-          this.total += value;
-          break;
-        }
-        case "subtract": {
-          // Update actor's ledger.
-          this.actor.sheet._loseLedger(
-            ledgerProp,
-            value,
-            `${reason} - ${game.user.name}`
-          );
-          // Update ledger application total.
-          // If a user puts in a negative number and then hits the Subtract action, the system assumes the user intended to subtract.
-          // This is true in cpr-actor-sheet.js --> _loseLedger() and was mimicked from there for consistency;
-          if (value <= 0) {
-            this.total += value;
-          } else {
-            this.total -= value;
-          }
-          break;
-        }
-        case "set": {
-          // Update actor's ledger.
-          this.actor.sheet._setLedger(
-            ledgerProp,
-            value,
-            `${reason} - ${game.user.name}`
-          );
-          // Update ledger applciation total.
-          this.total = value;
-          break;
-        }
-        default: {
-          SystemUtils.DisplayMessage(
-            "error",
-            SystemUtils.Localize("CPR.messages.eurobucksModifyInvalidAction")
-          );
-          break;
-        }
-      }
-      // Update ledger application contents.
-      this.contents = foundry.utils.duplicate(
-        this.actor.listRecords(this.propName)
-      );
-      this._makeLedgerReadable(this.propName);
-      this.render();
-    } else {
+  _updateLedger(action) {
+    const valueInput = this.element?.querySelector('input[name="modifyValue"]');
+    const reasonInput = this.element?.querySelector('input[name="reason"]');
+    const rawValue = valueInput?.value ?? "";
+    const reason = reasonInput?.value ?? "";
+
+    if (rawValue === "") {
       SystemUtils.DisplayMessage(
         "warn",
         SystemUtils.Localize("CPR.messages.eurobucksModifyWarn")
       );
+      return;
     }
+
+    const value = parseInt(rawValue, 10);
+    let actionToApply = action;
+    if (Number.isNaN(value)) actionToApply = "error";
+
+    switch (actionToApply) {
+      case "add": {
+        this.actor.sheet._gainLedger(
+          this.propName,
+          value,
+          `${reason} - ${game.user.name}`
+        );
+        this.total += value;
+        break;
+      }
+      case "subtract": {
+        this.actor.sheet._loseLedger(
+          this.propName,
+          value,
+          `${reason} - ${game.user.name}`
+        );
+        // If a user puts in a negative number and then hits the Subtract action, the system assumes the user intended to subtract.
+        // This is true in cpr-actor-sheet.js --> _loseLedger() and was mimicked from there for consistency;
+        if (value <= 0) {
+          this.total += value;
+        } else {
+          this.total -= value;
+        }
+        break;
+      }
+      case "set": {
+        this.actor.sheet._setLedger(
+          this.propName,
+          value,
+          `${reason} - ${game.user.name}`
+        );
+        this.total = value;
+        break;
+      }
+      default: {
+        SystemUtils.DisplayMessage(
+          "error",
+          SystemUtils.Localize("CPR.messages.eurobucksModifyInvalidAction")
+        );
+        break;
+      }
+    }
+
+    this.contents = foundry.utils.duplicate(
+      this.actor.listRecords(this.propName)
+    );
+    this._makeLedgerReadable(this.propName);
+    this.render();
   }
 
   /**

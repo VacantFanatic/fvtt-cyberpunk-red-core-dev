@@ -57,14 +57,9 @@
     </div>
     <div class="demon-notes">
       <div class="demon-edit-section">
-        {{editor
-            enrichedHTML.notes
-            target="system.notes"
-            button=true
-            owner=owner
-            editable=editable
-            engine="prosemirror"
-        }}
+        <prose-mirror name="system.notes" toggled
+                      {{#unless editable}}disabled{{/unless}}
+        >{{{actor.system.notes}}}</prose-mirror>
       </div>
     </div>
   </div>

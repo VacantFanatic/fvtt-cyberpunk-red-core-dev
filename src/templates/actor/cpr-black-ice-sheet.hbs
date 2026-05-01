@@ -103,13 +103,9 @@
       </div>
     </div>
     <div class="blackice-notes">
-      {{editor enrichedHTML.notes
-          target="system.notes"
-          button=true
-          owner=owner
-          editable=editable
-          engine="prosemirror"
-      }}
+      <prose-mirror name="system.notes" toggled
+                    {{#unless editable}}disabled{{/unless}}
+      >{{{actor.system.notes}}}</prose-mirror>
     </div>
   </div>
 </section>
