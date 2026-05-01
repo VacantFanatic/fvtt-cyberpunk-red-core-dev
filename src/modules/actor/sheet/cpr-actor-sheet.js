@@ -68,21 +68,39 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
    */
   constructor(options = {}) {
     super(options);
-    const legacyTemplate = this.template || this.options.template;
-    if (legacyTemplate) {
-      this.options.parts = {
-        sheet: { template: legacyTemplate },
-      };
-    }
-    this.options.collapsedSections = [];
+    /** @type {string[]} */
+    this.collapsedSections = [];
     const collapsedSections = SystemUtils.GetUserSetting(
       "sheetConfig",
       "sheetCollapsedSections",
       this.id
     );
     if (collapsedSections) {
-      this.options.collapsedSections = collapsedSections;
+      this.collapsedSections = Array.isArray(collapsedSections)
+        ? [...collapsedSections]
+        : collapsedSections;
     }
+    /** @type {string} */
+    this.cprContentFilter = "";
+  }
+
+  /**
+   * Inject legacy `this.template` paths into PARTS when the merged sheet part has no template
+   * (e.g. mook). Application V2 freezes `this.options`; do not assign `options.parts` in the constructor.
+   *
+   * @param {ApplicationRenderOptions} options
+   * @returns {Record<string, object>}
+   */
+  _configureRenderParts(options) {
+    const parts = super._configureRenderParts(options);
+    const legacyTemplate = this.template;
+    if (parts?.sheet && !parts.sheet.template && legacyTemplate) {
+      return {
+        ...parts,
+        sheet: { ...parts.sheet, template: legacyTemplate },
+      };
+    }
+    return parts;
   }
 
   /**
@@ -126,8 +144,8 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
    * @override
    * @returns {Object} data - a curated structure of actorSheet data
    */
-  async getData() {
-    const foundryData = await super._prepareContext({});
+  async getData(options = {}) {
+    const foundryData = await super._prepareContext(options);
     const cprData = {};
 
     cprData.fightData = {};
@@ -256,7 +274,20 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
       );
     }
 
-    return { ...foundryData, ...cprData };
+    const mergedOptions = foundry.utils.mergeObject(
+      foundry.utils.deepClone(foundryData.options ?? {}),
+      {
+        cprContentFilter: this.cprContentFilter,
+        collapsedSections: this.collapsedSections,
+      }
+    );
+
+    return {
+      ...foundryData,
+      actor: foundryData.actor ?? foundryData.document ?? this.actor,
+      options: mergedOptions,
+      ...cprData,
+    };
   }
 
   async _prepareContext(options) {
@@ -449,7 +480,9 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
 
     this._createActorImageContextMenu(root);
 
-    if (!this.options.editable) return;
+    super.activateListeners?.(root);
+
+    if (!this.isEditable) return;
     // Listeners for editable fields under here. Fields might not be editable because
     // the user viewing the sheet might not have permission to. They may not be the owner.
 
@@ -463,8 +496,6 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     on("click", ".roll-critical-injury", () => this._rollCriticalInjury());
     on("click", ".fire-checkbox", (event) => this._fireCheckboxToggle(event));
     on("click", ".reputation-open-ledger", () => this.showLedger("reputation"));
-
-    super.activateListeners?.(root);
   }
 
   /**
@@ -499,12 +530,12 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
       }
     }
 
-    if (this.options.collapsedSections.includes(btn.id)) {
-      this.options.collapsedSections = this.options.collapsedSections.filter(
+    if (this.collapsedSections.includes(btn.id)) {
+      this.collapsedSections = this.collapsedSections.filter(
         (sectionName) => sectionName !== btn.id
       );
     } else {
-      this.options.collapsedSections.push(btn.id);
+      this.collapsedSections.push(btn.id);
     }
   }
 
@@ -1757,7 +1788,7 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
       resolveSheetRoot(this.element) ??
       (this.element instanceof HTMLElement ? this.element : null);
     const num = sheetRoot?.querySelector(".filter-contents")?.value ?? "";
-    this.options.cprContentFilter = filterValue;
+    this.cprContentFilter = filterValue;
     await this._render();
     const sheetRootAfter =
       resolveSheetRoot(this.element) ??
@@ -1779,10 +1810,10 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
    */
   async _clearContentFilter() {
     if (
-      typeof this.options.cprContentFilter !== "undefined" &&
-      this.options.cprContentFilter !== ""
+      typeof this.cprContentFilter !== "undefined" &&
+      this.cprContentFilter !== ""
     ) {
-      this.options.cprContentFilter = "";
+      this.cprContentFilter = "";
       this._render();
     }
   }

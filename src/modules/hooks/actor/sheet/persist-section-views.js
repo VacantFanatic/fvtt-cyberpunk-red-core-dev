@@ -13,11 +13,9 @@ const PersistSectionViews = () => {
     SystemUtils.SetUserSetting(
       "sheetConfig",
       "sheetCollapsedSections",
-      actorSheet.options.collapsedSections,
+      actorSheet.collapsedSections,
       actorSheet.id
     );
-    // eslint-disable-next-line no-param-reassign
-    actorSheet.options.setConfig = true;
   });
 };
 

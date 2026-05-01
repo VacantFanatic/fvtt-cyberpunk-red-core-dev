@@ -21,6 +21,10 @@
 
 - Fix `CPRDialog` failing at load time (`Cannot read properties of undefined (reading 'id')`) by not referencing `game.system` in `static PARTS`.
 - Fix `copyAssets` resolving before Gulp finished writing files (could leave `cpr.js` and other roots missing from the built system folder).
+- Fix character sheet Application V2 tabs: define `static TABS` for `right` and `bottom`, remove legacy V1 `defaultOptions.tabs`, prepare tab context with `_prepareTabs`, and align Handlebars markup (`data-action="tab"`, `data-group`, `{{tabs.<group>.<id>.cssClass}}` on nav and `.tab` panels).
+- Fix `No matching tab element found` when switching character sheet tabs by giving each tab `<nav>` the **`tabs`** class required by Application V2 ([Foundry #10506](https://github.com/foundryvtt/foundryvtt/issues/10506)); remove duplicate `data-group` / `data-tab` from the Fight tab wrapper so only the inner control carries those attributes.
+- Fix actor sheet render data and listeners for Application V2: forward render `options` into `super._prepareContext`, expose `actor` for Handlebars (`document` fallback), call `super.activateListeners` before editable-only wiring, and use `this.isEditable` instead of `this.options.editable`.
+- Fix `CPRActorSheet` constructor crashing with `Cannot add property collapsedSections, object is not extensible` under Application V2: keep `collapsedSections` and `cprContentFilter` on the sheet instance, merge them into render `options` for Handlebars, override `_configureRenderParts` for mook-style legacy `this.template` instead of mutating `this.options.parts`, and update templates / hooks to read `sheet.collapsedSections` (and related paths).
 
 ## Version 1.3.4
 

@@ -1,15 +1,15 @@
 <div class="bottom-pane">
   <div class="bottom-tabs-section text-normal">
-    <nav class="navtabs-bottom cpr-tabs nav" data-group="primary">
+    <nav class="tabs navtabs-bottom cpr-tabs nav" data-group="bottom">
       <div class="tab-pink-underlay">
-        <a class="tab-label text-semi tab-indent" data-tab="role">
+        <a class="tab-label text-semi tab-indent {{tabs.bottom.role.cssClass}}" data-action="tab" data-group="bottom" data-tab="role">
           {{localize "CPR.global.role.role"}}
         </a>
       </div>
       <div class="tab-pink-underlay">
-        <div class="tab-label text-semi tab-indent" data-tab="fight">
+        <div class="tab-label text-semi tab-indent {{tabs.bottom.fight.cssClass}}">
           <div class="text-padding-right-smallest">
-            <a data-tab="fight">
+            <a data-action="tab" data-group="bottom" data-tab="fight">
               {{localize "CPR.characterSheet.bottomPane.fight.title"}}
             </a>
           </div>
@@ -35,18 +35,18 @@
         </div>
       </div>
       <div class="tab-pink-underlay">
-        <a class="tab-label text-semi tab-indent" data-tab="lifepath">{{localize "CPR.characterSheet.bottomPane.lifepath.title"}}</a>
+        <a class="tab-label text-semi tab-indent {{tabs.bottom.lifepath.cssClass}}" data-action="tab" data-group="bottom" data-tab="lifepath">{{localize "CPR.characterSheet.bottomPane.lifepath.title"}}</a>
       </div>
     </nav>
   </div>
   <div class="bottom-content-section">
-    <div class="tab role-tab" data-group="primary" data-tab="role">
+    <div class="tab role-tab {{tabs.bottom.role.cssClass}}" data-group="bottom" data-tab="role">
       {{> "systems/cyberpunk-red-core/templates/actor/character/bottom-pane/cpr-role-tab.hbs"}}
     </div>
-    <div class="tab fight-tab" data-group="primary" data-tab="fight">
+    <div class="tab fight-tab {{tabs.bottom.fight.cssClass}}" data-group="bottom" data-tab="fight">
       {{> "systems/cyberpunk-red-core/templates/actor/character/bottom-pane/cpr-fight-tab.hbs"}}
     </div>
-    <div class="tab lifepath-tab" data-group="primary" data-tab="lifepath">
+    <div class="tab lifepath-tab {{tabs.bottom.lifepath.cssClass}}" data-group="bottom" data-tab="lifepath">
       {{> "systems/cyberpunk-red-core/templates/actor/character/bottom-pane/cpr-lifepath-tab.hbs"}}
     </div>
   </div>

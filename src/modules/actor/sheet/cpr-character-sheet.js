@@ -17,6 +17,34 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
   };
 
   /**
+   * Application V2 tab groups (`data-group` in templates must match these keys).
+   *
+   * @type {Record<string, foundry.applications.types.ApplicationTabsConfiguration>}
+   */
+  static TABS = {
+    right: {
+      initial: "skills",
+      tabs: [
+        { id: "skills", label: "CPR.characterSheet.rightPane.skills.title" },
+        { id: "gear", label: "CPR.global.itemTypes.gear" },
+        { id: "cyberware", label: "CPR.characterSheet.rightPane.cyber.title" },
+        { id: "effects", label: "CPR.characterSheet.rightPane.effects.title" },
+      ],
+    },
+    bottom: {
+      initial: "fight",
+      tabs: [
+        { id: "role", label: "CPR.global.role.role" },
+        { id: "fight", label: "CPR.characterSheet.bottomPane.fight.title" },
+        {
+          id: "lifepath",
+          label: "CPR.characterSheet.bottomPane.lifepath.title",
+        },
+      ],
+    },
+  };
+
+  /**
    * Set default options for character sheets, which include making sure vertical scrollbars do not
    * get reset when re-rendering.
    * See https://foundryvtt.com/api/v12/classes/client.Application.html for the complete list of options available.
@@ -39,18 +67,6 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
         resizable: true,
       },
       scrollY: [".right-content-section", ".top-pane-gear"],
-      tabs: [
-        {
-          navSelector: ".navtabs-right",
-          contentSelector: ".right-content-section",
-          initial: "skills",
-        },
-        {
-          navSelector: ".navtabs-bottom",
-          contentSelector: ".bottom-content-section",
-          initial: "fight",
-        },
-      ],
     });
   }
 
@@ -65,7 +81,16 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
     });
     characterSheetData.netRoleSelectOptions = netRoleSelectOptions;
 
-    return foundry.utils.mergeObject(characterSheetData, actorSheetData);
+    const tabs = {
+      ...(actorSheetData.tabs ?? {}),
+      right: this._prepareTabs("right"),
+      bottom: this._prepareTabs("bottom"),
+    };
+
+    return foundry.utils.mergeObject(characterSheetData, {
+      ...actorSheetData,
+      tabs,
+    });
   }
 
   /**
@@ -98,7 +123,9 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
       this._toggleSectionVisibility(event)
     );
 
-    if (!this.options.editable) return;
+    super.activateListeners(root);
+
+    if (!this.isEditable) return;
 
     for (const el of root.querySelectorAll(".skill-input")) {
       el.addEventListener("click", (event) => event.target.select());
@@ -133,8 +160,6 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
       this._cyberdeckProgramExecution(event)
     );
     on("click", ".effect-control", (event) => this.manageEffect(event));
-
-    super.activateListeners(root);
   }
 
   /**
@@ -385,11 +410,11 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
 
     const showFavorites = collapsibleElement.querySelector(".show-favorites");
     if (showFavorites?.classList.contains("hide")) {
-      if (!this.options.collapsedSections.includes(trigger.id)) {
-        this.options.collapsedSections.push(trigger.id);
+      if (!this.collapsedSections.includes(trigger.id)) {
+        this.collapsedSections.push(trigger.id);
       }
     } else {
-      this.options.collapsedSections = this.options.collapsedSections.filter(
+      this.collapsedSections = this.collapsedSections.filter(
         (sectionName) => sectionName !== trigger.id
       );
       categoryTarget?.click();

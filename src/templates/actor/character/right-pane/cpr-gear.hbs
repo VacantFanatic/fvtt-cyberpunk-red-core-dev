@@ -7,7 +7,7 @@
                 id="gearTab-{{c}}"
                 data-tooltip="{{localize "CPR.actorSheets.commonActions.toggleCategoryPinned"}}">
             {{localize category}}
-            {{#if (cprListContains ../this.options.collapsedSections (cprGeneratePartial "gearTab-VAR" c)) }}
+            {{#if (cprListContains ../this.collapsedSections (cprGeneratePartial "gearTab-VAR" c)) }}
               <i class="fas fa-plus collapse-icon"></i>
               <i class="fas fa-minus expand-icon hide"></i>
             {{else}}
@@ -54,7 +54,7 @@
         </li>
         <ol class="items-list">
           {{#each (cprSort (cprGetProp ../actor.itemTypes c) "name") as |item i| }}
-            {{#if (cprSheetContentFilter ../../this.options.cprContentFilter item.name) }}
+            {{#if (cprSheetContentFilter ../../this.cprContentFilter item.name) }}
               {{!-- Partial handles Name and Data columns --}}
               {{> (cprGeneratePartial "systems/cyberpunk-red-core/templates/actor/character/right-pane/tabs/gear/cpr-VAR-content.hbs" c) (cprMergeForPartialArg "item,actor,sheet" this ../../this.actor ../../this)}}
               {{!-- {{cprNestedInstalledGearTab item}} --}}

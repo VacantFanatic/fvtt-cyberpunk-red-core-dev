@@ -1,5 +1,5 @@
 {{!-- NAME --}}
-<li class="item flexrow{{#if item.system.favorite }} favorite{{else }}{{#if (cprListContains sheet.options.collapsedSections "gearTab-weapon") }} hide{{/if }}{{/if }}"
+<li class="item flexrow{{#if item.system.favorite }} favorite{{else }}{{#if (cprListContains sheet.collapsedSections "gearTab-weapon") }} hide{{/if }}{{/if }}"
     data-item-id="{{item._id}}"
     data-item-category="{{item.type}}"
     draggable="true">
