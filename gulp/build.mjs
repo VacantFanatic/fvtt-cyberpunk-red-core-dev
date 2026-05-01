@@ -139,7 +139,7 @@ async function buildManifest() {
     // Read the template system.json from src/
     const systemRaw = fs.readFileSync(path.resolve(SRC_DIR, SYSTEM_FILE));
     const system = JSON.parse(systemRaw);
-    // If we're in CI use $VERSION as the version, else use a dummy version
+    // Version from gulp/config (SYSTEM_VERSION env or package.json); stamps dist manifest + URLs
     const version = SYSTEM_VERSION;
     const zipFile = process.env.ZIP_FILE
       ? process.env.ZIP_FILE

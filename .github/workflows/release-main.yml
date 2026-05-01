@@ -50,7 +50,6 @@ jobs:
       - name: Build
         env:
           CI: true
-          SYSTEM_VERSION: v${{ steps.pkg.outputs.version }}
         run: npm run build
 
       - name: Package manifest and zip

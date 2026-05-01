@@ -11,6 +11,7 @@
 ### Changed
 
 - CPR actor sheets (base, character, mook, container) now wire DOM listeners on the native sheet root (`HTMLElement`) instead of wrapping `this.element` in jQuery, matching Application V2 expectations.
+- `npm run build` stamps `dist/system.json` from `package.json` (ignores stale `SYSTEM_VERSION` in the environment). Use `OVERRIDE_SYSTEM_VERSION=vX.Y.Z` only for intentional one-off builds.
 
 ### New Features
 

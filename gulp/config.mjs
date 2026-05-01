@@ -26,9 +26,36 @@ export const SYSTEM_TITLE = process.env.SYSTEM_TITLE
   ? process.env.SYSTEM_TITLE
   : "Cyberpunk RED - CORE";
 
-export const SYSTEM_VERSION = process.env.SYSTEM_VERSION
-  ? process.env.SYSTEM_VERSION
-  : "v1.0.1";
+/**
+ * Version tag for manifests, zip names, and release URLs (`v1.2.3`).
+ * Defaults to `version` in repo root `package.json` (with a `v` prefix). Stale shells often export
+ * `SYSTEM_VERSION` or `CI`; those are ignored so local builds stay correct.
+ * Override only when intentional: `OVERRIDE_SYSTEM_VERSION=v9.9.9 npx gulp build`
+ */
+function readDefaultSystemVersionFromPackage() {
+  try {
+    const pkgPath = path.join(process.cwd(), "package.json");
+    const pkg = fs.readJSONSync(pkgPath);
+    const ver = String(pkg.version ?? "0.0.0").trim();
+    if (!ver) return "v0.0.0";
+    return ver.startsWith("v") ? ver : `v${ver}`;
+  } catch (err) {
+    log(
+      chalk.yellow(
+        "WARNING: Could not read package.json for SYSTEM_VERSION; falling back to v0.0.0"
+      ),
+      err.message
+    );
+    return "v0.0.0";
+  }
+}
+
+const overrideVersion = process.env.OVERRIDE_SYSTEM_VERSION?.trim();
+
+export const SYSTEM_VERSION =
+  overrideVersion && overrideVersion.length > 0
+    ? overrideVersion
+    : readDefaultSystemVersionFromPackage();
 
 /** Base URL for GitHub Releases (manifest / download). Override with RELEASE_REPO_BASE. */
 export const RELEASE_REPO_BASE = process.env.RELEASE_REPO_BASE
