@@ -461,7 +461,7 @@ CPR.blackIceStatList = {
 CPR.demonStatList = {
   rez: "CPR.global.generic.rez",
   interface: "CPR.global.role.netrunner.ability.interface",
-  netactions: "CPR.global.demon.netActions",
+  actions: "CPR.global.demon.netActions",
   combatNumber: "CPR.global.demon.combatNumber",
 };
 
