@@ -50,7 +50,9 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
 
   static PARTS = {
     form: {
-      template: `systems/${game.system.id}/templates/dialog/cpr-default-prompt.hbs`,
+      // Must not use `game.system.id` here: static fields run while the module loads, before `game` exists.
+      template:
+        "systems/cyberpunk-red-core/templates/dialog/cpr-default-prompt.hbs",
     },
   };
 

@@ -19,7 +19,7 @@
 
 ### Bug Fixes
 
-- None.
+- Fix `CPRDialog` failing at load time (`Cannot read properties of undefined (reading 'id')`) by not referencing `game.system` in `static PARTS`.
 
 ## Version 1.3.4
 
