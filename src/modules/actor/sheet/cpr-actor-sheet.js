@@ -1033,7 +1033,7 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
    * @param {String} prop - property to be updated in a dot notation (e.g. "item.name")
    * @param {*} value - value to set the property to
    */
-  _updateOwnedItemProp(item, prop, value) {
+  static _updateOwnedItemProp(item, prop, value) {
     item.update({ [prop]: value });
   }
 
@@ -1664,7 +1664,7 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
         "error",
         SystemUtils.Localize("CPR.messages.tradeDragInstalledCyberwareError")
       );
-      return;
+      return null;
     }
     const transferItem =
       dragData.system && dragData.system.actorId !== undefined;
@@ -1680,12 +1680,12 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
           "warn",
           SystemUtils.Localize("CPR.messages.tradeDragOutWarn")
         );
-        return;
+        return null;
       }
       if (sourceActor) {
         // Do not move if the data is moved to itself
         if (sourceActor._id === this.actor._id) {
-          return;
+          return null;
         }
 
         // If the cyberware is marked as core, or is installed, throw an error message.
@@ -1698,17 +1698,21 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
             "error",
             SystemUtils.Localize("CPR.messages.cannotDropInstalledCyberware")
           );
-          return;
+          return null;
         }
       }
     }
 
     const deleteList = transferItem ? [sourceItem._id] : [];
     const containerTypes = SystemUtils.getDocTypesFromMixin("container");
-    const safeContainerTypes = Array.isArray(containerTypes) ? containerTypes : [];
+    const safeContainerTypes = Array.isArray(containerTypes)
+      ? containerTypes
+      : [];
 
     const dropResult = await super._onDrop(event);
-    const newItem = Array.isArray(dropResult) ? dropResult[0] : dropResult ?? null;
+    const newItem = Array.isArray(dropResult)
+      ? dropResult[0]
+      : dropResult ?? null;
 
     // If we created a new item and the sourceItem is a container type the createItem hook ensures all of the
     // installed items are also created on the target actor. We need to ensure that those items are
@@ -1740,6 +1744,8 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
         deleteInstalled: true,
       });
     }
+
+    return newItem;
   }
 
   /**
