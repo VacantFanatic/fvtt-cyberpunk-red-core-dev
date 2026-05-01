@@ -422,7 +422,27 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     // allow navigation for non owned actors
     this._tabs?.forEach?.((t) => t.bind(root));
 
-    on("click", ".rollable", (event) => this._onRoll(event));
+    // Delegated `.rollable` click handling - bound once per render at the
+    // sheet root so re-rendered child parts always have working roll links
+    // without relying on per-element re-binding timing. Avoids the
+    // "rolls don't fire" regression seen after Application V2 part renders.
+    if (!root.dataset.cprRollableBound) {
+      root.dataset.cprRollableBound = "1";
+      root.addEventListener("click", (event) => {
+        const matched = event.target?.closest?.(".rollable");
+        if (!matched || !root.contains(matched)) return;
+        // Provide `currentTarget` semantics expected by _onRoll callees
+        // (e.g. SystemUtils.GetEventDatum reads event.currentTarget).
+        const wrapped = new Proxy(event, {
+          get(target, prop) {
+            if (prop === "currentTarget") return matched;
+            const value = target[prop];
+            return typeof value === "function" ? value.bind(target) : value;
+          },
+        });
+        this._onRoll(wrapped);
+      });
+    }
     on("click", ".ablate", (event) => this._ablateArmor(event));
     on("click", ".armor-current-untrack", (event) =>
       this._makeArmorCurrentTrack(event)

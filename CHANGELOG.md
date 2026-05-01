@@ -1,5 +1,3 @@
-<!-- markdownlint-disable MD024 -->
-
 # Changelog
 
 ## Version 1.3.5
@@ -22,9 +20,16 @@
 - Fix `CPRDialog` failing at load time (`Cannot read properties of undefined (reading 'id')`) by not referencing `game.system` in `static PARTS`.
 - Fix `copyAssets` resolving before Gulp finished writing files (could leave `cpr.js` and other roots missing from the built system folder).
 - Fix character sheet Application V2 tabs: define `static TABS` for `right` and `bottom`, remove legacy V1 `defaultOptions.tabs`, prepare tab context with `_prepareTabs`, and align Handlebars markup (`data-action="tab"`, `data-group`, `{{tabs.<group>.<id>.cssClass}}` on nav and `.tab` panels).
-- Fix `No matching tab element found` when switching character sheet tabs by giving each tab `<nav>` the **`tabs`** class required by Application V2 ([Foundry #10506](https://github.com/foundryvtt/foundryvtt/issues/10506)); remove duplicate `data-group` / `data-tab` from the Fight tab wrapper so only the inner control carries those attributes.
+- Fix `No matching tab element found` when switching character sheet tabs by giving each tab `<nav>` the `**tabs**` class required by Application V2 ([Foundry #10506](https://github.com/foundryvtt/foundryvtt/issues/10506)); remove duplicate `data-group` / `data-tab` from the Fight tab wrapper so only the inner control carries those attributes.
 - Fix actor sheet render data and listeners for Application V2: forward render `options` into `super._prepareContext`, expose `actor` for Handlebars (`document` fallback), call `super.activateListeners` before editable-only wiring, and use `this.isEditable` instead of `this.options.editable`.
 - Fix `CPRActorSheet` constructor crashing with `Cannot add property collapsedSections, object is not extensible` under Application V2: keep `collapsedSections` and `cprContentFilter` on the sheet instance, merge them into render `options` for Handlebars, override `_configureRenderParts` for mook-style legacy `this.template` instead of mutating `this.options.parts`, and update templates / hooks to read `sheet.collapsedSections` (and related paths).
+- Fix character sheet rolls silently doing nothing under Application V2: `CPRDialog`, `CPRRollDialog`, `CPRLedger`, and `SelectRoleBonuses` were assigning `this.options.title`, `this.options.template`, `this.options.window`, `this.options.parts`, and `this.options.buttons` after `super()`, throwing on the V2-frozen options object. The errors were swallowed by `handleRollDialog`'s `.catch`, leaving stat / skill / facedown / death-save / weapon clicks doing nothing. Overrides are now merged into the options passed to `super()`, and the resolve/reject callbacks used by `CPRDialog.showDialog` are stored as instance properties (`_confirmDialog` / `_closeDialog`) instead of on frozen options.
+- Fix `.rollable` clicks on character sheets occasionally not firing after Application V2 part re-renders by binding a single delegated `click` listener at the sheet root (`event.target.closest('.rollable')`) and proxying `currentTarget` so existing `_onRoll` / `SystemUtils.GetEventDatum` consumers keep working.
+- Fix character sheet right- and bottom-pane tab strips rendering at full pane width by scoping tighter `min-width`, `flex`, and underlay-margin rules to `.actor-sheet` so the `Skills/Gear/Cyber/Effects` and `Role/Fight/Lifepath` tabs size to their labels instead of stretching across the sheet (item sheet tabs unaffected).
+- Fix left-pane stat values appearing visually off-center by adding `text-align: center` for `.actor-stats-value input` while preserving the right/left alignment of min/max paired stats (e.g. `LUCK 6/6`, `HP 40/40`).
+- Fix character sheet right/bottom tab strips not spanning the full pane width and starting offset from the left edge: use `flex: 1` for tab wrappers, drop the underlay left margin, and trim per-tab `min-width` / `padding` so the strip is flush with the pane.
+- Fix left-pane stat NAME labels (INT, REF, ...) clipping out of their grey background boxes by giving `.actor-stats-stat` a stable two-row grid, padding `.actor-stats-title`, and adding `box-sizing: border-box` to the value inputs.
+- Fix CPR roll dialogs (and any dialog using a per-instance template such as the ledger and role-bonuses prompts) opening as a blank window under Application V2. Three V2 migration gaps were closed: (1) per-instance template override now uses `_configureRenderParts` instead of `options.parts` (which V2 treats as an array of part NAMES, not a definition map); (2) `CPRRollDialog`, `CPRRoleRollDialog`, `CPRLedger`, and `SelectRoleBonuses` were migrated from V1 `getData()` to V2 `_prepareContext(options)` so their roll/ledger/role data actually reaches the template; (3) `cpr-default-prompt.hbs` and `cpr-dialog-buttons.hbs` reference `{{options.buttons}}` / `{{options.buttonDefault}}`, which are now re-exposed via the dialog's `_prepareContext` (V2 no longer auto-merges `this.options` into the template scope).
 
 ## Version 1.3.4
 
@@ -384,7 +389,7 @@ For example, if you had the Grafted Bone and Muscle Lace (BODY +2) on an actor w
 
 Unfortunately we cannot revert this automatically so you will need to fix these issues manually. Either restore from a pre-`0.88` backup and remgirate or adjust the actors back. This affects all Characters/Mooks who had STAT modifiers.
 
-\*\*If you are currently migrating from a version prior to `0.88`, the above does not apply (as the migration script has been fixed).
+If you are currently migrating from a version prior to `0.88`, the above does not apply (as the migration script has been fixed).
 
 ### Bug Fixes
 
@@ -441,7 +446,7 @@ This means any instances where you have dragged an item from a compendium into a
 - Facedown rolls correctly include reputation value.
 - Fix CSS colors on User Config pop out
 - Fix Item Description tooltips in gear sheets to sanitize UUID references
-- Fix missing \_stats data from all system Compendia/Packs
+- Fix missing stats data from all system Compendia/Packs
 - Localized Mook skills are now sorted alphabetically
 - Fix luck rolls adding luck stat when no luck applied
 - Temp fix for Dice so Nice treating reputation as string on facedown rolls
@@ -507,7 +512,7 @@ This means any instances where you have dragged an item from a compendium into a
 
 ### Bug Fixes
 
-- #808 - Installed items in a mook were mapped to the wrong mook \_id, this has been fixed.
+- #808 - Installed items in a mook were mapped to the wrong mook id, this has been fixed.
 - #812 - Some roles were missing the bonuses data point as an empty array.
 - Fix not being able to open any Items due to the DV Tables compendium setting pointing to the old name
 - Fix being unable to delete certain effects from compendium items with Active Effects.
@@ -736,7 +741,7 @@ Ammo can now modify weapon damage / autofire maximums. This supports ammo which 
 - #741 - Fixed issue where selling stackable items to a vendor was broken
 - Migrating actors that are on scenes in a compendium would fail because the code did UUID lookups and Foundry won't let you do this synchronously. Added code so if the restoration is for a Compenium actor/item, the lookup is done with an async await.
 - Fixed an issue where if migration performs a backup/restore of an installed item, it would delete the original item which was causing the container item to report the incorrect amount of used slots.
-- Standardized the passed migration context to actor:\*EmbeddedDocuments to isMigrating
+- Standardized the passed migration context to actor:EmbeddedDocuments to isMigrating
 - Fixed HTML stripping of item descriptions on the Character sheet
 - #705 - When clicking the DV button on a sheet, users would sometimes feel like the Ruler was broken since it wouldn't show a DV if they did not have the token selected. Functionality has been enhanced:
   - Clicking the DV ruler will now highlight the current set DV table on the associated token
@@ -989,7 +994,7 @@ If you are using modified Critical Injuries please check out [this](https://gith
 - Fixed location of Lifestyle Data for Tragic Love Affairs and Affectations
 - Fix rolling initiative before combat has started
 - Fix weapon upgrades that are secondary weapons to work correctly
-- Fix cyberdeck program installation where it was adding the item.\_id under item.system
+- Fix cyberdeck program installation where it was adding the item.id under item.system
 - Fixed regression where filteredItems was re-introduced back into the system. This was replaced with actor.itemTypes in 0.82.0
 - Fixed an issue where attempting to delete a ledger line would throw an error
 - Fixed a couple migration issues:
@@ -1153,7 +1158,7 @@ If you are using modified Critical Injuries please check out [this](https://gith
   - Some fields on items were given defaults if they are empty. For example a null price or price category is set to something befitting the item type. It is still a guess, but now there is possibly correct data instead of definitely wrong or useless data.
   - Clothing and gear upgrades were converted to active effects
   - Armor, programs, netarch, vehicles, and weapons cannot be stacked any more. Duplicate items may have been created (up to 50) in players' inventories
-  - The _quality_ field has been removed from items (weapons, cyberdecks and vehicles) to avoid confusion about whether to change values in other fields. You can still use the name and other fields (such at attack modifier) to express excellent quality items
+  - The *quality* field has been removed from items (weapons, cyberdecks and vehicles) to avoid confusion about whether to change values in other fields. You can still use the name and other fields (such at attack modifier) to express excellent quality items
   - Some item types (weapons, vehicles) no longer "stack." They do not have an amount field any more
 
 ### Bug Fixes
@@ -1183,7 +1188,7 @@ If you are using modified Critical Injuries please check out [this](https://gith
 - Moved preCreateItem hook from actor.js to item.js and combined the code of createItem hook from both actor.js and item.js into item.js
 - Added a warning popup if a macro is using actor.addCriticalInjury() alerting a user to the eventual deprecation of the method. [Please see the updated API Wiki for details on the new way to create a Critical Injury from a Macro.](https://github.com/cyberpunk-red-team/fvtt-cyberpunk-red-core/wiki/System-Documentation-API-addCriticalInjury)
 - Removed shading from the "Cancel" button on dialogs which may have inadvertently made people believe it was the default
-- Renamed method \_favoriteVisibility to_toggleSectionVisibility and CSS tag toggle-favorite-visibility to toggle-section-visibility as it accurately describes what happens
+- Renamed method favoriteVisibility to_toggleSectionVisibility and CSS tag toggle-favorite-visibility to toggle-section-visibility as it accurately describes what happens
 - Updated the prompt naming for the cyberware installation to be consistent with code
 - Consolidated the interface to get Roll Tables from the system into a method in systemUtils that can either use a regular expression or not
 
@@ -1459,7 +1464,7 @@ If you are using modified Critical Injuries please check out [this](https://gith
 - Fixed various formatting issues on the mook sheet - i.e. whitespace trimmed; trailing commas and erroneous parentheses removed for Skills, Cyberware/Gear, Programs, and Critical Injuries lists.
 - Added icon artwork for many of the items in the shipped Weapons Compendium. Artwork provided by [Flintwyrm](https://twitter.com/Flintwyrm).
 - Renamed some compendia to make it more clear which are necessary to import and which should not be imported.
-- Default images added for compendia. Images from <https://game-icons.net>. They can be accessed from the file browser in "systems/cyberpunk-red-core/icons/compendium/default".
+- Default images added for compendia. Images from [https://game-icons.net](https://game-icons.net). They can be accessed from the file browser in "systems/cyberpunk-red-core/icons/compendium/default".
 - The French translation has been updated to account for all strings in this release. (Thank you VinceKun!)
 
 ### Bug Fixes
@@ -1493,7 +1498,7 @@ If you are using modified Critical Injuries please check out [this](https://gith
 
 ### New Features
 
-- FnWeather made a great video demonstrating some of the following changes which you can find here: <https://www.youtube.com/watch?v=csgB6c5KhkU>. Thanks to him!
+- FnWeather made a great video demonstrating some of the following changes which you can find here: [https://www.youtube.com/watch?v=csgB6c5KhkU](https://www.youtube.com/watch?v=csgB6c5KhkU). Thanks to him!
 - Added "Option Slots Size" for optional cyberware. This allows proper tracking of cyberware that can use no slots, or multiple slots. By default when first updating to this version all cyberware has an assumed slot size of 1. Please update your optional cyberware accordingly in line with the core rulebook.
 - Added extra content to the cyberware tab to display the amount of 'used' slots for foundational cyberware.
 - Added option to reroll duplicate critical injuries. There is a system setting to decide if you want to use it, with the default being off.
@@ -1579,7 +1584,7 @@ If you are using modified Critical Injuries please check out [this](https://gith
 
 ### UI/UX
 
-- FnWeather made a great video demonstrating some of the following changes which you can find here: <https://www.youtube.com/watch?v=Q8DP0qcR4AU>. Thanks to him!
+- FnWeather made a great video demonstrating some of the following changes which you can find here: [https://www.youtube.com/watch?v=Q8DP0qcR4AU](https://www.youtube.com/watch?v=Q8DP0qcR4AU). Thanks to him!
 - Added the ability to show DV for ranged weapons when using the ruler for measurement
   - Right clicking a token, you can select a DV table to use and after setting this, any ruler measurements will show the DV along with the measured range.
   - Ranged Weapons can be also configured to use a specific DV table in the item settings. Weapons with DV Tables associated with them will have a ruler in their Fight Tab which can be clicked to set the DV Table for the associated token to quickly switch DV tables when using the Ruler Measurement Tool.

@@ -321,8 +321,34 @@
         background-color: var(--cpr-background-box);
       }
 
+      .actor-stats-stat {
+        display: grid;
+        grid-template-rows: auto auto;
+        align-items: center;
+      }
+
+      .actor-stats-title {
+        line-height: 1.2;
+        padding: 0.125rem 0;
+      }
+
+      .actor-stats-title a {
+        display: block;
+        width: 100%;
+      }
+
+      .actor-stats-value {
+        input {
+          box-sizing: border-box;
+          width: 100%;
+          padding: 0;
+          text-align: center;
+        }
+      }
+
       .actor-stats-of {
         input {
+          box-sizing: border-box;
           width: 100%;
           padding: 0;
           text-align: center;
@@ -332,8 +358,16 @@
           padding: 0;
         }
 
+        .actor-stats-of-min input {
+          text-align: right;
+        }
+
         .actor-stats-of-max {
           padding: 0;
+        }
+
+        .actor-stats-of-max input {
+          text-align: left;
         }
 
         .actor-stats-of-sep {
@@ -396,6 +430,23 @@
       background-color: var(--cpr-background-box);
       border-color: var(--cpr-background-border);
     }
+  }
+
+  /* Scoped tab sizing for the character sheet: each tab shares the strip
+     equally (flex:1) so the strip is flush across the full pane width, with
+     a small min-width to keep short labels readable and zero left margin so
+     the first tab aligns flush with the pane's left edge. */
+  .cpr-tabs > * {
+    flex: 1;
+  }
+
+  .tab-label {
+    min-width: 4rem;
+    padding: 0;
+  }
+
+  .tab-pink-underlay {
+    margin-left: 0;
   }
 }
 

@@ -6,8 +6,20 @@ import CPRDialog from "./cpr-dialog-application.js";
  * Dialog which extends CPRDialog to display and modify the ledger property.
  */
 export default class CPRLedger extends CPRDialog {
-  constructor(actor, propName, options) {
-    super(actor.system[propName], options);
+  constructor(actor, propName, options = {}) {
+    const ledgername = "CPR.ledger.".concat(propName.toLowerCase());
+    // Merge title into options BEFORE super so the frozen `this.options`
+    // contract on Application V2 is respected.
+    const merged = foundry.utils.mergeObject(
+      options,
+      {
+        title: SystemUtils.Format("CPR.ledger.title", {
+          property: SystemUtils.Localize(ledgername),
+        }),
+      },
+      { inplace: false }
+    );
+    super(actor.system[propName], merged);
     this.actor = actor;
     this.total = actor.system[propName].value;
 
@@ -18,11 +30,7 @@ export default class CPRLedger extends CPRDialog {
     // This comment has been added to allow for automated checks
     // of localization strings in the code.
     this.propName = propName;
-    this.ledgername = "CPR.ledger.".concat(propName.toLowerCase());
-    // Set title.
-    this.options.title = SystemUtils.Format("CPR.ledger.title", {
-      property: SystemUtils.Localize(this.ledgername),
-    });
+    this.ledgername = ledgername;
     this.contents = actor.listRecords(propName);
     this._makeLedgerReadable(propName);
   }
@@ -55,13 +63,12 @@ export default class CPRLedger extends CPRDialog {
    *
    * @return {Object} - a structured object representing ledger data.
    */
-  async getData() {
-    const data = {
-      total: this.total,
-      ledgername: this.ledgername,
-      contents: this.contents,
-      isGM: game.user.isGM,
-    };
+  async _prepareContext(options) {
+    const data = await super._prepareContext(options);
+    data.total = this.total;
+    data.ledgername = this.ledgername;
+    data.contents = this.contents;
+    data.isGM = game.user.isGM;
     return data;
   }
 

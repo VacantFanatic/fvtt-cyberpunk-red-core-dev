@@ -10,14 +10,20 @@ export default class SelectRoleBonuses extends CPRDialog {
    * @param {Object} dialogData - Data for the form. Includes a skill list and information from the role.
    * @constructor
    */
-  constructor(dialogData, options) {
-    super(dialogData, options);
+  constructor(dialogData, options = {}) {
+    // Apply template + title via options (merged before super) to honor
+    // the Application V2 frozen-options contract.
+    const merged = foundry.utils.mergeObject(
+      options,
+      {
+        template: `systems/${game.system.id}/templates/dialog/cpr-select-role-bonuses-prompt.hbs`,
+        title: SystemUtils.Localize("CPR.dialog.selectRoleBonuses.title"),
+      },
+      { inplace: false }
+    );
+    super(dialogData, merged);
     this.skillList = dialogData.skillList;
     this.roleData = dialogData.roleData;
-    this.options.template = `systems/${game.system.id}/templates/dialog/cpr-select-role-bonuses-prompt.hbs`;
-    this.options.title = SystemUtils.Localize(
-      "CPR.dialog.selectRoleBonuses.title"
-    );
   }
 
   /**
@@ -25,8 +31,8 @@ export default class SelectRoleBonuses extends CPRDialog {
    *
    * @override
    */
-  async getData() {
-    const data = await super.getData();
+  async _prepareContext(options) {
+    const data = await super._prepareContext(options);
     data.skillList = this.skillList;
     data.roleData = this.roleData;
     return data;
