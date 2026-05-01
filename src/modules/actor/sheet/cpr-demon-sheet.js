@@ -2,29 +2,59 @@ import CPRChat from "../../chat/cpr-chat.js";
 import SystemUtils from "../../utils/cpr-systemUtils.js";
 import createImageContextMenu from "../../utils/cpr-imageContextMenu.js";
 
-const { ActorSheet } = foundry.appv1.sheets;
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const { ActorSheetV2 } = foundry.applications.sheets;
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
 /**
  * Implement the Demon sheet, which extends ActorSheet directly from Foundry. This does
  * not extend CPRActor, as there is very little overlap between Demons and mooks/characters.
  *
- * @extends {ActorSheet}
+ * @extends {ActorSheetV2}
  */
-export default class CPRDemonActorSheet extends ActorSheet {
-  /** @override */
-  static get defaultOptions() {
-    const resizeCPRSheets = game.settings.get(
-      game.system.id,
-      "resizeCPRSheets"
-    );
-
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      height: resizeCPRSheets ? 275 : "auto",
-      resizable: true,
-      template: `systems/${game.system.id}/templates/actor/cpr-demon-sheet.hbs`,
+export default class CPRDemonActorSheet extends HandlebarsApplicationMixin(
+  ActorSheetV2
+) {
+  static DEFAULT_OPTIONS = {
+    classes: ["sheet", "actor"],
+    tag: "form",
+    position: {
       width: 600,
-    });
+      height: "auto",
+    },
+    window: {
+      resizable: true,
+    },
+    form: {
+      submitOnChange: true,
+      closeOnSubmit: false,
+    },
+  };
+
+  static PARTS = {
+    sheet: {
+      template:
+        "systems/cyberpunk-red-core/templates/actor/cpr-demon-sheet.hbs",
+    },
+  };
+
+  /**
+   * Apply `resizeCPRSheets` before `super()` so V2's frozen options see the merged
+   * height (never read settings from a dead V1 `static get defaultOptions`, which V2 ignores).
+   *
+   * @param {object} [options]
+   */
+  constructor(options = {}) {
+    const merged = foundry.utils.mergeObject({}, options ?? {});
+    if (game?.settings?.get) {
+      const resize = game.settings.get(game.system.id, "resizeCPRSheets");
+      if (resize) {
+        merged.position = foundry.utils.mergeObject(merged.position ?? {}, {
+          height: 275,
+        });
+      }
+    }
+    super(merged);
   }
 
   /**
@@ -35,9 +65,9 @@ export default class CPRDemonActorSheet extends ActorSheet {
    * @override
    * @returns {Object} data - a curated structure of actorSheet data
    */
-  async getData() {
-    const sheetData = await super.getData();
-    sheetData.enrichedHTML = [];
+  async _prepareContext(options) {
+    const sheetData = await super._prepareContext(options);
+    sheetData.enrichedHTML = sheetData.enrichedHTML ?? {};
     sheetData.enrichedHTML.notes = await TextEditor.enrichHTML(
       this.actor.system.notes,
       { async: true }
@@ -46,16 +76,38 @@ export default class CPRDemonActorSheet extends ActorSheet {
   }
 
   /**
-   * Activate listeners for the sheet. This has to call super at the end for Foundry to process
-   * events properly.
+   * Activate listeners for the sheet. Delegate `.rollable` from the stable application
+   * root so `_onRoll` survives re-renders without accumulating duplicate handlers.
    *
    * @override
-   * @param {Object} html - the DOM object
+   * @param {object} context
+   * @param {object} options
    */
-  activateListeners(html) {
-    html.find(".rollable").click((event) => this._onRoll(event));
-    this._createDemonImageContextMenu(html);
-    super.activateListeners(html);
+  _onRender(context, options) {
+    super._onRender(context, options);
+    const root = this.element;
+    if (!(root instanceof HTMLElement)) return;
+
+    if (!root.dataset.cprDemonRollableBound) {
+      root.dataset.cprDemonRollableBound = "1";
+      root.addEventListener("click", (event) => {
+        const matched = event.target?.closest?.(".rollable");
+        if (!matched || !root.contains(matched)) return;
+        const wrapped = new Proxy(event, {
+          get(target, prop) {
+            if (prop === "currentTarget") return matched;
+            const value = target[prop];
+            return typeof value === "function" ? value.bind(target) : value;
+          },
+        });
+        this._onRoll(wrapped);
+      });
+    }
+
+    if (!root.dataset.cprDemonImgMenuBound) {
+      root.dataset.cprDemonImgMenuBound = "1";
+      this._createDemonImageContextMenu(root);
+    }
   }
 
   /**
@@ -84,13 +136,24 @@ export default class CPRDemonActorSheet extends ActorSheet {
   }
 
   /**
-   * Sets up a ContextMenu that appears when the Actor's image is right clicked.
-   * Enables the user to share the image with other players.
+   * Right-click menu on portrait (share image). Uses a DOM selector that matches
+   * {@link templates/actor/cpr-demon-sheet.hbs} markup.
    *
-   * @param {Object} html - The DOM object
-   * @returns {object} The created ContextMenu
+   * @param {HTMLElement} html - sheet root (`this.element`)
+   * @returns {object|undefined} The created ContextMenu
    */
   _createDemonImageContextMenu(html) {
-    return createImageContextMenu(html, ".demon-icon", this.actor);
+    const root =
+      html instanceof HTMLElement
+        ? html
+        : html?.[0] instanceof HTMLElement
+        ? html[0]
+        : null;
+    if (!root) return undefined;
+    return createImageContextMenu(
+      [root],
+      ".demon-image .profile-img",
+      this.actor
+    );
   }
 }

@@ -12,8 +12,8 @@ function tokenDocumentFromHud(hud, thirdArg) {
 }
 
 function dismissTokenHud(hud) {
-  if (typeof hud.clear === "function") hud.clear();
-  else hud.close?.();
+  if (typeof hud.close === "function") hud.close();
+  else hud.clear?.();
 }
 
 const AddDvTokenHud = () => {

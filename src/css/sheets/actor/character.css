@@ -4,7 +4,7 @@
   display: grid;
   gap: 0.313rem;
   grid-template-columns: 17.3rem auto;
-  grid-template-rows: 34rem auto;
+  grid-template-rows: 34rem minmax(0, 1fr);
   grid-template-areas:
     "pane-left pane-right"
     "pane-bottom pane-bottom";
@@ -321,8 +321,34 @@
         background-color: var(--cpr-background-box);
       }
 
+      .actor-stats-stat {
+        display: grid;
+        grid-template-rows: auto auto;
+        align-items: center;
+      }
+
+      .actor-stats-title {
+        line-height: 1.2;
+        padding: 0.125rem 0;
+      }
+
+      .actor-stats-title a {
+        display: block;
+        width: 100%;
+      }
+
+      .actor-stats-value {
+        input {
+          box-sizing: border-box;
+          width: 100%;
+          padding: 0;
+          text-align: center;
+        }
+      }
+
       .actor-stats-of {
         input {
+          box-sizing: border-box;
           width: 100%;
           padding: 0;
           text-align: center;
@@ -332,8 +358,16 @@
           padding: 0;
         }
 
+        .actor-stats-of-min input {
+          text-align: right;
+        }
+
         .actor-stats-of-max {
           padding: 0;
+        }
+
+        .actor-stats-of-max input {
+          text-align: left;
         }
 
         .actor-stats-of-sep {
@@ -356,6 +390,9 @@
     .right-tabs-section {
       grid-area: tabs-right;
       width: 100%;
+      height: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
     }
 
     .right-content-section {
@@ -380,11 +417,14 @@
       "tabs-bottom"
       "content-bottom";
     overflow-y: hidden;
+    min-height: 0;
 
     .bottom-tabs-section {
       grid-area: tabs-bottom;
       width: 100%;
       height: 1.438rem;
+      overflow: hidden;
+      box-sizing: border-box;
     }
 
     .bottom-content-section {
@@ -395,7 +435,39 @@
       overflow-y: auto;
       background-color: var(--cpr-background-box);
       border-color: var(--cpr-background-border);
+      min-height: 0;
     }
+  }
+
+  /* Scoped tab sizing for the character sheet: each tab shares the strip
+     equally (flex:1) so the strip is flush across the full pane width, with
+     a small min-width to keep short labels readable and zero left margin so
+     the first tab aligns flush with the pane's left edge. The strip's grid
+     row is fixed (1.44rem on the right pane, 1.438rem on the bottom pane);
+     constraining the label height + line-height keeps the strip flush and
+     prevents the labels from clipping over the content row below. */
+  .cpr-tabs {
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .cpr-tabs > * {
+    flex: 1;
+    height: 100%;
+  }
+
+  .tab-label {
+    min-width: 4rem;
+    padding: 0;
+    height: 100%;
+    box-sizing: border-box;
+    align-items: center;
+    line-height: 1;
+  }
+
+  .tab-pink-underlay {
+    margin-left: 0;
+    height: 100%;
   }
 }
 
@@ -494,14 +566,16 @@
   width: inherit;
   background-color: var(--cpr-background-border);
   height: 100%;
+  min-height: 0;
 
   .fight-tab-grid {
     display: grid;
     grid-template-columns: 25% 25% auto;
-    grid-template-rows: auto;
+    grid-template-rows: minmax(0, 1fr);
     grid-template-areas: "injuries armor weapon";
     gap: 0.313rem;
     height: 100%;
+    min-height: 0;
 
     .fight-tab > div {
       background-color: var(--cpr-background-box);

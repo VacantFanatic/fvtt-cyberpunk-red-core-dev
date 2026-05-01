@@ -83,6 +83,7 @@
             {{#if ../isGM }}
               <div class="ledger-delete">
                 <a class="delete-ledger-line"
+                   data-action="deleteLedgerLine"
                    data-line="{{cprMath "subtract" ../contents.length @index 1}}">
                   <i class="fas fa-trash-can"
                      data-tooltip="{{localize "CPR.dialog.ledgerForm.delete"}}">

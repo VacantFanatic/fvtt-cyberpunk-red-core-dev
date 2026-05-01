@@ -50,27 +50,34 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
 
   static PARTS = {
     form: {
-      template: `systems/${game.system.id}/templates/dialog/cpr-default-prompt.hbs`,
+      // Must not use `game.system.id` here: static fields run while the module loads, before `game` exists.
+      template:
+        "systems/cyberpunk-red-core/templates/dialog/cpr-default-prompt.hbs",
     },
   };
 
   constructor(dialogData, options = {}) {
-    super(options);
+    // Application V2 freezes `this.options` after `super()`. Standard option
+    // keys (`window.title`, `buttons`, ...) need to be merged BEFORE super.
+    // Per-instance template overrides are NOT routed through options because
+    // V2 treats `options.parts` as an array of part NAMES, not a definition
+    // map; the actual template is swapped via `_configureRenderParts` below
+    // using the `_templateOverride` instance field set after `super()`.
+    const overrides = {};
+    if (options.title) {
+      overrides.window = { title: options.title };
+    }
+    if (options.overwriteButtons && options.buttons) {
+      overrides.buttons = options.buttons;
+    }
+    const mergedOptions = foundry.utils.mergeObject(options, overrides, {
+      inplace: false,
+    });
+    super(mergedOptions);
     this.dialogData = dialogData;
     this.objectData = dialogData?.object;
+    this._templateOverride = options.template ?? null;
 
-    if (options.template) {
-      this.options.parts = {
-        form: { template: options.template },
-      };
-    }
-    if (options.title) {
-      this.options.window = this.options.window ?? {};
-      this.options.window.title = options.title;
-    }
-    if (this.options.overwriteButtons && options.buttons) {
-      this.options.buttons = options.buttons;
-    }
     if (this.options?.buttons) {
       Object.keys(this.options.buttons).forEach((buttonName) => {
         const dialogButton = this.options.buttons[buttonName];
@@ -79,6 +86,25 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
         }
       });
     }
+  }
+
+  /**
+   * Inject any per-instance template override (e.g. a roll prompt template)
+   * into the merged PARTS map. Application V2 freezes `this.options`, so this
+   * is the only safe place to swap the rendered template after construction.
+   *
+   * @param {ApplicationRenderOptions} options
+   * @returns {Record<string, object>}
+   */
+  _configureRenderParts(options) {
+    const parts = super._configureRenderParts(options);
+    if (this._templateOverride && parts?.form) {
+      return {
+        ...parts,
+        form: { ...parts.form, template: this._templateOverride },
+      };
+    }
+    return parts;
   }
 
   get object() {
@@ -188,6 +214,14 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
     Object.entries(this.object ?? {}).forEach(([key, value]) => {
       data[key] = value;
     });
+    // V1 dialogs got `this.options` merged into the template scope for free.
+    // V2 only forwards what `_prepareContext` returns, so re-expose the
+    // option keys that the dialog HBS templates read explicitly
+    // (cpr-default-prompt.hbs, cpr-dialog-buttons.hbs, etc.).
+    data.options = {
+      buttons: this.options.buttons,
+      buttonDefault: this.options.buttonDefault,
+    };
     return data;
   }
 
@@ -240,7 +274,7 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
 
   async confirmDialog(_event, options) {
     // Taken from Starfinder: Fire callback that resolves original promise.
-    this.options.confirmDialog();
+    this._confirmDialog?.();
     return this.close(options);
   }
 
@@ -250,12 +284,15 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
    * @param {Object} options - potential options to pass to this.close; currently unused;
    */
   async closeDialog(_event, options) {
-    this.options.closeDialog();
+    this._closeDialog?.();
     return this.close(options);
   }
 
   /**
    * Creates a promise to be resolved when the dialog is confirmed. One can also override default options here.
+   *
+   * Callbacks are stored on the instance (not on `this.options`, which is frozen
+   * by Application V2).
    *
    * @param {...args<Object>} - The first argument should be the object that is being changed by the dialog.
    *                          - The final argument (optional) is options to pass to the dialog.
@@ -265,8 +302,8 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
   static async showDialog(...args) {
     return new Promise((resolve, reject) => {
       const dialog = new this(...args);
-      dialog.options.confirmDialog = () => resolve(args[0]);
-      dialog.options.closeDialog = () => reject(args[0]);
+      dialog._confirmDialog = () => resolve(args[0]);
+      dialog._closeDialog = () => reject(args[0]);
       dialog.render(true);
     });
   }

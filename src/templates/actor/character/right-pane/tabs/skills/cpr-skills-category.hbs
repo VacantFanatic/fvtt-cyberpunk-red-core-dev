@@ -5,7 +5,7 @@
           id="skillTab-{{category}}"
           data-tooltip="{{localize "CPR.actorSheets.commonActions.toggleCategoryPinned"}}">
       {{localize (cprFindConfigValue "skillCategories" category)}}
-      {{#if (cprListContains sheet.options.collapsedSections (cprGeneratePartial "skillTab-VAR" category)) }}
+      {{#if (cprListContains sheet.collapsedSections (cprGeneratePartial "skillTab-VAR" category)) }}
         <i class="fas fa-plus collapse-icon"></i>
         <i class="fas fa-minus expand-icon hide"></i>
       {{else}}
@@ -32,8 +32,8 @@
   {{!-- Skill List --}}
   <ol class="items-list">
     {{#each (cprSortCoreSkills (cprFilter actor.itemTypes.skill "system.category" category) ) as |skill s| }}
-      {{#if (cprSheetContentFilter ../this.sheet.options.cprContentFilter (localize (cprGetLocalizedlNameKey skill.name "skill"))) }}
-      <li class="item flexrow{{#if skill.system.favorite }} favorite{{else }}{{#if (cprListContains ../sheet.options.collapsedSections (cprGeneratePartial "skillTab-VAR" ../category)) }} hide{{/if }}{{/if }}"
+      {{#if (cprSheetContentFilter @root.options.cprContentFilter (localize (cprGetLocalizedlNameKey skill.name "skill"))) }}
+      <li class="item flexrow{{#if skill.system.favorite }} favorite{{else }}{{#if (cprListContains ../sheet.collapsedSections (cprGeneratePartial "skillTab-VAR" ../category)) }} hide{{/if }}{{/if }}"
           data-item-id="{{skill._id}}"
           data-skill-category="{{skill.system.category}}"
           draggable="true">

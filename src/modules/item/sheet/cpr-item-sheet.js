@@ -8,64 +8,143 @@ import CPRDialog from "../../dialog/cpr-dialog-application.js";
 import RoleAbilitySchema from "../../datamodels/item/components/role-ability-schema.js";
 import { ContainerUtils } from "../mixins/cpr-container.js";
 
-const { ItemSheet } = foundry.appv1.sheets;
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const { ItemSheetV2 } = foundry.applications.sheets;
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
 /**
- * Extend the basic ItemSheet.
- * @extends {ItemSheet}
+ * Normalize a sheet root reference (HTMLElement or jQuery-like) to an
+ * HTMLElement. Application V2 always passes `this.element` as a real element;
+ * legacy call sites may still hand in a jQuery wrapper.
+ *
+ * @param {unknown} html
+ * @returns {HTMLElement|null}
  */
+function resolveItemSheetRoot(html) {
+  if (html instanceof HTMLElement) return html;
+  const el = html?.[0];
+  return el instanceof HTMLElement ? el : null;
+}
 
-export default class CPRItemSheet extends ItemSheet {
-  /* -------------------------------------------- */
-  /** @override */
-  static get defaultOptions() {
-    const resizeCPRSheets = game.settings.get(
-      game.system.id,
-      "resizeCPRSheets"
-    );
-
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      height: resizeCPRSheets ? 400 : "auto",
-      resizable: true,
-      tabs: [
-        {
-          contentSelector: ".item-bottom-content-section",
-          initial: "item-description",
-          navSelector: ".navtabs-item",
-        },
-      ],
+/**
+ * Application V2 item sheet. Extends `ItemSheetV2` with the
+ * `HandlebarsApplicationMixin` so we get part-based template rendering plus
+ * V2's tab/action wiring while keeping the rest of CPR's existing item sheet
+ * behavior.
+ *
+ * @extends {ItemSheetV2}
+ */
+export default class CPRItemSheet extends HandlebarsApplicationMixin(
+  ItemSheetV2
+) {
+  static DEFAULT_OPTIONS = {
+    classes: ["sheet", "item"],
+    tag: "form",
+    position: {
       width: 715,
-    });
+      height: "auto",
+    },
+    window: {
+      resizable: true,
+    },
+    form: {
+      submitOnChange: true,
+      closeOnSubmit: false,
+    },
+    actions: {},
+  };
+
+  static PARTS = {
+    sheet: {
+      template: "systems/cyberpunk-red-core/templates/item/cpr-item-sheet.hbs",
+    },
+  };
+
+  static TABS = {
+    primary: {
+      tabs: [
+        { id: "item-description" },
+        { id: "item-settings" },
+        { id: "item-effects" },
+      ],
+      initial: "item-description",
+    },
+  };
+
+  /**
+   * Apply per-instance overrides (e.g. the world-level `resizeCPRSheets`
+   * setting) into `options.position` BEFORE `super()` so that V2 — which
+   * freezes `this.options` after construction — receives the merged shape.
+   * Foundry globals such as `game.settings` may not be available at module
+   * load, so we read them inside the constructor instead of `static
+   * DEFAULT_OPTIONS`.
+   *
+   * @param {object} [options]
+   */
+  constructor(options = {}) {
+    const merged = foundry.utils.mergeObject({}, options ?? {});
+    if (game?.settings?.get) {
+      const resize = game.settings.get(game.system.id, "resizeCPRSheets");
+      if (resize) {
+        merged.position = foundry.utils.mergeObject(merged.position ?? {}, {
+          height: 400,
+        });
+      }
+    }
+    super(merged);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  get template() {
-    return `systems/${game.system.id}/templates/item/cpr-item-sheet.hbs`;
+  /**
+   * Push the per-item-type class (e.g. `weapon`, `cyberware`, `role`) onto the
+   * sheet's `classes` array so existing scoped CSS keeps targeting items by
+   * type. V2 calls this once during construction; `this.document` is not yet
+   * assigned, so we read the type from `options.document` instead.
+   *
+   * @param {object} options
+   * @returns {object}
+   */
+  _initializeApplicationOptions(options) {
+    const initialized = super._initializeApplicationOptions(options);
+    const itemType = options?.document?.type ?? this.document?.type;
+    if (itemType) {
+      const classes = Array.isArray(initialized.classes)
+        ? [...initialized.classes]
+        : [];
+      if (!classes.includes(itemType)) classes.push(itemType);
+      initialized.classes = classes;
+    }
+    return initialized;
   }
 
-  get classes() {
-    return super.defaultOptions.classes.concat([
-      "sheet",
-      "item",
-      `${this.item.type}`,
-    ]);
+  /**
+   * V1 `ItemSheet` exposed `this.item` and `this.actor`; V2 only guarantees
+   * `this.document`. Keep the convenience aliases so existing call sites
+   * (and downstream subclasses) keep working without rewriting every
+   * reference.
+   */
+  get item() {
+    return this.document;
+  }
+
+  get actor() {
+    return this.document?.parent ?? null;
   }
 
   /** @override */
-  async getData() {
-    const foundryData = await super.getData();
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const { item } = this;
     const cprData = {};
     cprData.isGM = game.user.isGM;
-    const itemType = foundryData.item.type;
+    const itemType = item.type;
     const mixins = SystemUtils.getMixins(itemType);
     if (itemType === "role" || mixins.includes("attackable")) {
       // relativeSkills and relativeAmmo will be other items relevant to this one.
       // For owned objects, the item list will come from the character owner
       // For unowned objects, the item list will come from the core list of objects
-      if (foundryData.item.isOwned && this.object.actor.type !== "container") {
-        cprData.relativeSkills = this.object.actor.itemTypes.skill;
-        cprData.relativeAmmo = this.object.actor.itemTypes.ammo;
+      if (item.isOwned && item.actor?.type !== "container") {
+        cprData.relativeSkills = item.actor.itemTypes.skill;
+        cprData.relativeAmmo = item.actor.itemTypes.ammo;
       } else {
         const coreSkills = await SystemUtils.GetCoreSkills();
         const worldSkills = game.items.filter((i) => i.type === "skill");
@@ -80,15 +159,15 @@ export default class CPRItemSheet extends ItemSheet {
     }
 
     if (mixins.includes("effects")) {
-      cprData.effectNames = this.item.getEffectNames();
+      cprData.effectNames = item.getEffectNames();
       cprData.effectNames.push({
         label: SystemUtils.Localize("CPR.itemSheet.effects.none"),
         value: "none",
       });
 
       cprData.allowedUsages =
-        this.item.system.allowedUsage &&
-        this.item.system.allowedUsage.map((use) => {
+        item.system.allowedUsage &&
+        item.system.allowedUsage.map((use) => {
           return {
             value: use,
             label: CPR.effectUses[use],
@@ -98,7 +177,7 @@ export default class CPRItemSheet extends ItemSheet {
 
     if (itemType === "itemUpgrade") {
       const { upgradableSelectOptions, upgradableSheetData } =
-        CPRItemSheet._getItemUpgradeData(this.item);
+        CPRItemSheet._getItemUpgradeData(item);
       cprData.upgradableTypes = upgradableSelectOptions;
       cprData.upgradableDataPoints = upgradableSheetData;
     }
@@ -111,11 +190,29 @@ export default class CPRItemSheet extends ItemSheet {
     }
 
     // Enrich the description so that links to foundry documents in item descriptions have proper functionality.
-    foundryData.enrichedHTMLDescription = await TextEditor.enrichHTML(
-      foundryData.item.system.description.value,
+    cprData.enrichedHTMLDescription = await TextEditor.enrichHTML(
+      item.system.description.value,
       { async: true }
     );
-    return { ...foundryData, ...cprData };
+
+    // Always merge an explicit `primary` tab group into context.tabs so the
+    // Handlebars `{{tabs.primary.<id>.cssClass}}` references resolve even on
+    // initial render. `HandlebarsApplicationMixin` only guarantees auto-prep
+    // for the active tab group; building it here mirrors how the character
+    // sheet wires its `right` / `bottom` groups.
+    const tabs = {
+      ...(context.tabs ?? {}),
+      primary: this._prepareTabs("primary"),
+    };
+
+    return {
+      ...context,
+      item,
+      isOwned: item.isOwned,
+      isEditable: this.isEditable,
+      tabs,
+      ...cprData,
+    };
   }
 
   /**
@@ -269,69 +366,79 @@ export default class CPRItemSheet extends ItemSheet {
     return { upgradableSelectOptions, upgradableSheetData };
   }
 
+  /**
+   * Application V2 lifecycle hook. Runs after every part render — including
+   * partial re-renders such as switching tabs — so we re-bind the item
+   * sheet's listeners every time using the current sheet root, which keeps
+   * jQuery-style `.find().click()` semantics (re-attaching after each render)
+   * but uses native DOM under the hood.
+   *
+   * @param {object} context - prepared render context (unused)
+   * @param {object} options - render options (unused)
+   */
+  _onRender(context, options) {
+    super._onRender(context, options);
+    this.activateListeners(this.element);
+  }
+
   /* -------------------------------------------- */
-  /** @override */
+  /**
+   * Convert the V1 jQuery-based listeners to native DOM listeners attached to
+   * the sheet root. Called from `_onRender` so listeners are re-applied on
+   * every render (matching V1 `activateListeners` semantics under V2).
+   *
+   * @param {HTMLElement|JQuery} html - the sheet root (V2 passes
+   *   `this.element`; legacy callers may still pass jQuery)
+   */
   activateListeners(html) {
-    super.activateListeners(html);
-    if (!this.options.editable) return;
+    const root = resolveItemSheetRoot(html) ?? this.element;
+    if (!(root instanceof HTMLElement)) return;
+
+    const on = (type, selector, listener, opts) => {
+      for (const el of root.querySelectorAll(selector)) {
+        el.addEventListener(type, listener, opts);
+      }
+    };
+
+    // Right-click context menu on the item image — applies to all viewers.
+    this._createItemImageContextMenu(root);
+
+    if (!this.isEditable) return;
 
     // Select all text when grabbing text input.
-    $("input[type=text]").focusin(() => $(this).select());
+    for (const input of root.querySelectorAll("input[type=text]")) {
+      input.addEventListener("focusin", () => input.select());
+    }
 
     // generic listeners
-    html
-      .find(".item-checkbox")
-      .click((event) => this._itemCheckboxToggle(event));
-
-    html
-      .find(".item-multi-option")
-      .click((event) => this._itemMultiOption(event));
-
-    html
-      .find(".select-compatible-ammo")
-      .click(() => this._selectCompatibleAmmo());
-
-    html
-      .find(".netarch-level-action")
-      .click((event) => this._netarchLevelAction(event));
-
-    html
-      .find(".netarch-roll-level")
-      .click(() => this._netarchGenerateFromTables());
-
-    html
-      .find(".role-ability-action")
-      .click((event) => this._roleAbilityAction(event));
-
-    html
-      .find(".select-role-bonuses")
-      .click((event) => this._selectRoleBonuses(event));
-
-    html
-      .find(".manage-installed-programs")
-      .click(() => this._manageInstalledItems("program"));
-
-    html
-      .find(".manage-installed-upgrades")
-      .click(() => this._manageInstalledItems("itemUpgrade"));
-
-    html
-      .find(".manage-installed-items")
-      .click(() => this._manageInstalledItems());
-
-    html
-      .find(".uninstall-single-item")
-      .click((event) => this._uninstallSingleItem(event));
-
-    html
-      .find(".item-view")
-      .click((event) => this._renderReadOnlyItemCard(event));
-
-    html
-      .find(".manage-installable-types")
-      .click((event) => this._manageInstallableTypes(event));
-
-    html.find(".netarch-generate-auto").click(() => {
+    on("click", ".item-checkbox", (event) => this._itemCheckboxToggle(event));
+    on("click", ".item-multi-option", (event) => this._itemMultiOption(event));
+    on("click", ".select-compatible-ammo", () => this._selectCompatibleAmmo());
+    on("click", ".netarch-level-action", (event) =>
+      this._netarchLevelAction(event)
+    );
+    on("click", ".netarch-roll-level", () => this._netarchGenerateFromTables());
+    on("click", ".role-ability-action", (event) =>
+      this._roleAbilityAction(event)
+    );
+    on("click", ".select-role-bonuses", (event) =>
+      this._selectRoleBonuses(event)
+    );
+    on("click", ".manage-installed-programs", () =>
+      this._manageInstalledItems("program")
+    );
+    on("click", ".manage-installed-upgrades", () =>
+      this._manageInstalledItems("itemUpgrade")
+    );
+    on("click", ".manage-installed-items", () => this._manageInstalledItems());
+    on("click", ".uninstall-single-item", (event) =>
+      this._uninstallSingleItem(event)
+    );
+    on("click", ".item-view", (event) => this._renderReadOnlyItemCard(event));
+    on("click", ".manage-installable-types", (event) =>
+      this._manageInstallableTypes(event)
+    );
+    on("click", ".netarch-generate-auto", () => {
       if (game.user.isGM) {
         this.item._generateNetarchScene();
       } else {
@@ -341,8 +448,7 @@ export default class CPRItemSheet extends ItemSheet {
         );
       }
     });
-
-    html.find(".netarch-generate-custom").click(() => {
+    on("click", ".netarch-generate-custom", () => {
       if (game.user.isGM) {
         this.item._customize();
       } else {
@@ -352,21 +458,12 @@ export default class CPRItemSheet extends ItemSheet {
         );
       }
     });
+    on("click", ".netarch-item-link", (event) => this._openItemFromId(event));
+    on("click", ".effect-control", (event) => this.item.manageEffects(event));
 
-    html
-      .find(".netarch-item-link")
-      .click((event) => this._openItemFromId(event));
-
-    // Active Effects listener
-    html
-      .find(".effect-control")
-      .click((event) => this.item.manageEffects(event));
-
-    // Change things when the "usage" for active effects changes
-    html.find(".set-usage").change((event) => this._setUsage(event));
-
-    // Set up right click context menu when clicking on Item's image
-    this._createItemImageContextMenu(html);
+    // Change things when the "usage" for active effects changes. V2 actions
+    // are click-only, so wire change events imperatively.
+    on("change", ".set-usage", (event) => this._setUsage(event));
   }
 
   /*
@@ -389,11 +486,10 @@ export default class CPRItemSheet extends ItemSheet {
   async _itemMultiOption(event) {
     const cprItem = foundry.utils.duplicate(this.item);
     // the target the option wants to be put into
-    const target = $(event.currentTarget)
-      .parents(".item-multi-select")
-      .attr("data-target");
+    const target =
+      event.currentTarget.closest(".item-multi-select")?.dataset?.target;
     const value = SystemUtils.GetEventDatum(event, "data-value");
-    if (foundry.utils.hasProperty(cprItem, target)) {
+    if (target && foundry.utils.hasProperty(cprItem, target)) {
       const prop = foundry.utils.getProperty(cprItem, target);
       if (prop.includes(value)) {
         prop.splice(prop.indexOf(value), 1);
@@ -441,7 +537,7 @@ export default class CPRItemSheet extends ItemSheet {
     const coreSkills = await SystemUtils.GetCoreSkills(); // Get core skills.
     const customSkills = game.items.filter((i) => i.type === "skill"); // Get any custom skills.
     // If object is owned, get all skills on actor. If not, get all skills in system.
-    const allSkills = this.object.isOwned
+    const allSkills = this.item.isOwned
       ? this.actor.itemTypes.skill
       : coreSkills
           .concat(customSkills)
@@ -1133,7 +1229,7 @@ export default class CPRItemSheet extends ItemSheet {
 
     const coreSkills = await SystemUtils.GetCoreSkills();
     const customSkills = game.items.filter((i) => i.type === "skill");
-    const allSkills = this.object.isOwned
+    const allSkills = this.item.isOwned
       ? this.actor.itemTypes.skill
       : coreSkills
           .concat(customSkills)
@@ -1422,11 +1518,19 @@ export default class CPRItemSheet extends ItemSheet {
    * Sets up a ContextMenu that appears when the Item's image is right clicked.
    * Enables the user to share the image with other players.
    *
-   * @param {Object} html - The DOM object
-   * @returns {ContextMenu} The created ContextMenu
+   * `createImageContextMenu` array-destructures its first argument to extract
+   * the underlying `HTMLElement` (legacy jQuery-collection pattern), so pass
+   * the sheet root wrapped in an array — works whether `html` is already an
+   * array-like or a raw `HTMLElement`.
+   *
+   * @param {HTMLElement|JQuery} html - The sheet root
+   * @returns {ContextMenu|undefined} The created ContextMenu (or `undefined`
+   *   when no root is available, e.g. before first render)
    */
   _createItemImageContextMenu(html) {
-    return createImageContextMenu(html, ".item-image-block", this.item);
+    const root = resolveItemSheetRoot(html) ?? this.element;
+    if (!root) return undefined;
+    return createImageContextMenu([root], ".item-image-block", this.item);
   }
 
   async _manageInstallableTypes() {

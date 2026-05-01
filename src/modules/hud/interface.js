@@ -39,13 +39,14 @@ export default class HudInterface {
     if (formData.dvTable === null) {
       formData.dvTable = "";
     }
-    const { controlled } = canvas.tokens;
-    const tokenId = tokenData.id ?? tokenData._id;
-    const index = controlled.findIndex((x) => x.id === tokenId);
-    const token = controlled[index];
+    const token =
+      tokenData?.object ??
+      canvas.tokens?.get(tokenData?.id ?? tokenData?._id) ??
+      tokenData;
     await SystemUtils.SetDvTable(token, formData.dvTable);
-    if (token.actor.sheet.rendered) {
-      token.actor.sheet.render();
+    const actorSheet = tokenData?.actor?.sheet ?? token?.actor?.sheet;
+    if (actorSheet?.rendered) {
+      actorSheet.render();
     }
   }
 }

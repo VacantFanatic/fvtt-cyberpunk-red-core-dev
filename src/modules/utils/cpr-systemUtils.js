@@ -250,6 +250,18 @@ export default class CPRSystemUtils {
   }
 
   static async SetDvTable(token, tableName) {
+    const tokenDocument = token?.document ?? token ?? null;
+    if (
+      !tokenDocument ||
+      typeof tokenDocument.unsetFlag !== "function" ||
+      typeof tokenDocument.setFlag !== "function"
+    ) {
+      LOGGER.warn(
+        "SetDvTable called without a valid Token or TokenDocument; skipping DV flag update."
+      );
+      return;
+    }
+
     const dvTables = await CPRSystemUtils.GetDvTables();
     const [selectedTable] = dvTables.filter(
       (table) => table.name === tableName
@@ -270,8 +282,8 @@ export default class CPRSystemUtils {
     }
     // Because we're setting a flag to an object, Foundry will try to merge it if we
     // just call setFlag. We unset it first.
-    await token.document.unsetFlag(game.system.id, "cprDvTable");
-    await token.document.setFlag(game.system.id, "cprDvTable", dvSetting);
+    await tokenDocument.unsetFlag(game.system.id, "cprDvTable");
+    await tokenDocument.setFlag(game.system.id, "cprDvTable", dvSetting);
   }
 
   /**

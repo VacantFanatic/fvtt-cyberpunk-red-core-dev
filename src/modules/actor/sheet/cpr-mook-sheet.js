@@ -1,4 +1,4 @@
-import CPRActorSheet from "./cpr-actor-sheet.js";
+import CPRActorSheet, { resolveSheetRoot } from "./cpr-actor-sheet.js";
 import LOGGER from "../../utils/cpr-logger.js";
 import SystemUtils from "../../utils/cpr-systemUtils.js";
 import CPRDialog from "../../dialog/cpr-dialog-application.js";
@@ -25,9 +25,13 @@ export default class CPRMookActorSheet extends CPRActorSheet {
     );
 
     return foundry.utils.mergeObject(super.defaultOptions, {
-      height: resizeCPRSheets ? 600 : "auto",
-      resizable: true,
-      width: 800,
+      position: {
+        width: 800,
+        height: resizeCPRSheets ? 600 : "auto",
+      },
+      window: {
+        resizable: true,
+      },
     });
   }
 
@@ -57,8 +61,8 @@ export default class CPRMookActorSheet extends CPRActorSheet {
    * @override
    * @returns {Object} data - a curated structure of actorSheet data
    */
-  async getData() {
-    const foundryData = await super.getData();
+  async _prepareContext(options) {
+    const foundryData = await super._prepareContext(options);
     const cprActorData = foundryData.actor.system;
     cprActorData.equippedArmor = this.actor.itemTypes.armor.filter(
       (item) => item.system.equipped === "equipped"
@@ -91,20 +95,26 @@ export default class CPRMookActorSheet extends CPRActorSheet {
    */
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".mod-mook-skill").click(() => this._modMookSkills());
-    html.find(".change-mook-name").click(() => this._changeMookName());
-    html
-      .find(".mook-image-toggle")
-      .click((event) => this._expandMookImage(event));
+    const root =
+      resolveSheetRoot(html) ?? resolveSheetRoot(this.element) ?? null;
+    if (!(root instanceof HTMLElement)) return;
 
-    // If the element is "changeable", check for a keydown action and handle the key press.
-    html.find(".changeable").hover((event) => $(event.currentTarget).focus());
-    html.find(".changeable").keydown((event) => this._handleKeyPress(event));
+    const on = (type, selector, listener, options) => {
+      for (const el of root.querySelectorAll(selector)) {
+        el.addEventListener(type, listener, options);
+      }
+    };
 
-    // If the element is "installable", await mouse click and process the event
-    html
-      .find(".installable")
-      .click((event) => this._handleInstallAction(event));
+    on("click", ".mod-mook-skill", () => this._modMookSkills());
+    on("click", ".change-mook-name", () => this._changeMookName());
+    on("click", ".mook-image-toggle", (event) => this._expandMookImage(event));
+
+    for (const el of root.querySelectorAll(".changeable")) {
+      el.addEventListener("mouseenter", () => el.focus());
+      el.addEventListener("keydown", (event) => this._handleKeyPress(event));
+    }
+
+    on("click", ".installable", (event) => this._handleInstallAction(event));
   }
 
   /**
@@ -215,30 +225,30 @@ export default class CPRMookActorSheet extends CPRActorSheet {
    * @param {Object} event - event data such as a mouse click or key press
    */
   _expandMookImage(event) {
-    const mookImageArea = $(event.currentTarget).parents(".mook-image");
-    const mookImageImg = $(event.currentTarget)
-      .parents(".mook-image")
-      .children(".mook-image-block");
-    const mookImageToggle = $(event.currentTarget);
+    const mookImageToggle = event.currentTarget;
+    const mookImageArea = mookImageToggle.closest(".mook-image");
+    if (!mookImageArea) return;
+
+    const mookImageImg = mookImageArea.querySelector(".mook-image-block");
     let collapsedImage = null;
     if (
-      mookImageToggle.attr("data-text") ===
+      mookImageToggle.getAttribute("data-text") ===
       SystemUtils.Localize("CPR.mookSheet.image.collapse")
     ) {
-      mookImageToggle.attr(
+      mookImageToggle.setAttribute(
         "data-text",
         SystemUtils.Localize("CPR.mookSheet.image.expand")
       );
       collapsedImage = true;
     } else {
-      mookImageToggle.attr(
+      mookImageToggle.setAttribute(
         "data-text",
         SystemUtils.Localize("CPR.mookSheet.image.collapse")
       );
       collapsedImage = false;
     }
-    mookImageArea.toggleClass("mook-image-small-toggle");
-    mookImageImg.toggleClass("hide");
+    mookImageArea.classList.toggle("mook-image-small-toggle");
+    mookImageImg?.classList.toggle("hide");
     const cprActorData = foundry.utils.duplicate(this.actor.system);
     cprActorData.flags.collapsedImage = collapsedImage;
     this.actor.update(cprActorData);
@@ -305,7 +315,12 @@ export default class CPRMookActorSheet extends CPRActorSheet {
       }
     } else if (event.keyCode === 18) {
       LOGGER.debug("ALT key was pressed");
-      $(".skill-name").hide();
+      const sheetRoot =
+        resolveSheetRoot(this.element) ??
+        (this.element instanceof HTMLElement ? this.element : null);
+      for (const el of sheetRoot?.querySelectorAll(".skill-name") ?? []) {
+        el.classList.add("hide");
+      }
     }
   }
 

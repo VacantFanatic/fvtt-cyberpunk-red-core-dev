@@ -1,4 +1,4 @@
-<form>
+<section>
   <div class="container-sheet">
     <div class="left-pane">
       {{!-- Image --}}
@@ -193,7 +193,7 @@
                     id="gearTab-{{c}}"
                     data-tooltip="{{localize "CPR.actorSheets.commonActions.toggleCategoryPinned"}}">
                 {{localize category}}
-                {{#if (cprListContains ../this.options.collapsedSections (cprGeneratePartial "gearTab-VAR" c)) }}
+                {{#if (cprListContains ../this.collapsedSections (cprGeneratePartial "gearTab-VAR" c)) }}
                   <i class="fas fa-plus collapse-icon"></i>
                   <i class="fas fa-minus expand-icon hide"></i>
                 {{else}}
@@ -222,7 +222,7 @@
             <ol class="items-list">
               {{#each (cprSort (cprGetProp ../actor.itemTypes c) "name") as |item i| }}
                 {{!-- Row for individual item --}}
-                {{> "systems/cyberpunk-red-core/templates/actor/container/cpr-item-content.hbs" (cprMergeForPartialArg "item,actor,isGM,collapsed" item ../../actor ../../isGM ../../this.options.collapsedSections)}}
+                {{> "systems/cyberpunk-red-core/templates/actor/container/cpr-item-content.hbs" (cprMergeForPartialArg "item,actor,isGM,collapsed" item ../../actor ../../isGM ../../this.collapsedSections)}}
               {{/each}}
             </ol>
           </div>
@@ -231,4 +231,4 @@
     </div>
   </div>
   </div>
-</form>
+</section>

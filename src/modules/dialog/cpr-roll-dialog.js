@@ -12,18 +12,23 @@ export class CPRRollDialog extends CPRDialog {
    * @param {Object} options - options to change the nature of the dialog
    * @constructor
    */
-  constructor(rollData, actor, item, options) {
-    super(rollData, options);
+  constructor(rollData, actor, item, options = {}) {
+    // Push title + template into options BEFORE super so the V2 frozen-options
+    // contract is respected (CPRDialog merges these into the rendered config).
+    const merged = foundry.utils.mergeObject(
+      options,
+      {
+        title: rollData.rollTitle,
+        template: rollData.rollPrompt,
+      },
+      { inplace: false }
+    );
+    super(rollData, merged);
 
-    // Set data and options specific to this subclass.
-    this.options.title = rollData.rollTitle;
     this.rollData = rollData;
 
     // Get prototype chain (an array of class name strings) for the rollData.
     this.prototypeChain = SystemUtils.getPrototypeChain(rollData);
-
-    // Set template.
-    this.options.template = rollData.rollPrompt;
 
     // Set actor and items.
     this.actor = actor;
@@ -43,8 +48,8 @@ export class CPRRollDialog extends CPRDialog {
    *
    * @override
    */
-  async getData() {
-    const data = await super.getData();
+  async _prepareContext(options) {
+    const data = await super._prepareContext(options);
     data.rollData = this.rollData; // CPRRoll object
     data.actor = this.actor;
     data.prototypeChain = this.prototypeChain;
@@ -226,8 +231,8 @@ export class CPRRoleRollDialog extends CPRRollDialog {
   /**
    * Prepares any data unique to the Role Roll Dialog sheet.
    */
-  async getData() {
-    const data = await super.getData();
+  async _prepareContext(options) {
+    const data = await super._prepareContext(options);
 
     const skillIsVarying =
       this.item.system.skill === "varying" ||

@@ -1,5 +1,4 @@
-/* eslint-env jquery */
-import CPRActorSheet from "./cpr-actor-sheet.js";
+import CPRActorSheet, { resolveSheetRoot } from "./cpr-actor-sheet.js";
 import LOGGER from "../../utils/cpr-logger.js";
 import SystemUtils from "../../utils/cpr-systemUtils.js";
 import CPRChat from "../../chat/cpr-chat.js";
@@ -16,6 +15,13 @@ const TextEditor = foundry.applications.ux.TextEditor.implementation;
  * @extends {CPRActorSheet}
  */
 export default class CPRContainerActorSheet extends CPRActorSheet {
+  static PARTS = {
+    sheet: {
+      template:
+        "systems/cyberpunk-red-core/templates/actor/cpr-container-sheet.hbs",
+    },
+  };
+
   /**
    * See https://foundryvtt.com/api/v12/classes/client.Application.html for the complete list of options available.
    *
@@ -29,10 +35,13 @@ export default class CPRContainerActorSheet extends CPRActorSheet {
     );
 
     return foundry.utils.mergeObject(super.defaultOptions, {
-      height: resizeCPRSheets ? 750 : "auto",
-      resizable: true,
-      template: `systems/${game.system.id}/templates/actor/cpr-container-sheet.hbs`,
-      width: 1000,
+      position: {
+        width: 1000,
+        height: resizeCPRSheets ? 750 : "auto",
+      },
+      window: {
+        resizable: true,
+      },
     });
   }
 
@@ -44,8 +53,8 @@ export default class CPRContainerActorSheet extends CPRActorSheet {
    * @override
    * @returns {Object} data - a curated structure of actorSheet data
    */
-  async getData() {
-    const foundryData = await super.getData();
+  async _prepareContext(options) {
+    const foundryData = await super._prepareContext(options);
     const cprActorData = {};
 
     cprActorData.userOwnedActors = [];
@@ -79,26 +88,30 @@ export default class CPRContainerActorSheet extends CPRActorSheet {
    * @param {*} html - the DOM object
    */
   activateListeners(html) {
-    // Selection of trade partner
-    html
-      .find('select[name="trade-with-dropdown"')
-      .change((event) => this._setTradePartner(event));
+    const root =
+      resolveSheetRoot(html) ?? resolveSheetRoot(this.element) ?? null;
+    if (!(root instanceof HTMLElement)) return;
 
-    //
-    html
-      .find(".container-type-dropdown")
-      .change((event) => this._setContainerType(event));
-    // Toggle the state of a flag for the data of the checkbox
-    html.find(".checkbox-toggle").click((event) => this._checkboxToggle(event));
-    // Eurobucks management
-    html
-      .find(".eurobucks-input-button")
-      .click((event) => this._updateEurobucks(event));
-    html.find(".eurobucks-open-ledger").click(() => this.showLedger("wealth"));
-    // Configure container to purchase items from players
-    html.find(".vendor-configure-sell-to").click(() => this._configureSellTo());
+    const on = (type, selector, listener, options) => {
+      for (const el of root.querySelectorAll(selector)) {
+        el.addEventListener(type, listener, options);
+      }
+    };
 
-    super.activateListeners(html);
+    on("change", 'select[name="trade-with-dropdown"]', (event) =>
+      this._setTradePartner(event)
+    );
+    on("change", ".container-type-dropdown", (event) =>
+      this._setContainerType(event)
+    );
+    on("click", ".checkbox-toggle", (event) => this._checkboxToggle(event));
+    on("click", ".eurobucks-input-button", (event) =>
+      this._updateEurobucks(event)
+    );
+    on("click", ".eurobucks-open-ledger", () => this.showLedger("wealth"));
+    on("click", ".vendor-configure-sell-to", () => this._configureSellTo());
+
+    super.activateListeners(root);
   }
 
   /**
@@ -179,7 +192,7 @@ export default class CPRContainerActorSheet extends CPRActorSheet {
    * @param {} event - object capturing event data (what was clicked and where?)
    */
   _setTradePartner(event) {
-    this.tradePartnerId = $(event.currentTarget).val();
+    this.tradePartnerId = event.currentTarget.value;
   }
 
   /**
@@ -543,7 +556,7 @@ export default class CPRContainerActorSheet extends CPRActorSheet {
    * @param {} event - object capturing event data (what was clicked and where?)
    */
   async _setContainerType(event) {
-    const containerType = $(event.currentTarget).val();
+    const containerType = event.currentTarget.value;
     const actor = this.token === null ? this.actor : this.token.actor;
     if (this.token === null) {
       SystemUtils.DisplayMessage(
@@ -647,9 +660,14 @@ export default class CPRContainerActorSheet extends CPRActorSheet {
   }
 
   async _updateEurobucks(event) {
-    // const value = parseInt(event.currentTarget.parentElement.previousElementSibling.children[0].value, 10);
-    const value = parseInt($("#eurobucks").val(), 10);
-    const action = $(event.currentTarget).attr("data-action");
+    const sheetRoot =
+      resolveSheetRoot(this.element) ??
+      (this.element instanceof HTMLElement ? this.element : null);
+    const modifyInput =
+      sheetRoot?.querySelector('input[name="modifyValue"]') ??
+      sheetRoot?.querySelector("#eurobucks");
+    const value = parseInt(modifyInput?.value ?? "", 10);
+    const action = event.currentTarget.getAttribute("data-action");
     if (Number.isNaN(value)) {
       SystemUtils.DisplayMessage(
         "warn",

@@ -10,36 +10,97 @@ import CPRDialog from "../../dialog/cpr-dialog-application.js";
 import { ContainerUtils } from "../../item/mixins/cpr-container.js";
 import AdditionsTemplate from "../../additions/template.js";
 
-const { ActorSheet } = foundry.appv1.sheets;
+/**
+ * Normalize sheet root to an HTMLElement (Application V2 passes `this.element`;
+ * legacy call sites may still pass a jQuery-like collection).
+ *
+ * @param {unknown} html
+ * @returns {HTMLElement|null}
+ */
+export function resolveSheetRoot(html) {
+  if (html instanceof HTMLElement) return html;
+  const el = html?.[0];
+  return el instanceof HTMLElement ? el : null;
+}
+
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const { ActorSheetV2 } = foundry.applications.sheets;
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
 /**
  * Extend the basic ActorSheet, which comes from Foundry. Not all sheets used in
  * this system module may extend from this. Others also extend ActorSheet. CPRActor
  * is used for common code between Mook sheets and Character sheets.
- * @extends {ActorSheet}
+ * @extends {ActorSheetV2}
  */
-export default class CPRActorSheet extends ActorSheet {
+export default class CPRActorSheet extends HandlebarsApplicationMixin(
+  ActorSheetV2
+) {
+  static DEFAULT_OPTIONS = {
+    classes: ["sheet", "actor"],
+    tag: "form",
+    position: {
+      width: 800,
+      height: "auto",
+    },
+    window: {
+      resizable: true,
+    },
+    form: {
+      submitOnChange: true,
+      closeOnSubmit: false,
+    },
+  };
+
+  static PARTS = {
+    sheet: {
+      template: "",
+    },
+  };
+
   /**
    * We extend the constructor to initialize data structures used for tracking parts of the sheet
    * being collapsed or opened, such as skill categories. These structures are later loaded from
    * User Settings if they exist.
    *
    * @constructor
-   * @param {*} actor - the actor object associated with this sheet
    * @param {*} options - entity options passed up the chain
    */
-  constructor(actor, options) {
-    super(actor, options);
-    this.options.collapsedSections = [];
+  constructor(options = {}) {
+    super(options);
+    /** @type {string[]} */
+    this.collapsedSections = [];
     const collapsedSections = SystemUtils.GetUserSetting(
       "sheetConfig",
       "sheetCollapsedSections",
       this.id
     );
     if (collapsedSections) {
-      this.options.collapsedSections = collapsedSections;
+      this.collapsedSections = Array.isArray(collapsedSections)
+        ? [...collapsedSections]
+        : collapsedSections;
     }
+    /** @type {string} */
+    this.cprContentFilter = "";
+  }
+
+  /**
+   * Inject legacy `this.template` paths into PARTS when the merged sheet part has no template
+   * (e.g. mook). Application V2 freezes `this.options`; do not assign `options.parts` in the constructor.
+   *
+   * @param {ApplicationRenderOptions} options
+   * @returns {Record<string, object>}
+   */
+  _configureRenderParts(options) {
+    const parts = super._configureRenderParts(options);
+    const legacyTemplate = this.template;
+    if (parts?.sheet && !parts.sheet.template && legacyTemplate) {
+      return {
+        ...parts,
+        sheet: { ...parts.sheet, template: legacyTemplate },
+      };
+    }
+    return parts;
   }
 
   /**
@@ -58,11 +119,19 @@ export default class CPRActorSheet extends ActorSheet {
     );
 
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: super.defaultOptions.classes.concat(["sheet", "actor"]),
-      height: resizeCPRSheets ? 500 : "auto",
-      resizable: true,
+      classes: ["sheet", "actor"],
+      position: {
+        width: 800,
+        height: resizeCPRSheets ? 500 : "auto",
+      },
+      window: {
+        resizable: true,
+      },
       scrollY: [".right-content-section", ".top-pane-gear"],
-      width: 800,
+      form: {
+        submitOnChange: true,
+        closeOnSubmit: false,
+      },
     });
   }
 
@@ -75,8 +144,8 @@ export default class CPRActorSheet extends ActorSheet {
    * @override
    * @returns {Object} data - a curated structure of actorSheet data
    */
-  async getData() {
-    const foundryData = await super.getData();
+  async getData(options = {}) {
+    const foundryData = await super._prepareContext(options);
     const cprData = {};
 
     cprData.fightData = {};
@@ -104,6 +173,7 @@ export default class CPRActorSheet extends ActorSheet {
     cprData.isGM = game.user.isGM;
 
     cprData.isTokenSheet = !!this.token;
+    cprData.measureDvInteractive = !!this._resolveDvTargetToken();
 
     cprData.enrichedHTML = [];
     if (this.actor.type !== "container") {
@@ -205,7 +275,29 @@ export default class CPRActorSheet extends ActorSheet {
       );
     }
 
-    return { ...foundryData, ...cprData };
+    const mergedOptions = foundry.utils.mergeObject(
+      foundry.utils.deepClone(foundryData.options ?? {}),
+      {
+        cprContentFilter: this.cprContentFilter,
+        collapsedSections: this.collapsedSections,
+      }
+    );
+
+    return {
+      ...foundryData,
+      actor: foundryData.actor ?? foundryData.document ?? this.actor,
+      options: mergedOptions,
+      ...cprData,
+    };
+  }
+
+  async _prepareContext(options) {
+    return this.getData(options);
+  }
+
+  _onRender(context, options) {
+    super._onRender(context, options);
+    this.activateListeners(this.element);
   }
 
   /**
@@ -318,112 +410,127 @@ export default class CPRActorSheet extends ActorSheet {
    * @param {Object} html - the DOM object
    */
   activateListeners(html) {
-    // allow navigation for non owned actors
-    this._tabs.forEach((t) => t.bind(html[0]));
+    const root =
+      resolveSheetRoot(html) ?? resolveSheetRoot(this.element) ?? null;
+    if (!(root instanceof HTMLElement)) return;
 
-    // Make a roll
-    html.find(".rollable").click((event) => this._onRoll(event));
-
-    // Ablate Armor
-    html.find(".ablate").click((event) => this._ablateArmor(event));
-
-    // Track armor and set armor values as current
-    html
-      .find(".armor-current-untrack")
-      .click((event) => this._makeArmorCurrentTrack(event));
-
-    // Untrack armor and remove armor values from token
-    html
-      .find(".armor-current-track")
-      .click((event) => this._makeArmorCurrentUntrack(event));
-
-    // Generic item action
-    html.find(".item-action").click((event) => this._itemAction(event));
-
-    // bring up read-only versions of the item card (sheet), used with installed cyberware
-    html
-      .find(".item-view")
-      .click((event) => this._renderReadOnlyItemCard(event));
-
-    // Create item in inventory
-    html
-      .find(".item-create")
-      .click((event) => this._createInventoryItem(event));
-
-    // Reset Death Penalty
-    html.find(".reset-deathsave-value").click(() => this._resetDeathSave());
-
-    // Increase Death Penalty
-    html
-      .find(".increase-deathsave-value")
-      .click(() => this._increaseDeathSave());
-
-    // Filter contents of skills or gear
-    html.find(".filter-contents").bind("keyup", (event) => {
-      this._applyContentFilter(event);
-    });
-
-    // Reset content filter
-    html.find(".reset-content-filter").click(() => this._clearContentFilter());
-
-    // toggle the expand/collapse buttons for skill and item categories
-    html.find(".expand-button").click((event) => this._expandButton(event));
-
-    // toggle display of nested installed items in the gear tab
-    html
-      .find(".toggle-installed-visibility")
-      .click((event) => this._toggleInstalledVisibility(event));
-
-    // Uninstall a single item from its parent.
-    html
-      .find(".uninstall-single-item")
-      .click((event) => this._uninstallSingleItem(event));
-
-    // Show edit and delete buttons
-    html.find(".row.item").hover(
-      (event) => {
-        // show edit and delete buttons
-        $(event.currentTarget).contents().contents().addClass("show");
-      },
-      (event) => {
-        // hide edit and delete buttons
-        $(event.currentTarget).contents().contents().removeClass("show");
+    const on = (type, selector, listener, options) => {
+      for (const el of root.querySelectorAll(selector)) {
+        el.addEventListener(type, listener, options);
       }
+    };
+
+    // allow navigation for non owned actors
+    this._tabs?.forEach?.((t) => t.bind(root));
+
+    // Delegated `.rollable` click handling - bound once per render at the
+    // sheet root so re-rendered child parts always have working roll links
+    // without relying on per-element re-binding timing. Avoids the
+    // "rolls don't fire" regression seen after Application V2 part renders.
+    if (!root.dataset.cprRollableBound) {
+      root.dataset.cprRollableBound = "1";
+      root.addEventListener("click", (event) => {
+        const matched = event.target?.closest?.(".rollable");
+        if (!matched || !root.contains(matched)) return;
+        // Provide `currentTarget` semantics expected by _onRoll callees
+        // (e.g. SystemUtils.GetEventDatum reads event.currentTarget).
+        const wrapped = new Proxy(event, {
+          get(target, prop) {
+            if (prop === "currentTarget") return matched;
+            const value = target[prop];
+            return typeof value === "function" ? value.bind(target) : value;
+          },
+        });
+        this._onRoll(wrapped);
+      });
+    }
+    if (!root.dataset.cprItemActionBound) {
+      root.dataset.cprItemActionBound = "1";
+      root.addEventListener("click", (event) => {
+        const matched = event.target?.closest?.(".item-action");
+        if (!matched || !root.contains(matched)) return;
+        const wrapped = new Proxy(event, {
+          get(target, prop) {
+            if (prop === "currentTarget") return matched;
+            const value = target[prop];
+            return typeof value === "function" ? value.bind(target) : value;
+          },
+        });
+        this._itemAction(wrapped);
+      });
+    }
+    on("click", ".ablate", (event) => this._ablateArmor(event));
+    on("click", ".armor-current-untrack", (event) =>
+      this._makeArmorCurrentTrack(event)
+    );
+    on("click", ".armor-current-track", (event) =>
+      this._makeArmorCurrentUntrack(event)
+    );
+    on("click", ".item-view", (event) => this._renderReadOnlyItemCard(event));
+    on("click", ".item-create", (event) => this._createInventoryItem(event));
+    on("click", ".reset-deathsave-value", () => this._resetDeathSave());
+    on("click", ".increase-deathsave-value", () => this._increaseDeathSave());
+    on("keyup", ".filter-contents", (event) => this._applyContentFilter(event));
+    on("click", ".reset-content-filter", () => this._clearContentFilter());
+    on("click", ".expand-button", (event) => this._expandButton(event));
+    on("click", ".toggle-installed-visibility", (event) =>
+      this._toggleInstalledVisibility(event)
+    );
+    on("click", ".uninstall-single-item", (event) =>
+      this._uninstallSingleItem(event)
     );
 
-    // Item Dragging
-    const handler = (ev) => this._onDragItemStart(ev);
-    html.find(".item").each((i, li) => {
-      li.setAttribute("draggable", true);
-      li.addEventListener("dragstart", handler, false);
-    });
+    for (const row of root.querySelectorAll(".row.item")) {
+      row.addEventListener("mouseenter", (event) => {
+        const { currentTarget } = event;
+        for (const child of currentTarget.children) {
+          if (child.nodeType === Node.ELEMENT_NODE) {
+            for (const nested of child.children) {
+              if (nested.nodeType === Node.ELEMENT_NODE) {
+                nested.classList.add("show");
+              }
+            }
+          }
+        }
+      });
+      row.addEventListener("mouseleave", (event) => {
+        const { currentTarget } = event;
+        for (const child of currentTarget.children) {
+          if (child.nodeType === Node.ELEMENT_NODE) {
+            for (const nested of child.children) {
+              if (nested.nodeType === Node.ELEMENT_NODE) {
+                nested.classList.remove("show");
+              }
+            }
+          }
+        }
+      });
+    }
 
-    // Set up right click context menu when clicking on Actor's image
-    this._createActorImageContextMenu(html);
+    const dragHandler = (ev) => this._onDragItemStart(ev);
+    for (const li of root.querySelectorAll(".item")) {
+      li.setAttribute("draggable", "true");
+      li.addEventListener("dragstart", dragHandler, false);
+    }
 
-    if (!this.options.editable) return;
+    this._createActorImageContextMenu(root);
+
+    super.activateListeners?.(root);
+
+    if (!this.isEditable) return;
     // Listeners for editable fields under here. Fields might not be editable because
     // the user viewing the sheet might not have permission to. They may not be the owner.
 
-    $("input[type=text]").focusin(() => $(this).select());
+    for (const input of root.querySelectorAll(
+      'input[type="text"], input[type=text]'
+    )) {
+      input.addEventListener("focusin", () => input.select());
+    }
 
-    // Render Item Card
-    html.find(".item-edit").click((event) => this._renderItemCard(event));
-
-    // Roll critical injuries and add to sheet
-    html.find(".roll-critical-injury").click(() => this._rollCriticalInjury());
-
-    // set/unset "checkboxes" used with fire modes
-    html
-      .find(".fire-checkbox")
-      .click((event) => this._fireCheckboxToggle(event));
-
-    // Reputation related listeners
-    html
-      .find(".reputation-open-ledger")
-      .click(() => this.showLedger("reputation"));
-
-    super.activateListeners(html);
+    on("click", ".item-edit", (event) => this._renderItemCard(event));
+    on("click", ".roll-critical-injury", () => this._rollCriticalInjury());
+    on("click", ".fire-checkbox", (event) => this._fireCheckboxToggle(event));
+    on("click", ".reputation-open-ledger", () => this.showLedger("reputation"));
   }
 
   /**
@@ -435,24 +542,35 @@ export default class CPRActorSheet extends ActorSheet {
    * @param {*} event - object with details of the event
    */
   _expandButton(event) {
-    const collapsibleElement = $(event.currentTarget).parents(".collapsible");
-    $(collapsibleElement).find(".collapse-icon").toggleClass("hide");
-    $(collapsibleElement).find(".expand-icon").toggleClass("hide");
-    const itemOrderedList = $(collapsibleElement).children("ol");
-    const itemList = $(itemOrderedList).children("li");
-    itemList.each((lineIndex) => {
-      const lineItem = itemList[lineIndex];
-      if ($(lineItem).hasClass("item") && !$(lineItem).hasClass("favorite")) {
-        $(lineItem).toggleClass("hide");
-      }
-    });
+    const btn = event.currentTarget;
+    const collapsibleElement = btn.closest(".collapsible");
+    if (!collapsibleElement) return;
 
-    if (this.options.collapsedSections.includes(event.currentTarget.id)) {
-      this.options.collapsedSections = this.options.collapsedSections.filter(
-        (sectionName) => sectionName !== event.currentTarget.id
+    for (const el of collapsibleElement.querySelectorAll(".collapse-icon")) {
+      el.classList.toggle("hide");
+    }
+    for (const el of collapsibleElement.querySelectorAll(".expand-icon")) {
+      el.classList.toggle("hide");
+    }
+
+    const itemOrderedList = collapsibleElement.querySelector(":scope > ol");
+    if (itemOrderedList) {
+      for (const lineItem of itemOrderedList.querySelectorAll(":scope > li")) {
+        if (
+          lineItem.classList.contains("item") &&
+          !lineItem.classList.contains("favorite")
+        ) {
+          lineItem.classList.toggle("hide");
+        }
+      }
+    }
+
+    if (this.collapsedSections.includes(btn.id)) {
+      this.collapsedSections = this.collapsedSections.filter(
+        (sectionName) => sectionName !== btn.id
       );
     } else {
-      this.options.collapsedSections.push(event.currentTarget.id);
+      this.collapsedSections.push(btn.id);
     }
   }
 
@@ -808,15 +926,7 @@ export default class CPRActorSheet extends ActorSheet {
           if (item.system?.dvTable !== "") {
             await item.doAction(this.actor, event.currentTarget.attributes);
             await this._setDvIconState(item);
-            if (
-              canvas.tokens.controlled.filter((t) => t.id === this.token.id)
-                .length === 0 &&
-              canvas.tokens.ownedTokens.filter(
-                (t) =>
-                  t.actor.constructor.name === "CPRCharacterActor" ||
-                  t.actor.constructor.name === "CPRMookActor"
-              ).length !== 1
-            ) {
+            if (!this._resolveDvTargetToken()) {
               SystemUtils.DisplayMessage(
                 "warn",
                 SystemUtils.Localize(
@@ -850,23 +960,41 @@ export default class CPRActorSheet extends ActorSheet {
    * @param {CPRItem} item - item we are activating the DV Ruler for
    */
   async _setDvIconState(item) {
-    const dvGlyphs = this.element[0].querySelectorAll(".dv-glyph");
+    const sheetRoot = resolveSheetRoot(this.element);
+    if (!sheetRoot) return this.render();
 
-    const dvFlag = this.token.getFlag(game.system.id, "cprDvTable");
-
+    const dvGlyphs = sheetRoot.querySelectorAll(".dv-glyph");
+    const targetToken = this._resolveDvTargetToken();
+    const tokenDocument = targetToken?.document ?? this.token ?? null;
+    const dvFlag = tokenDocument?.getFlag(game.system.id, "cprDvTable");
     const dvFlagSet = dvFlag?.name !== "";
 
     for (const glyphNode of dvGlyphs) {
-      const weaponId = $(glyphNode).attr("data-item-id");
+      const weaponId = glyphNode.getAttribute("data-item-id");
       if (weaponId === item._id && dvFlagSet) {
-        $(glyphNode).addClass("dv-active");
+        glyphNode.classList.add("dv-active");
       } else {
-        $(glyphNode).removeClass("dv-active");
+        glyphNode.classList.remove("dv-active");
       }
     }
 
-    // Rerender the sheet
     return this.render();
+  }
+
+  _resolveDvTargetToken() {
+    const sheetTokenId = this.token?.id ?? this.token?._id;
+    if (sheetTokenId) {
+      return canvas.tokens?.get(sheetTokenId) ?? this.token?.object ?? null;
+    }
+
+    const matchingControlled = canvas?.tokens?.controlled?.filter(
+      (token) => token.actor?.id === this.actor?.id
+    );
+    if (matchingControlled?.length === 1) {
+      return matchingControlled[0];
+    }
+
+    return null;
   }
 
   /**
@@ -905,7 +1033,7 @@ export default class CPRActorSheet extends ActorSheet {
    * @param {String} prop - property to be updated in a dot notation (e.g. "item.name")
    * @param {*} value - value to set the property to
    */
-  _updateOwnedItemProp(item, prop, value) {
+  static _updateOwnedItemProp(item, prop, value) {
     item.update({ [prop]: value });
   }
 
@@ -1528,12 +1656,15 @@ export default class CPRActorSheet extends ActorSheet {
     const dragData = TextEditor.getDragEventData(event);
     let sourceActor;
     const sourceItem = fromUuidSync(dragData.uuid);
+    if (!sourceItem) {
+      return super._onDrop(event);
+    }
     if (sourceItem.type === "cyberware" && sourceItem.system?.isInstalled) {
       SystemUtils.DisplayMessage(
         "error",
         SystemUtils.Localize("CPR.messages.tradeDragInstalledCyberwareError")
       );
-      return;
+      return null;
     }
     const transferItem =
       dragData.system && dragData.system.actorId !== undefined;
@@ -1549,12 +1680,12 @@ export default class CPRActorSheet extends ActorSheet {
           "warn",
           SystemUtils.Localize("CPR.messages.tradeDragOutWarn")
         );
-        return;
+        return null;
       }
       if (sourceActor) {
         // Do not move if the data is moved to itself
         if (sourceActor._id === this.actor._id) {
-          return;
+          return null;
         }
 
         // If the cyberware is marked as core, or is installed, throw an error message.
@@ -1567,27 +1698,36 @@ export default class CPRActorSheet extends ActorSheet {
             "error",
             SystemUtils.Localize("CPR.messages.cannotDropInstalledCyberware")
           );
-          return;
+          return null;
         }
       }
     }
 
     const deleteList = transferItem ? [sourceItem._id] : [];
     const containerTypes = SystemUtils.getDocTypesFromMixin("container");
+    const safeContainerTypes = Array.isArray(containerTypes)
+      ? containerTypes
+      : [];
 
-    const [newItem] = await super._onDrop(event);
+    const dropResult = await super._onDrop(event);
+    const newItem = Array.isArray(dropResult)
+      ? dropResult[0]
+      : dropResult ?? null;
 
     // If we created a new item and the sourceItem is a container type the createItem hook ensures all of the
     // installed items are also created on the target actor. We need to ensure that those items are
     // deleted from the source actor.
     if (
       newItem &&
-      containerTypes.includes(sourceItem.type) &&
+      safeContainerTypes.includes(sourceItem.type) &&
       sourceItem.isOwned &&
       sourceItem.system.hasInstalled
     ) {
       const deleteItemList = sourceItem.recursiveGetAllInstalledItems();
-      for (const item of deleteItemList) {
+      const safeDeleteItemList = Array.isArray(deleteItemList)
+        ? deleteItemList
+        : [];
+      for (const item of safeDeleteItemList) {
         // Delete non-ammo items.
         if (item.type !== "ammo") deleteList.push(item._id);
         // Only delete ammo items if they have a non-zero stack size.
@@ -1604,6 +1744,8 @@ export default class CPRActorSheet extends ActorSheet {
         deleteInstalled: true,
       });
     }
+
+    return newItem;
   }
 
   /**
@@ -1687,7 +1829,9 @@ export default class CPRActorSheet extends ActorSheet {
    * @returns {ContextMenu} The created ContextMenu
    */
   _createActorImageContextMenu(html) {
-    return createImageContextMenu(html, ".image-block", this.actor);
+    const root = resolveSheetRoot(html) ?? resolveSheetRoot(this.element);
+    if (!root) return undefined;
+    return createImageContextMenu([root], ".image-block", this.actor);
   }
 
   /**
@@ -1699,10 +1843,21 @@ export default class CPRActorSheet extends ActorSheet {
    */
   async _applyContentFilter(event) {
     const filterValue = event.currentTarget.value;
-    const num = $(".filter-contents").val();
-    this.options.cprContentFilter = filterValue;
-    await this._render();
-    $(".filter-contents").focus().val("").val(num);
+    const sheetRoot =
+      resolveSheetRoot(this.element) ??
+      (this.element instanceof HTMLElement ? this.element : null);
+    const num = sheetRoot?.querySelector(".filter-contents")?.value ?? "";
+    this.cprContentFilter = filterValue;
+    await this.render(true);
+    const sheetRootAfter =
+      resolveSheetRoot(this.element) ??
+      (this.element instanceof HTMLElement ? this.element : null);
+    const inp = sheetRootAfter?.querySelector(".filter-contents");
+    if (inp) {
+      inp.focus();
+      inp.value = "";
+      inp.value = num;
+    }
   }
 
   /**
@@ -1714,11 +1869,11 @@ export default class CPRActorSheet extends ActorSheet {
    */
   async _clearContentFilter() {
     if (
-      typeof this.options.cprContentFilter !== "undefined" &&
-      this.options.cprContentFilter !== ""
+      typeof this.cprContentFilter !== "undefined" &&
+      this.cprContentFilter !== ""
     ) {
-      this.options.cprContentFilter = "";
-      this._render();
+      this.cprContentFilter = "";
+      await this.render(true);
     }
   }
 
