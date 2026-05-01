@@ -88,18 +88,25 @@ async function compileCss() {
 // Copy all static assets into the build directory
 // defined in `./config.mjs`
 async function copyAssets() {
-  return new Promise((cb) => {
-    log("Copying static assets...");
-    _createDist();
-    [...SOURCE_FILES, ...SOURCE_DIRS].forEach((asset) => {
-      if (DEBUG) {
-        log(`DEBUG: Copying ${asset.from}`);
-      }
-      gulp.src(asset.from).pipe(gulp.dest(path.resolve(DEST_DIR, asset.to)));
-    });
-    log("Finished copying static assets.");
-    cb();
-  });
+  log("Copying static assets...");
+  await _createDist();
+  const assets = [...SOURCE_FILES, ...SOURCE_DIRS];
+  await Promise.all(
+    assets.map(
+      (asset) =>
+        new Promise((resolve, reject) => {
+          if (DEBUG) {
+            log(`DEBUG: Copying ${asset.from}`);
+          }
+          const stream = gulp
+            .src(asset.from, { allowEmpty: true })
+            .pipe(gulp.dest(path.resolve(DEST_DIR, asset.to)));
+          stream.on("finish", resolve);
+          stream.on("error", reject);
+        })
+    )
+  );
+  log("Finished copying static assets.");
 }
 
 async function generateDevMode() {

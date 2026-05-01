@@ -20,6 +20,7 @@
 ### Bug Fixes
 
 - Fix `CPRDialog` failing at load time (`Cannot read properties of undefined (reading 'id')`) by not referencing `game.system` in `static PARTS`.
+- Fix `copyAssets` resolving before Gulp finished writing files (could leave `cpr.js` and other roots missing from the built system folder).
 
 ## Version 1.3.4
 
