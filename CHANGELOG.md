@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.3.6
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fix ActiveEffect deprecation spam ("You are accessing the numeric #mode of an ActiveEffect change. Use the string #type instead.") on every actor / item sheet render. `CPRMod` now derives `changeMode` from `change.type` via `CONST.ACTIVE_EFFECT_MODES`, the three templates that iterated `effect.changes` directly (`cpr-item-effects.hbs`, `cpr-effects.hbs` description mixin, `cpr-criticalInjuries.hbs`) now pass `change.type`, and the `cprEffectModMode` Handlebars helper accepts either the new string type or the legacy numeric mode (closes #30).
+
 ## Version 1.3.5
 
 ### Action Needed
