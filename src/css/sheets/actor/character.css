@@ -390,6 +390,9 @@
     .right-tabs-section {
       grid-area: tabs-right;
       width: 100%;
+      height: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
     }
 
     .right-content-section {
@@ -419,6 +422,8 @@
       grid-area: tabs-bottom;
       width: 100%;
       height: 1.438rem;
+      overflow: hidden;
+      box-sizing: border-box;
     }
 
     .bottom-content-section {
@@ -435,18 +440,32 @@
   /* Scoped tab sizing for the character sheet: each tab shares the strip
      equally (flex:1) so the strip is flush across the full pane width, with
      a small min-width to keep short labels readable and zero left margin so
-     the first tab aligns flush with the pane's left edge. */
+     the first tab aligns flush with the pane's left edge. The strip's grid
+     row is fixed (1.44rem on the right pane, 1.438rem on the bottom pane);
+     constraining the label height + line-height keeps the strip flush and
+     prevents the labels from clipping over the content row below. */
+  .cpr-tabs {
+    height: 100%;
+    box-sizing: border-box;
+  }
+
   .cpr-tabs > * {
     flex: 1;
+    height: 100%;
   }
 
   .tab-label {
     min-width: 4rem;
     padding: 0;
+    height: 100%;
+    box-sizing: border-box;
+    align-items: center;
+    line-height: 1;
   }
 
   .tab-pink-underlay {
     margin-left: 0;
+    height: 100%;
   }
 }
 
