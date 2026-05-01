@@ -1809,7 +1809,7 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
       (this.element instanceof HTMLElement ? this.element : null);
     const num = sheetRoot?.querySelector(".filter-contents")?.value ?? "";
     this.cprContentFilter = filterValue;
-    await this._render();
+    await this.render(true);
     const sheetRootAfter =
       resolveSheetRoot(this.element) ??
       (this.element instanceof HTMLElement ? this.element : null);
@@ -1834,7 +1834,7 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
       this.cprContentFilter !== ""
     ) {
       this.cprContentFilter = "";
-      this._render();
+      await this.render(true);
     }
   }
 
