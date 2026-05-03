@@ -254,7 +254,7 @@ export default class CPRActiveEffectSheet extends ActiveEffectConfig {
       updateData: {
         [`changes.${idx}`]: {
           key: "",
-          mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+          type: "add",
           value: "0",
         },
         // we set the default "key category" here.

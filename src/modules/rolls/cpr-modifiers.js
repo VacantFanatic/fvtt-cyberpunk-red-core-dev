@@ -3,6 +3,16 @@
 import CPR from "../system/config.js";
 import SystemUtils from "../utils/cpr-systemUtils.js";
 
+/** Legacy numeric `change.mode` (Foundry ≤13) → V14+ string `change.type`. Never use CONST.ACTIVE_EFFECT_MODES (deprecated). */
+const LEGACY_MODE_TO_TYPE = Object.freeze({
+  0: "custom",
+  1: "multiply",
+  2: "add",
+  3: "downgrade",
+  4: "upgrade",
+  5: "override",
+});
+
 export default class CPRMod {
   /**
    *
@@ -24,10 +34,26 @@ export default class CPRMod {
     this.source = effect.name;
     this.value = Number.parseInt(change.value, 10);
     this.key = change.key;
-    // Foundry V14+: read change.type (string); numeric change.mode is deprecated.
-    const modes = CONST.ACTIVE_EFFECT_MODES;
-    const typeKey = String(change.type ?? "add").toUpperCase();
-    this.changeMode = modes[typeKey] ?? modes.ADD;
+    // Foundry V14+: `change.type` is a string; legacy `change.mode` is numeric (do not read via CONST.ACTIVE_EFFECT_MODES).
+    this.changeType = CPRMod.normalizeChangeType(change);
+  }
+
+  /**
+   * @param {object} change - Active effect change entry
+   * @returns {string} Foundry change type (lowercase), e.g. "add", "multiply"
+   */
+  static normalizeChangeType(change) {
+    if (change?.type != null && String(change.type).trim() !== "") {
+      return String(change.type).toLowerCase();
+    }
+    const legacy = change?.mode;
+    if (
+      typeof legacy === "number" &&
+      LEGACY_MODE_TO_TYPE[legacy] !== undefined
+    ) {
+      return LEGACY_MODE_TO_TYPE[legacy];
+    }
+    return "add";
   }
 
   /**

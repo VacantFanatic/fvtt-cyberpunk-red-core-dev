@@ -70,11 +70,11 @@
         needs to persist the existing value, and the mode so the math applies correctly. This has implications
         on how to present in the actor sheet too. --}}
         {{#if (cprCompare change.category "===" "stat") }}
-          <select name="changes.{{i}}.mode" data-dtype="Number">
-            {{selectOptions (cprFindConfigObj "effectModifierModes") selected=change.changeMode localize=true}}
+          <select name="changes.{{i}}.type" data-dtype="String">
+            {{selectOptions (cprFindConfigObj "effectModifierModes") selected=change.changeType localize=true}}
           </select>
         {{else}}
-          <input type="hidden" name="changes.{{i}}.mode" data-dtype="Number" value="2"/>
+          <input type="hidden" name="changes.{{i}}.type" data-dtype="String" value="add"/>
           <span>
             {{localize "CPR.effectSheet.modifiers.addSubtract"}}
             <i class="fas fa-circle-question" data-tooltip="{{localize "CPR.effectSheet.info.deleteAndModesComing"}}"></i>

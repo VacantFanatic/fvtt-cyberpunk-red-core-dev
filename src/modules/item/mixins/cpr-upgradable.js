@@ -109,7 +109,7 @@ const Upgradable = function Upgradable() {
         mod.source = overrides[0].name; // Where the upgrade comes from.
         mod.key = key; // Datapoint being upgraded.
         mod.category = category; // Category of above key.
-        mod.changeMode = CONST.ACTIVE_EFFECT_MODES.ADD; // const = 2. This comes from foundry.
+        mod.changeType = "add";
         relevantUpgrades.push(mod);
       } else {
         installedUpgrades.forEach((u, index) => {
@@ -119,7 +119,7 @@ const Upgradable = function Upgradable() {
             mod.source = u.name; // Where the upgrade comes from.
             mod.key = key; // Datapoint being upgraded.
             mod.category = category; // Category of above key.
-            mod.changeMode = CONST.ACTIVE_EFFECT_MODES.ADD; // const = 2. This comes from foundry.
+            mod.changeType = "add";
             relevantUpgrades.push(mod);
           }
         });

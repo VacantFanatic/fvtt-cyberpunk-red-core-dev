@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.3.7
+
+### Action Needed
+
+- Run **world migration** once after updating so data model version reaches **44**; migration **Active Effect changes: legacy mode to string type** rewrites embedded `ActiveEffect` changes from deprecated numeric `mode` to string `type` on Items and Actors.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Remove all use of deprecated `CONST.ACTIVE_EFFECT_MODES` (Foundry V14 warns; removal planned V16). `CPRMod` now exposes string `changeType` from `change.type` with a local map for legacy `change.mode` only. Active Effect config sheet and `CPR.effectModifierModes` persist Foundry string types (`multiply`, `add`, etc.). `cprEffectModMode` and related templates use `changeType` / string types. Data model migration **44** converts existing embedded effects accordingly (closes #32).
+
 ## Version 1.3.6
 
 ### Action Needed

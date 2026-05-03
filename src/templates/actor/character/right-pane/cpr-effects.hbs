@@ -26,7 +26,7 @@
                   {{cprGetChangeNameByKey ../this change.category change.key}}
                   {{#if change.value }}
                     {{#unless (cprCompare change.key "===" "bonuses.hasPainSuppression")}}
-                      {{cprEffectModMode change.changeMode change.value}}
+                      {{cprEffectModMode change.changeType change.value}}
                     {{/unless}}
                   {{~else}}
                     0

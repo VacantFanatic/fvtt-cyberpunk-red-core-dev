@@ -19,7 +19,7 @@
                 {{mod.source}} ({{cprGetChangeNameByKey false mod.category mod.key}}):
               </div>
               <div class="situational-mod-value text-nowrap text-center">
-                {{cprEffectModMode mod.changeMode mod.value}}
+                {{cprEffectModMode mod.changeType mod.value}}
               </div>
               <div class="situational-mod-input text-nowrap">
                 <i class="far fa{{#if (cprObjectListContains ../rollData.mods "id" mod.id) }}-check{{/if }}-circle"></i>
