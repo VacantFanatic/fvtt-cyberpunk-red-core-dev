@@ -996,33 +996,37 @@ export default function registerHandlebarsHelpers() {
   });
 
   /**
-   * For readability's sake, translate the "mode" of an active effect mod into an intuitive mathematical operator.
-   * For unknown modes, just return a question mark, which shouldn't happen. Modes are constants provided by Foundry:
-   *    0 (CUSTOM) - calls the "applyActiveEffect" hook with the value to figure out what to do with it (not used)
-   *    1 (MULTIPLY) - multiply this value with the current one
-   *    2 (ADD) - add this value to the current value (as an Integer) or set it if currently null
-   *    3 (DOWNGRADE) - like OVERRIDE but only replace if the value is lower (worse)
-   *    4 (UPGRADE) - like OVERRIDE but only replace if the value is higher (better)
-   *    5 (OVERRIDE) - replace the current value with this one
+   * Translate an active effect change type into an intuitive operator for display.
+   * Accepts Foundry V14+ string types (e.g. "add", "multiply") or legacy numeric modes 0–5.
+   * Does not use CONST.ACTIVE_EFFECT_MODES (deprecated in V14).
    */
-  Handlebars.registerHelper("cprEffectModMode", (mode, value) => {
-    let numericMode = mode;
-    if (typeof mode === "string") {
-      const modes = CONST.ACTIVE_EFFECT_MODES;
-      const key = mode.toUpperCase();
-      numericMode = modes[key] ?? modes.ADD;
-    }
-    switch (numericMode) {
-      case 1:
+  Handlebars.registerHelper("cprEffectModMode", (modeOrType, value) => {
+    const legacyNumToType = {
+      0: "custom",
+      1: "multiply",
+      2: "add",
+      3: "downgrade",
+      4: "upgrade",
+      5: "override",
+    };
+    const type =
+      typeof modeOrType === "number"
+        ? legacyNumToType[modeOrType] ?? "add"
+        : String(modeOrType ?? "add").toLowerCase();
+
+    switch (type) {
+      case "multiply":
         return `*${value}`;
-      case 2:
-        return value > 0 ? `+${value}` : value; // account for minus already being there for negative numbers
-      case 3:
+      case "add":
+      case "subtract":
+        return value > 0 ? `+${value}` : value;
+      case "downgrade":
         return `<=${value}`;
-      case 4:
+      case "upgrade":
         return `>=${value}`;
-      case 5:
+      case "override":
         return `=${value}`;
+      case "custom":
       default:
         return `?${value}`;
     }

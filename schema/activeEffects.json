@@ -214,19 +214,31 @@
             "bonuses.hasPainSuppression"
           ]
         },
-        "mode": {
-          "type": "integer",
-          "enum": [0, 1, 2, 3, 4, 5]
+        "type": {
+          "description": "Foundry V14+ ActiveEffect change type (string). Replaces legacy numeric mode.",
+          "type": "string",
+          "enum": [
+            "custom",
+            "multiply",
+            "add",
+            "subtract",
+            "downgrade",
+            "upgrade",
+            "override"
+          ]
+        },
+        "phase": {
+          "type": "string"
         },
         "priority": {
-          "type": "null"
+          "type": "number"
         },
         "value": {
           "type": "string",
           "format": "integer"
         }
       },
-      "required": ["key", "mode", "value"]
+      "required": ["key", "type", "value"]
     },
     "CPRC-Effect-Duration": {
       "description": "We do not currently use 'duration' in our AEs. This will need to be better defined if we start using 'duration'",

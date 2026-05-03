@@ -6,18 +6,12 @@ import SystemUtils from "../../utils/cpr-systemUtils.js";
  * Valid mods are objects shown below. They are in the "changes" property of the active effect.
  * {
  *    key: "system.stats.dex.value"
- *    mode: 2
+ *    type: "add"   // Foundry V14+ string change type (see CONST.ACTIVE_EFFECT_CHANGE_TYPES)
  *    priority: 10   <-- implies an order to applying effects; not used in this system
  *    value: "20"
  * }
  *
- * mode is an enum with the following behaviors:
- *    0 (CUSTOM) - calls the "applyActiveEffect" hook with the value to figure out what to do with it
- *    1 (MULTIPLY) - multiply this value with the current one
- *    2 (ADD) - add this value to the current value (as an Integer) or set it if currently null
- *    3 (DOWNGRADE) - like OVERRIDE but only replace if the value is lower (worse)
- *    4 (UPGRADE) - like OVERRIDE but only replace if the value is higher (better)
- *    5 (OVERRIDE) - replace the current value with this one
+ * Common `type` values: custom, multiply, add, subtract, downgrade, upgrade, override.
  */
 const Effects = function Effects() {
   /**
