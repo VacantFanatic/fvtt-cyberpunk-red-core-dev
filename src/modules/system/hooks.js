@@ -29,6 +29,7 @@ const hooksImports = [
   "foundry/ui/pause-animation.js",
   "foundry/ui/theme.js",
   "hotbar/generate-item-macro.js",
+  "import/cyberpunkred-com.js",
   "item/role/update-sub-roles.js",
   "item/set-default-image.js",
   "setup/create-black-ice-actor.js",

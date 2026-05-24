@@ -88,13 +88,18 @@ export default class CPRContainerActorSheet extends CPRActorSheet {
    * @param {*} html - the DOM object
    */
   activateListeners(html) {
+    super.activateListeners(html);
+
     const root =
       resolveSheetRoot(html) ?? resolveSheetRoot(this.element) ?? null;
     if (!(root instanceof HTMLElement)) return;
+    if (!this._sheetListenersAbort) return;
 
-    const on = (type, selector, listener, options) => {
+    const { signal } = this._sheetListenersAbort;
+    const on = (type, selector, listener, options = {}) => {
+      const opts = { ...options, signal };
       for (const el of root.querySelectorAll(selector)) {
-        el.addEventListener(type, listener, options);
+        el.addEventListener(type, listener, opts);
       }
     };
 
@@ -110,8 +115,6 @@ export default class CPRContainerActorSheet extends CPRActorSheet {
     );
     on("click", ".eurobucks-open-ledger", () => this.showLedger("wealth"));
     on("click", ".vendor-configure-sell-to", () => this._configureSellTo());
-
-    super.activateListeners(root);
   }
 
   /**

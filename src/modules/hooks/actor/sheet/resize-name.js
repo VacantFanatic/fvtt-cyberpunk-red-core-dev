@@ -12,7 +12,7 @@ const ResizeName = () => {
    * @param {Object} html - HTML DOM object
    */
   Hooks.on("renderActorSheet", (_, html) => {
-    const inputElement = html.find('input[name="name"]');
+    const inputElement = SheetUtils.jqSheet(html).find('input[name="name"]');
     if (inputElement.length) {
       window.requestAnimationFrame(() => {
         SheetUtils.adjustFontSizeToFit(inputElement);

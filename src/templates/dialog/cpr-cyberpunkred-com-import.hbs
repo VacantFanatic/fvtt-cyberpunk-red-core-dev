@@ -1,0 +1,31 @@
+<form class="dialog-sheet cpr-cyberpunkred-com-import-form">
+  <p>{{localize "CPR.import.cyberpunkredCom.enterCode"}}</p>
+  <input
+    class="character-import-code"
+    type="text"
+    maxlength="6"
+    autocomplete="off"
+    placeholder="XXXXXX"
+  />
+  <div class="character-import-text">
+    <div class="character-import-name {{#if invalidCode}}invalid-code{{/if}}">
+      {{previewName}}
+    </div>
+    <div class="character-import-message">{{{previewMessage}}}</div>
+  </div>
+  <footer class="dialog-footer flexrow">
+    <button
+      type="button"
+      class="cpr-dialog-button"
+      data-action="submitImport"
+      {{#unless canImport}}disabled{{/unless}}
+    >
+      <i class="fas fa-cloud-download-alt"></i>
+      {{localize "CPR.import.cyberpunkredCom.importButton"}}
+    </button>
+    <button type="button" class="cpr-dialog-button" data-action="cancelImport">
+      <i class="fas fa-xmark"></i>
+      {{localize "CPR.dialog.common.cancel"}}
+    </button>
+  </footer>
+</form>

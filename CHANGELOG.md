@@ -1,5 +1,59 @@
 # Changelog
 
+## Version 1.4.0
+
+### Action Needed
+
+- For full item import from cyberpunkred.com v2 exports, install and enable the [Quick Insert](https://foundryvtt.com/packages/quick-insert) module and build its search index once.
+
+### Changed
+
+- None.
+
+### New Features
+
+- Built-in import from [cyberpunkred.com](https://cyberpunkred.com/) using a six-character export code: Actor Directory button, character/mook sheet header menu (**Import from cyberpunkred.com**), and `game.cpr.api.import`. Imports stats, skills, lifepath, and items (v1 via compendium lookup; v2 via Quick Insert). Adapted from [cyberpunkred-importer](https://github.com/aolkin/cyberpunkred-importer) (MIT).
+
+### Bug Fixes
+
+- Gear tab equip and repair actions now use the same `item-action` click path as favorite/delete (fixes dead clicks on the gear tab after Application V2 migration); `SystemUtils.GetEventDatum` resolves item ids from parent rows without jQuery.
+
+## Version 1.3.9
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Application V2 calls `_onRender` → `activateListeners` on **every** render (including tab switches). CPR attached fresh native `addEventListener` handlers each time without removing the previous ones, so listeners stacked on the same DOM nodes and could collapse FPS (especially hover + inventory rows). Actor sheets now abort the prior listener generation via `AbortController` before rebinding; delegated `.rollable` / `.item-action` handlers use the same `signal` (replacing `dataset` guards). Subclasses (`character`, `container`, `mook`) call `super.activateListeners` first and attach their handlers with the shared `signal`. Item sheets use the same pattern (`_itemSheetListenersAbort`).
+
+## Version 1.3.8
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Sheet resize hooks (`resize-name`, `SheetUtils.setCssClassWidth` used by `resize-type-tag`) assumed `renderActorSheet` / `renderItemSheet` passed a jQuery object. Application V2 passes a native `HTMLElement`, so `html.find` threw on every render (inside `requestAnimationFrame`), which could severely reduce client FPS. Hooks now normalize via `SheetUtils.jqSheet(html)` (`$(html?.[0] ?? html)`).
+
 ## Version 1.3.7
 
 ### Action Needed

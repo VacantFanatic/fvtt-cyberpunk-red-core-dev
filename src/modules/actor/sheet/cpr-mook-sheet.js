@@ -98,10 +98,13 @@ export default class CPRMookActorSheet extends CPRActorSheet {
     const root =
       resolveSheetRoot(html) ?? resolveSheetRoot(this.element) ?? null;
     if (!(root instanceof HTMLElement)) return;
+    if (!this._sheetListenersAbort) return;
 
-    const on = (type, selector, listener, options) => {
+    const { signal } = this._sheetListenersAbort;
+    const on = (type, selector, listener, options = {}) => {
+      const opts = { ...options, signal };
       for (const el of root.querySelectorAll(selector)) {
-        el.addEventListener(type, listener, options);
+        el.addEventListener(type, listener, opts);
       }
     };
 
@@ -110,8 +113,10 @@ export default class CPRMookActorSheet extends CPRActorSheet {
     on("click", ".mook-image-toggle", (event) => this._expandMookImage(event));
 
     for (const el of root.querySelectorAll(".changeable")) {
-      el.addEventListener("mouseenter", () => el.focus());
-      el.addEventListener("keydown", (event) => this._handleKeyPress(event));
+      el.addEventListener("mouseenter", () => el.focus(), { signal });
+      el.addEventListener("keydown", (event) => this._handleKeyPress(event), {
+        signal,
+      });
     }
 
     on("click", ".installable", (event) => this._handleInstallAction(event));

@@ -1,5 +1,5 @@
 {
-  "version": "1.3.7",
+  "version": "1.4.0",
   "flags": {
     "featureVideoURL": "",
     "statusEffects": [
@@ -155,6 +155,13 @@
         "id": "lib-wrapper",
         "type": "module",
         "compatibility": {}
+      }
+    ],
+    "recommends": [
+      {
+        "id": "quick-insert",
+        "type": "module",
+        "reason": "Recommended for importing items from cyberpunkred.com v2 character exports."
       }
     ]
   },

@@ -94,72 +94,86 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
   }
 
   /**
+   * @inheritdoc
+   * @param {(selector: string, listener: (event: Event) => void) => void} onClick
+   * @protected
+   */
+  _bindSubclassSheetClicks(onClick) {
+    onClick(".calculate-hp", () => this._setMaxHp());
+    onClick(".calculate-humanity", () => this._setMaxHumanity());
+    onClick(".install-remove-cyberware", (event) =>
+      this._installUninstallCyberwareAction(event)
+    );
+    onClick(".set-lifepath", () => this._setLifepath());
+    onClick(".toggle-section-visibility", (event) =>
+      this._toggleSectionVisibility(event)
+    );
+
+    if (!this.isEditable) return;
+
+    onClick(".improvement-points-open-ledger", () =>
+      this.showLedger("improvementPoints")
+    );
+    onClick(".eurobucks-input-button", (event) => this._updateEurobucks(event));
+    onClick(".eurobucks-open-ledger", () => this.showLedger("wealth"));
+    onClick(".toggle-fight-state", (event) => this._toggleFightState(event));
+    onClick(".program-execution", (event) =>
+      this._cyberdeckProgramExecution(event)
+    );
+    onClick(".effect-control", (event) => this.manageEffect(event));
+  }
+
+  /**
    * Add listeners specific to the Character sheet. Remember additional listeners are added from the
    * parent class, CPRActor.
    *
    * @param {*} html - the DOM object
    */
   activateListeners(html) {
+    super.activateListeners(html);
+
     const root =
       resolveSheetRoot(html) ?? resolveSheetRoot(this.element) ?? null;
     if (!(root instanceof HTMLElement)) return;
+    if (!this._sheetListenersAbort) return;
 
-    const on = (type, selector, listener, options) => {
-      for (const el of root.querySelectorAll(selector)) {
-        el.addEventListener(type, listener, options);
-      }
-    };
-
-    on("click", ".navtabs-right", () => this._clearContentFilter());
-    on("click", ".calculate-hp", () => this._setMaxHp());
-    on("click", ".calculate-humanity", () => this._setMaxHumanity());
-    on("click", ".equip", (event) => this._cycleEquipState(event));
-    on("click", ".repair", (event) => this._repairArmor(event));
-    on("click", ".install-remove-cyberware", (event) =>
-      this._installUninstallCyberwareAction(event)
-    );
-    on("click", ".set-lifepath", () => this._setLifepath());
-    on("click", ".toggle-section-visibility", (event) =>
-      this._toggleSectionVisibility(event)
-    );
-
-    super.activateListeners(root);
+    const { signal } = this._sheetListenersAbort;
 
     if (!this.isEditable) return;
 
     for (const el of root.querySelectorAll(".skill-input")) {
-      el.addEventListener("click", (event) => event.target.select());
-      el.addEventListener("change", (event) => this._updateSkill(event));
+      el.addEventListener("click", (event) => event.target.select(), {
+        signal,
+      });
+      el.addEventListener("change", (event) => this._updateSkill(event), {
+        signal,
+      });
     }
     for (const el of root.querySelectorAll(".gear-amount-input")) {
-      el.addEventListener("click", (event) => event.target.select());
-      el.addEventListener("change", (event) => this._updateAmount(event));
+      el.addEventListener("click", (event) => event.target.select(), {
+        signal,
+      });
+      el.addEventListener("change", (event) => this._updateAmount(event), {
+        signal,
+      });
     }
     for (const el of root.querySelectorAll(".ability-input")) {
-      el.addEventListener("click", (event) => event.target.select());
-      el.addEventListener("change", (event) => this._updateRoleAbility(event));
+      el.addEventListener("click", (event) => event.target.select(), {
+        signal,
+      });
+      el.addEventListener("change", (event) => this._updateRoleAbility(event), {
+        signal,
+      });
     }
-
-    on("click", ".improvement-points-open-ledger", () =>
-      this.showLedger("improvementPoints")
-    );
-    on("click", ".eurobucks-input-button", (event) =>
-      this._updateEurobucks(event)
-    );
-    on("click", ".eurobucks-open-ledger", () => this.showLedger("wealth"));
 
     for (const el of root.querySelectorAll(".weapon-input")) {
-      el.addEventListener("click", (event) => event.target.select());
-      el.addEventListener("change", (event) => this._updateWeaponAmmo(event));
+      el.addEventListener("click", (event) => event.target.select(), {
+        signal,
+      });
+      el.addEventListener("change", (event) => this._updateWeaponAmmo(event), {
+        signal,
+      });
     }
-
-    on("click", ".toggle-fight-state", (event) =>
-      this._toggleFightState(event)
-    );
-    on("click", ".program-execution", (event) =>
-      this._cyberdeckProgramExecution(event)
-    );
-    on("click", ".effect-control", (event) => this.manageEffect(event));
   }
 
   /**
@@ -200,8 +214,10 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
    * @param {} event - object with details of the event
    */
   _cycleEquipState(event) {
+    event.preventDefault?.();
     const item = this.actor.getOwnedItem(CPRActorSheet._getItemId(event));
-    const prop = CPRActorSheet._getObjProp(event);
+    if (!item) return;
+    const prop = CPRActorSheet._getObjProp(event) ?? "system.equipped";
     let newValue = "owned";
     switch (item.system.equipped) {
       case "owned": {
@@ -257,13 +273,13 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
         break;
       }
     }
-    this._updateOwnedItemProp(item, prop, newValue);
+    CPRActorSheet._updateOwnedItemProp(item, prop, newValue);
     const containerTypes = SystemUtils.getDocTypesFromMixin("container");
     if (containerTypes.includes(item.type)) {
       const allInstalledItems = item.recursiveGetAllInstalledItems();
       if (allInstalledItems.length > 0) {
         for (const installedItem of allInstalledItems) {
-          this._updateOwnedItemProp(installedItem, prop, newValue);
+          CPRActorSheet._updateOwnedItemProp(installedItem, prop, newValue);
         }
       }
     }
@@ -278,7 +294,10 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
    * @param {*} event - object with details of the event
    */
   _repairArmor(event) {
-    const item = this.actor.getOwnedItem(CPRActorSheet._getItemId(event));
+    event.preventDefault?.();
+    const itemId = CPRActorSheet._getItemId(event);
+    const item = this.actor.getOwnedItem(itemId);
+    if (!item) return;
     const upgradeData = item.getTotalUpgradeValues("shieldHp");
     const currentArmorBodyValue = item.system.bodyLocation.sp;
     const currentArmorHeadValue = item.system.headLocation.sp;
@@ -287,34 +306,27 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
         ? upgradeData.value
         : item.system.shieldHitPoints.max + upgradeData.value;
     // XXX: cannot use _getObjProp since we need to update 2 props
-    this._updateOwnedItemProp(item, "system.headLocation.ablation", 0);
-    this._updateOwnedItemProp(item, "system.bodyLocation.ablation", 0);
-    this._updateOwnedItemProp(
+    CPRActorSheet._updateOwnedItemProp(item, "system.headLocation.ablation", 0);
+    CPRActorSheet._updateOwnedItemProp(item, "system.bodyLocation.ablation", 0);
+    CPRActorSheet._updateOwnedItemProp(
       item,
       "system.shieldHitPoints.value",
       currentArmorShieldValue
     );
     // Update actor external data when armor is repaired:
-    if (
-      CPRActorSheet._getItemId(event) ===
-      this.actor.system.externalData.currentArmorBody.id
-    ) {
+    const { currentArmorBody, currentArmorHead, currentArmorShield } =
+      this.actor.system.externalData;
+    if (itemId === currentArmorBody?.id) {
       this.actor.update({
         "system.externalData.currentArmorBody.value": currentArmorBodyValue,
       });
     }
-    if (
-      CPRActorSheet._getItemId(event) ===
-      this.actor.system.externalData.currentArmorHead.id
-    ) {
+    if (itemId === currentArmorHead?.id) {
       this.actor.update({
         "system.externalData.currentArmorHead.value": currentArmorHeadValue,
       });
     }
-    if (
-      CPRActorSheet._getItemId(event) ===
-      this.actor.system.externalData.currentArmorShield.id
-    ) {
+    if (itemId === currentArmorShield?.id) {
       this.actor.update({
         "system.externalData.currentArmorShield.value": currentArmorShieldValue,
       });
