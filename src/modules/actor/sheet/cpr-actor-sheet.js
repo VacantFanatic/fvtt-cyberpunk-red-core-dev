@@ -50,6 +50,9 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
       submitOnChange: true,
       closeOnSubmit: false,
     },
+    actions: {
+      importCyberpunkRedCom: CPRActorSheet.#onImportCyberpunkRedCom,
+    },
   };
 
   static PARTS = {
@@ -82,6 +85,8 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     }
     /** @type {string} */
     this.cprContentFilter = "";
+    /** @type {AbortController|null} Abort prior listeners when V2 re-renders the same root. */
+    this._sheetListenersAbort = null;
   }
 
   /**
@@ -301,6 +306,53 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
   }
 
   /**
+   * Wrap a native event so handlers can use `event.currentTarget` as the matched element.
+   *
+   * @param {Event} event
+   * @param {Element} matched
+   * @returns {Event}
+   */
+  static _wrapDelegatedEvent(event, matched) {
+    return new Proxy(event, {
+      get(target, prop) {
+        if (prop === "currentTarget") return matched;
+        const value = target[prop];
+        return typeof value === "function" ? value.bind(target) : value;
+      },
+    });
+  }
+
+  /**
+   * Delegated click listener for sheet controls inside tab bodies (survives V2 re-renders).
+   *
+   * @param {HTMLElement} root
+   * @param {AbortSignal} signal
+   * @param {string} selector
+   * @param {(event: Event) => void} listener
+   */
+  _bindDelegatedClick(root, signal, selector, listener) {
+    root.addEventListener(
+      "click",
+      (event) => {
+        const matched = event.target?.closest?.(selector);
+        if (!matched || !root.contains(matched)) return;
+        listener.call(this, CPRActorSheet._wrapDelegatedEvent(event, matched));
+      },
+      { signal }
+    );
+  }
+
+  /**
+   * Hook for character/mook sheets to register delegated clicks in the same pass as the base
+   * sheet (avoids a second `activateListeners` pass that V2 can skip after tab re-renders).
+   *
+   * @param {(selector: string, listener: (event: Event) => void) => void} onClick
+   * @protected
+   */
+  // eslint-disable-next-line class-methods-use-this, no-unused-vars -- subclass hook
+  _bindSubclassSheetClicks(_onClick) {}
+
+  /**
    * Prepare the data structure for Active Effects which are currently applied to this actor.
    * This came from the DND5E active-effect.js code.
    *
@@ -414,103 +466,93 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
       resolveSheetRoot(html) ?? resolveSheetRoot(this.element) ?? null;
     if (!(root instanceof HTMLElement)) return;
 
-    const on = (type, selector, listener, options) => {
-      for (const el of root.querySelectorAll(selector)) {
-        el.addEventListener(type, listener, options);
-      }
-    };
+    this._sheetListenersAbort?.abort();
+    this._sheetListenersAbort = new AbortController();
+    const { signal } = this._sheetListenersAbort;
 
     // allow navigation for non owned actors
     this._tabs?.forEach?.((t) => t.bind(root));
 
-    // Delegated `.rollable` click handling - bound once per render at the
-    // sheet root so re-rendered child parts always have working roll links
-    // without relying on per-element re-binding timing. Avoids the
-    // "rolls don't fire" regression seen after Application V2 part renders.
-    if (!root.dataset.cprRollableBound) {
-      root.dataset.cprRollableBound = "1";
-      root.addEventListener("click", (event) => {
-        const matched = event.target?.closest?.(".rollable");
-        if (!matched || !root.contains(matched)) return;
-        // Provide `currentTarget` semantics expected by _onRoll callees
-        // (e.g. SystemUtils.GetEventDatum reads event.currentTarget).
-        const wrapped = new Proxy(event, {
-          get(target, prop) {
-            if (prop === "currentTarget") return matched;
-            const value = target[prop];
-            return typeof value === "function" ? value.bind(target) : value;
-          },
-        });
-        this._onRoll(wrapped);
-      });
-    }
-    if (!root.dataset.cprItemActionBound) {
-      root.dataset.cprItemActionBound = "1";
-      root.addEventListener("click", (event) => {
-        const matched = event.target?.closest?.(".item-action");
-        if (!matched || !root.contains(matched)) return;
-        const wrapped = new Proxy(event, {
-          get(target, prop) {
-            if (prop === "currentTarget") return matched;
-            const value = target[prop];
-            return typeof value === "function" ? value.bind(target) : value;
-          },
-        });
-        this._itemAction(wrapped);
-      });
-    }
-    on("click", ".ablate", (event) => this._ablateArmor(event));
-    on("click", ".armor-current-untrack", (event) =>
+    // Delegated `.rollable` / `.item-action` clicks — tied to `signal` so partial
+    // V2 re-renders do not accumulate duplicate native listeners on `root`.
+    const onClick = (selector, listener) =>
+      this._bindDelegatedClick(root, signal, selector, listener);
+
+    this._bindSubclassSheetClicks(onClick);
+
+    onClick(".rollable", (event) => this._onRoll(event));
+    onClick(".item-action", (event) => this._itemAction(event));
+    onClick(".ablate", (event) => this._ablateArmor(event));
+    onClick(".armor-current-untrack", (event) =>
       this._makeArmorCurrentTrack(event)
     );
-    on("click", ".armor-current-track", (event) =>
+    onClick(".armor-current-track", (event) =>
       this._makeArmorCurrentUntrack(event)
     );
-    on("click", ".item-view", (event) => this._renderReadOnlyItemCard(event));
-    on("click", ".item-create", (event) => this._createInventoryItem(event));
-    on("click", ".reset-deathsave-value", () => this._resetDeathSave());
-    on("click", ".increase-deathsave-value", () => this._increaseDeathSave());
-    on("keyup", ".filter-contents", (event) => this._applyContentFilter(event));
-    on("click", ".reset-content-filter", () => this._clearContentFilter());
-    on("click", ".expand-button", (event) => this._expandButton(event));
-    on("click", ".toggle-installed-visibility", (event) =>
+    onClick(".item-view", (event) => this._renderReadOnlyItemCard(event));
+    onClick(".item-create", (event) => this._createInventoryItem(event));
+    onClick(".reset-deathsave-value", () => this._resetDeathSave());
+    onClick(".increase-deathsave-value", () => this._increaseDeathSave());
+    onClick(".reset-content-filter", () => this._clearContentFilter());
+    onClick(".expand-button", (event) => this._expandButton(event));
+    onClick(".toggle-installed-visibility", (event) =>
       this._toggleInstalledVisibility(event)
     );
-    on("click", ".uninstall-single-item", (event) =>
+    onClick(".uninstall-single-item", (event) =>
       this._uninstallSingleItem(event)
     );
 
+    root.addEventListener(
+      "keyup",
+      (event) => {
+        const matched = event.target?.closest?.(".filter-contents");
+        if (!matched || !root.contains(matched)) return;
+        this._applyContentFilter(
+          CPRActorSheet._wrapDelegatedEvent(event, matched)
+        );
+      },
+      { signal }
+    );
+
     for (const row of root.querySelectorAll(".row.item")) {
-      row.addEventListener("mouseenter", (event) => {
-        const { currentTarget } = event;
-        for (const child of currentTarget.children) {
-          if (child.nodeType === Node.ELEMENT_NODE) {
-            for (const nested of child.children) {
-              if (nested.nodeType === Node.ELEMENT_NODE) {
-                nested.classList.add("show");
+      row.addEventListener(
+        "mouseenter",
+        (event) => {
+          const { currentTarget } = event;
+          for (const child of currentTarget.children) {
+            if (child.nodeType === Node.ELEMENT_NODE) {
+              for (const nested of child.children) {
+                if (nested.nodeType === Node.ELEMENT_NODE) {
+                  nested.classList.add("show");
+                }
               }
             }
           }
-        }
-      });
-      row.addEventListener("mouseleave", (event) => {
-        const { currentTarget } = event;
-        for (const child of currentTarget.children) {
-          if (child.nodeType === Node.ELEMENT_NODE) {
-            for (const nested of child.children) {
-              if (nested.nodeType === Node.ELEMENT_NODE) {
-                nested.classList.remove("show");
+        },
+        { signal }
+      );
+      row.addEventListener(
+        "mouseleave",
+        (event) => {
+          const { currentTarget } = event;
+          for (const child of currentTarget.children) {
+            if (child.nodeType === Node.ELEMENT_NODE) {
+              for (const nested of child.children) {
+                if (nested.nodeType === Node.ELEMENT_NODE) {
+                  nested.classList.remove("show");
+                }
               }
             }
           }
-        }
-      });
+        },
+        { signal }
+      );
     }
 
     const dragHandler = (ev) => this._onDragItemStart(ev);
     for (const li of root.querySelectorAll(".item")) {
       li.setAttribute("draggable", "true");
-      li.addEventListener("dragstart", dragHandler, false);
+      li.addEventListener("dragstart", dragHandler, { signal });
     }
 
     this._createActorImageContextMenu(root);
@@ -524,13 +566,13 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     for (const input of root.querySelectorAll(
       'input[type="text"], input[type=text]'
     )) {
-      input.addEventListener("focusin", () => input.select());
+      input.addEventListener("focusin", () => input.select(), { signal });
     }
 
-    on("click", ".item-edit", (event) => this._renderItemCard(event));
-    on("click", ".roll-critical-injury", () => this._rollCriticalInjury());
-    on("click", ".fire-checkbox", (event) => this._fireCheckboxToggle(event));
-    on("click", ".reputation-open-ledger", () => this.showLedger("reputation"));
+    onClick(".item-edit", (event) => this._renderItemCard(event));
+    onClick(".roll-critical-injury", () => this._rollCriticalInjury());
+    onClick(".fire-checkbox", (event) => this._fireCheckboxToggle(event));
+    onClick(".reputation-open-ledger", () => this.showLedger("reputation"));
   }
 
   /**
@@ -909,6 +951,20 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
           this._splitItem(item);
           break;
         }
+        case "cycle-equip": {
+          if (typeof this._cycleEquipState === "function") {
+            event.preventDefault?.();
+            this._cycleEquipState(event);
+          }
+          return;
+        }
+        case "repair-armor": {
+          if (typeof this._repairArmor === "function") {
+            event.preventDefault?.();
+            this._repairArmor(event);
+          }
+          return;
+        }
         case "snort": {
           // consume a drug
           item.snort();
@@ -1103,11 +1159,14 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
    */
   static _getItemId(event) {
     let id = SystemUtils.GetEventDatum(event, "data-item-id");
-    if (typeof id === "undefined") {
-      LOGGER.debug(
-        "Could not find itemId in parent elements, trying currentTarget"
-      );
-      id = SystemUtils.GetEventDatum(event, "data-item-id");
+    if (id == null) {
+      id =
+        event?.currentTarget
+          ?.closest?.("[data-item-id]")
+          ?.getAttribute("data-item-id") ?? undefined;
+    }
+    if (id == null) {
+      LOGGER.debug(`Could not find data-item-id in the event data!`);
     }
     return id;
   }
@@ -1916,5 +1975,69 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     return container
       ? installedItem.uninstall({ providedContainers: [container] })
       : installedItem.uninstall();
+  }
+
+  /**
+   * Header menu: import character data from cyberpunkred.com onto this actor.
+   *
+   * @param {PointerEvent} event
+   */
+  static async #onImportCyberpunkRedCom(event) {
+    event?.preventDefault();
+    if (!game.user.can("FILES_UPLOAD")) return;
+    const actor = this.document;
+    if (!actor || (actor.type !== "character" && actor.type !== "mook")) {
+      return;
+    }
+    try {
+      if (!game.cpr?.api?.import?.runImportFlow) {
+        ui.notifications.error(
+          SystemUtils.Localize("CPR.import.cyberpunkredCom.apiUnavailable")
+        );
+        return;
+      }
+      const imported = await game.cpr.api.import.runImportFlow({
+        mode: "import",
+        actor,
+      });
+      if (imported) {
+        imported.sheet?.render(true);
+      }
+    } catch (err) {
+      LOGGER.error(err);
+      ui.notifications.error(
+        SystemUtils.Localize("CPR.import.cyberpunkredCom.failed", {
+          name: actor.name,
+        })
+      );
+    }
+  }
+
+  /**
+   * Add cyberpunkred.com import to the sheet header menu (character/mook only).
+   *
+   * @protected
+   * @returns {foundry.applications.types.ApplicationHeaderControlsEntry[]}
+   */
+  _getHeaderControls() {
+    const controls = super._getHeaderControls();
+    if (!game.user.can("FILES_UPLOAD")) {
+      return controls;
+    }
+    const actor = this.document;
+    if (!actor || (actor.type !== "character" && actor.type !== "mook")) {
+      return controls;
+    }
+    if (controls.some((c) => c.action === "importCyberpunkRedCom")) {
+      return controls;
+    }
+    return [
+      {
+        icon: "fa-solid fa-cloud-download-alt",
+        label: "CPR.import.cyberpunkredCom.menuLabel",
+        action: "importCyberpunkRedCom",
+      },
+      ...controls,
+    ];
   }
 }

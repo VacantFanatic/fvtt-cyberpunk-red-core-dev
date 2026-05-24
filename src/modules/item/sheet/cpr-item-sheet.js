@@ -92,6 +92,8 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
       }
     }
     super(merged);
+    /** @type {AbortController|null} Abort prior listeners when V2 re-renders the same root. */
+    this._itemSheetListenersAbort = null;
   }
 
   /**
@@ -394,9 +396,14 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
     const root = resolveItemSheetRoot(html) ?? this.element;
     if (!(root instanceof HTMLElement)) return;
 
-    const on = (type, selector, listener, opts) => {
+    this._itemSheetListenersAbort?.abort();
+    this._itemSheetListenersAbort = new AbortController();
+    const { signal } = this._itemSheetListenersAbort;
+
+    const on = (type, selector, listener, opts = {}) => {
+      const merged = { ...opts, signal };
       for (const el of root.querySelectorAll(selector)) {
-        el.addEventListener(type, listener, opts);
+        el.addEventListener(type, listener, merged);
       }
     };
 
@@ -407,7 +414,7 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
 
     // Select all text when grabbing text input.
     for (const input of root.querySelectorAll("input[type=text]")) {
-      input.addEventListener("focusin", () => input.select());
+      input.addEventListener("focusin", () => input.select(), { signal });
     }
 
     // generic listeners

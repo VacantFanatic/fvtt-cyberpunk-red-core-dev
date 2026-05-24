@@ -1,5 +1,6 @@
 import empableItems from "./actor/empable-items.js";
 import { getAdditionsApi } from "../additions/index.js";
+import * as cyberpunkRedComImport from "../import/cyberpunkred-com/index.js";
 
 /**
  * Loads actor functions from predefined modules and returns them as an object.
@@ -35,7 +36,18 @@ function initializeAPI() {
   // Load actor functions synchronously
   const actorFunctions = _loadActorFunctions();
   // Return the initialized API object
-  return { actor: actorFunctions, additions: getAdditionsApi() };
+  return {
+    actor: actorFunctions,
+    additions: getAdditionsApi(),
+    import: {
+      createAndImport: cyberpunkRedComImport.createAndImport,
+      fetchCharacter: cyberpunkRedComImport.fetchCharacter,
+      showImportDialog: cyberpunkRedComImport.showImportDialog,
+      runImportFlow: cyberpunkRedComImport.runImportFlow,
+      importCharacter: cyberpunkRedComImport.importCharacter,
+      loadItemDatabases: cyberpunkRedComImport.loadItemDatabases,
+    },
+  };
 }
 
 export default initializeAPI;

@@ -7,6 +7,17 @@ import LOGGER from "./cpr-logger.js";
  */
 export default class CPRSheetUtils {
   /**
+   * Normalize sheet hook `html`: legacy apps pass jQuery; Application V2 passes
+   * a raw HTMLElement (Application V2 document sheets).
+   *
+   * @param {JQuery|HTMLElement} html
+   * @returns {JQuery}
+   */
+  static jqSheet(html) {
+    return $(html?.[0] ?? html);
+  }
+
+  /**
    * Dynamically adjusts the width of all elements with the specified class
    * within the provided HTML context. It ensures that all elements have a
    * consistent width equal to the width of the widest element. The width is
@@ -14,12 +25,11 @@ export default class CPRSheetUtils {
    * measuring their width, and then applying this maximum width to all
    * elements in rem units.
    *
-   * @param {Object} html - The jQuery HTML context in which to find and adjust
-   *                        '.type-tag' elements.
+   * @param {JQuery|HTMLElement} html - Sheet root as jQuery or HTMLElement (V2).
    * @param {String} cssClass - The CSS class to target
    */
   static setCssClassWidth(html, cssClass) {
-    const typeTags = html.find(cssClass);
+    const typeTags = CPRSheetUtils.jqSheet(html).find(cssClass);
 
     // As some elements might be hidden on other tabs or under expandos we need
     // to clone them and append them to the body to measure their width.

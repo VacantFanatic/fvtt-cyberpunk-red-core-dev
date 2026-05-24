@@ -733,15 +733,26 @@ export default class CPRSystemUtils {
    * @returns {String} - the value of the field passed in the event data
    */
   static GetEventDatum(event, datum) {
-    let id = $(event.currentTarget).attr(datum);
-    if (typeof id === "undefined") {
-      LOGGER.debug(
-        `Could not find ${datum} in currentTarget trying .item parents`
-      );
-      id = $(event.currentTarget).parents(".item").attr(datum);
-      if (typeof id === "undefined") {
-        LOGGER.debug(`Could not find ${datum} in the event data!`);
-      }
+    const target = event?.currentTarget;
+    if (!(target instanceof HTMLElement)) {
+      return undefined;
+    }
+    let id = target.getAttribute(datum);
+    if (id === "") id = null;
+    if (id == null && datum.startsWith("data-")) {
+      const datasetKey = datum
+        .slice(5)
+        .replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+      id = target.dataset?.[datasetKey] ?? undefined;
+    }
+    if (id == null) {
+      id =
+        target.closest("[data-item-id]")?.getAttribute(datum) ??
+        target.closest(".item")?.getAttribute(datum) ??
+        undefined;
+    }
+    if (id == null) {
+      LOGGER.debug(`Could not find ${datum} in the event data!`);
     }
     return id;
   }

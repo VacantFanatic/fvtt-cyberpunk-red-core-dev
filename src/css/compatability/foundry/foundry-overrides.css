@@ -232,6 +232,10 @@ input,
 select,
 button,
 .sidebar-tab .directory-header .header-search input,
+.cpr-cyberpunkred-com-import .character-import-name.invalid-code {
+  color: var(--color-level-error, #c62828);
+}
+
 .dialog .dialog-buttons button,
 .dialog .dialog-buttons button.default {
   color: var(--cpr-text-foundry-input);

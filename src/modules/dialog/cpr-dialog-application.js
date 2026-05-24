@@ -67,12 +67,23 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
     if (options.title) {
       overrides.window = { title: options.title };
     }
+    let mergedOptions;
     if (options.overwriteButtons && options.buttons) {
-      overrides.buttons = options.buttons;
+      const base = foundry.utils.deepClone(CPRDialog.DEFAULT_OPTIONS);
+      delete base.buttons;
+      delete base.buttonDefault;
+      mergedOptions = foundry.utils.mergeObject(
+        base,
+        foundry.utils.mergeObject(options, overrides, { inplace: false }),
+        { inplace: false }
+      );
+      mergedOptions.buttons = options.buttons;
+      mergedOptions.buttonDefault = options.buttonDefault ?? "confirm";
+    } else {
+      mergedOptions = foundry.utils.mergeObject(options, overrides, {
+        inplace: false,
+      });
     }
-    const mergedOptions = foundry.utils.mergeObject(options, overrides, {
-      inplace: false,
-    });
     super(mergedOptions);
     this.dialogData = dialogData;
     this.objectData = dialogData?.object;

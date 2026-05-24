@@ -1,4 +1,4 @@
-<a class="equip" data-item-prop="system.equipped">
+<a class="item-action" data-action-type="cycle-equip" data-item-id="{{this._id}}" data-item-prop="system.equipped">
   {{#if (cprCompare system.equipped "===" "equipped") }}
     <i class="fas fa-hand text-left"
        data-tooltip="{{localize "CPR.global.equipState.equipped"}}">
