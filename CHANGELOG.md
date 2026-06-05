@@ -17,6 +17,8 @@
 ### Bug Fixes
 
 - Gear tab equip and repair actions now use the same `item-action` click path as favorite/delete (fixes dead clicks on the gear tab after Application V2 migration); `SystemUtils.GetEventDatum` resolves item ids from parent rows without jQuery.
+- Inline `<prose-mirror>` editors on actor and item sheets now pass `data-document-uuid` and enriched HTML content, so Foundry no longer falls back to the deprecated global `JournalTextPageSheet` when configuring ProseMirror plugins (fixes [#33](https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev/issues/33)).
+- Sheet resize hooks now listen on `renderActorSheetV2` / `renderItemSheetV2` instead of the Application V1 `renderActorSheet` / `renderItemSheet` hooks; collapsed-section persistence uses `closeActorSheetV2`.
 
 ## Version 1.3.9
 

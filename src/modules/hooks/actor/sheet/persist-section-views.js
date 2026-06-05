@@ -9,7 +9,7 @@ const PersistSectionViews = () => {
    * @memberof hookEvents
    * @param {CPRActorSheet} actorSheet - application object (the sheet)
    */
-  Hooks.on("closeActorSheet", (actorSheet) => {
+  Hooks.on("closeActorSheetV2", (actorSheet) => {
     SystemUtils.SetUserSetting(
       "sheetConfig",
       "sheetCollapsedSections",

@@ -8,8 +8,10 @@
     {{/each}}
   </div>
   <div class="item-description-section">
-    <prose-mirror name="system.description.value" toggled
+    <prose-mirror name="system.description.value"
+                  data-document-uuid="{{document.uuid}}"
+                  toggled
                   {{#unless editable}}disabled{{/unless}}
-    >{{{item.system.description.value}}}</prose-mirror>
+    >{{{enrichedHTMLDescription}}}</prose-mirror>
   </div>
 </div>

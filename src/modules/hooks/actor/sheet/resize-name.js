@@ -11,7 +11,7 @@ const ResizeName = () => {
    * @param {CPRActorSheet} app - application object (unused)
    * @param {Object} html - HTML DOM object
    */
-  Hooks.on("renderActorSheet", (_, html) => {
+  Hooks.on("renderActorSheetV2", (_, html) => {
     const inputElement = SheetUtils.jqSheet(html).find('input[name="name"]');
     if (inputElement.length) {
       window.requestAnimationFrame(() => {
