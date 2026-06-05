@@ -8,7 +8,8 @@
 
 ### Changed
 
-- None.
+- Sheet HTML enrichment (prose-mirror inactive state, lifepath fields, item descriptions) now uses a shared `enrichDocumentHTML` helper with `secrets`, `relativeTo`, and `rollData` so document links and rolls resolve correctly for the viewing user.
+- Foundry Docker dev script skips restart when the container is already healthy; use `FOUNDRY_RECREATE=1` to force recreate after compose changes. `sync-system` requires a running container.
 
 ### New Features
 
@@ -18,6 +19,7 @@
 
 - Inline `<prose-mirror>` editors on actor and item sheets now pass `data-document-uuid` and enriched HTML content, so Foundry no longer falls back to the deprecated global `JournalTextPageSheet` when configuring ProseMirror plugins (fixes [#33](https://github.com/VacantFanatic/fvtt-cyberpunk-red-core-dev/issues/33)).
 - Sheet resize hooks now listen on `renderActorSheetV2` / `renderItemSheetV2` instead of the Application V1 `renderActorSheet` / `renderItemSheet` hooks; collapsed-section persistence uses `closeActorSheetV2`.
+- Collapsed-section persistence no longer throws when `collapsedSections` is missing or not an array on sheet close.
 
 ## Version 1.4.0
 

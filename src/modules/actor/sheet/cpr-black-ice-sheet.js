@@ -3,10 +3,10 @@ import LOGGER from "../../utils/cpr-logger.js";
 import SystemUtils from "../../utils/cpr-systemUtils.js";
 import createImageContextMenu from "../../utils/cpr-imageContextMenu.js";
 import CPRDialog from "../../dialog/cpr-dialog-application.js";
+import enrichDocumentHTML from "../../utils/cpr-enrich-html.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
-const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
 /**
  * Implement the Black-ICE sheet, which extends ActorSheet directly from Foundry. This does
@@ -74,9 +74,9 @@ export default class CPRBlackIceActorSheet extends HandlebarsApplicationMixin(
     const foundryData = await super._prepareContext(options);
 
     foundryData.enrichedHTML = foundryData.enrichedHTML ?? {};
-    foundryData.enrichedHTML.notes = await TextEditor.enrichHTML(
+    foundryData.enrichedHTML.notes = await enrichDocumentHTML(
       this.actor.system.notes,
-      { async: true }
+      this.actor
     );
 
     // Get data for the linked program for the Black ICE.

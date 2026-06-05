@@ -10,6 +10,8 @@ const PersistSectionViews = () => {
    * @param {CPRActorSheet} actorSheet - application object (the sheet)
    */
   Hooks.on("closeActorSheetV2", (actorSheet) => {
+    if (!Array.isArray(actorSheet.collapsedSections)) return;
+
     SystemUtils.SetUserSetting(
       "sheetConfig",
       "sheetCollapsedSections",
