@@ -93,9 +93,11 @@
           <span>{{localize "CPR.global.generic.notes"}}</span>
         </div>
         <div class="mook-notes-content">
-          <prose-mirror name="system.information.notes" toggled
+          <prose-mirror name="system.information.notes"
+                        data-document-uuid="{{document.uuid}}"
+                        toggled
                         {{#unless editable}}disabled{{/unless}}
-          >{{{actor.system.information.notes}}}</prose-mirror>
+          >{{{enrichedHTML.systemInformationNotes}}}</prose-mirror>
         </div>
       </div>
     </div>

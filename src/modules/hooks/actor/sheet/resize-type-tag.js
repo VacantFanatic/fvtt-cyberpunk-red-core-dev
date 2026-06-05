@@ -10,7 +10,7 @@ const ResizeTypeTag = () => {
    * @param {Object} html - HTML DOM object
    */
   // Run on Actor Sheets
-  Hooks.on("renderActorSheet", (_, html) => {
+  Hooks.on("renderActorSheetV2", (_, html) => {
     window.requestAnimationFrame(() => {
       SheetUtils.setCssClassWidth(html, ".type-tag");
     });
@@ -18,7 +18,7 @@ const ResizeTypeTag = () => {
   // Run on Item Sheets
   // This should arguably be in items/sheet/resize-type-tag.js but it's
   // probably fine here as it's exactly the same as the Actor hook.
-  Hooks.on("renderItemSheet", (_, html) => {
+  Hooks.on("renderItemSheetV2", (_, html) => {
     window.requestAnimationFrame(() => {
       SheetUtils.setCssClassWidth(html, ".type-tag");
     });

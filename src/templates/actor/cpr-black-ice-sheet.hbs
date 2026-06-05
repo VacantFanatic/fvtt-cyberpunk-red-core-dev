@@ -103,9 +103,11 @@
       </div>
     </div>
     <div class="blackice-notes">
-      <prose-mirror name="system.notes" toggled
+      <prose-mirror name="system.notes"
+                    data-document-uuid="{{document.uuid}}"
+                    toggled
                     {{#unless editable}}disabled{{/unless}}
-      >{{{actor.system.notes}}}</prose-mirror>
+      >{{{enrichedHTML.notes}}}</prose-mirror>
     </div>
   </div>
 </section>

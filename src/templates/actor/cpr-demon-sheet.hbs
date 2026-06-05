@@ -52,9 +52,11 @@
     </div>
     <div class="demon-notes">
       <div class="demon-edit-section">
-        <prose-mirror name="system.notes" toggled
+        <prose-mirror name="system.notes"
+                      data-document-uuid="{{document.uuid}}"
+                      toggled
                       {{#unless editable}}disabled{{/unless}}
-        >{{{actor.system.notes}}}</prose-mirror>
+        >{{{enrichedHTML.notes}}}</prose-mirror>
       </div>
     </div>
   </div>

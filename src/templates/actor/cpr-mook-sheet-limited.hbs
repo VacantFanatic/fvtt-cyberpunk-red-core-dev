@@ -12,9 +12,11 @@
       <div class="mook-notes-limited pad-thin">
         <span class="text-padding-left-smallest">{{localize "CPR.global.generic.notes"}}</span>
         <div class="mook-edit-section-limited text-padding-left-smallest">
-          <prose-mirror name="system.information.notes" toggled
+          <prose-mirror name="system.information.notes"
+                        data-document-uuid="{{document.uuid}}"
+                        toggled
                         {{#unless editable}}disabled{{/unless}}
-          >{{{actor.system.information.notes}}}</prose-mirror>
+          >{{{enrichedHTML.systemInformationNotes}}}</prose-mirror>
         </div>
       </div>
     </div>
