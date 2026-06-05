@@ -48,6 +48,16 @@ Interested in helping out? We would love to hear from you! We also coordinate ou
 
 If you'd like to get a sense of the project's direction, the tools we use, and how we're organized, our [Development Documentation](https://github.com/cyberpunk-red-team/fvtt-cyberpunk-red-core/wiki/home#development-documentation) is a great place to start.
 
+### Developer documentation
+
+In-repo developer references for contributors:
+
+| Document | What it covers |
+|---|---|
+| [Architecture](docs/ARCHITECTURE.md) | Module map, entity factory, data models, item mixin system, rolls, hooks, migration |
+| [Contributing](docs/CONTRIBUTING.md) | Setup, build workflow, code style, common tasks (adding types/hooks/migrations) |
+| [Active Effects](docs/ACTIVE-EFFECTS.md) | Suppression, V14 change types, CPRMod, situational modifiers, key reference |
+
 ---
 
 <!-- markdownlint-disable-next-line MD033 -->

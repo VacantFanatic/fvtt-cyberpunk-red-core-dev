@@ -26,7 +26,7 @@ foundry-docker.env
 
 # Build
 dist/
-docs/
+api-docs/
 src/packs/other/changelog
 
 # Ryan's temp files
