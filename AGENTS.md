@@ -21,32 +21,31 @@ Do **not** add `npm run watch` or `npm run build` to the update script.
 
 ### Foundry VTT in Docker (persistent E2E)
 
-Foundry runs in Docker via [felddy/foundryvtt-docker](https://github.com/felddy/foundryvtt-docker). Configuration lives **in this repo**; worlds and user data persist **outside the repo** so they survive agent sessions when the VM home directory is preserved.
+Foundry runs in Docker via [felddy/foundryvtt-docker](https://github.com/felddy/foundryvtt-docker). Configuration lives **in this repo**; Foundry worlds and modules persist in a **Docker named volume** on the host (not a bind mount from the agent pod — pod paths are invisible to the Docker host).
 
 | Path | Purpose |
 |------|---------|
-| `docker/foundry-compose.yml` | Compose service definition (Foundry 14.360) |
-| `scripts/foundry-docker.sh` | `up` / `down` / `status` / `logs` |
-| `~/foundry-data/` | Bind mount for Foundry `/data` (worlds, modules, config) |
-| `~/foundry-docker.env` | Foundry account credentials (mode 600, **not** in git) |
-| `foundryconfig.json` | Written by `foundry-docker.sh up`; points Gulp at `~/foundry-data` |
+| `docker/foundry-compose.yml` | Compose service (Foundry 14.x) |
+| `scripts/foundry-docker.sh` | `up` / `down` / `status` / `logs` / `sync-system` |
+| Docker volume `docker_cpr-foundry-data` | Worlds, modules, Foundry config (persists on Docker host) |
+| `~/foundry-docker.env` | Credentials (`%q`-quoted bash source file, mode 600) |
+| `foundryconfig.json` | Optional; omit for `dist/` builds (default). Use only for native Foundry user-data paths. |
+| `dist/` → `sync-system` | Deploy built system into the container |
 
-**Credentials (required once per VM):** add Cursor Cloud secrets **`FOUNDRY_USERNAME`** and **`FOUNDRY_PASSWORD`** (foundryvtt.com account used to download Foundry). On first `up`, the script writes `~/foundry-docker.env`. Alternatively copy `foundry-docker.env.example` to `~/foundry-docker.env` or `./foundry-docker.env` (gitignored).
-
-**Docker CLI:** the cloud VM exposes Docker on `tcp://127.0.0.1:2375`. The script sets `DOCKER_HOST` automatically. If `docker` is missing, install `docker-ce-cli` and `docker-compose-plugin` (Ubuntu).
+**Credentials:** Cursor Cloud secrets **`FOUNDRY_USERNAME`** and **`FOUNDRY_PASSWORD`**. The script exports them to Compose (avoids `$` corruption in env files) and writes `~/foundry-docker.env` for sessions without re-injected secrets.
 
 **Commands:**
 
 ```bash
-./scripts/foundry-docker.sh up      # start Foundry, sync foundryconfig.json
-./scripts/foundry-docker.sh status  # container + HTTP probe
-./scripts/foundry-docker.sh logs    # follow startup / download logs
-npm run watch                       # rebuild system into ~/foundry-data/Data/systems/...
+./scripts/foundry-docker.sh up           # start Foundry
+npm run build && ./scripts/foundry-docker.sh sync-system
+npm run watch                          # rebuild to dist/; re-run sync-system after changes
+./scripts/foundry-docker.sh status     # container + HTTP probe
 ```
 
-**Browser:** open `http://127.0.0.1:30000` (Desktop pane / VNC). First launch runs Foundry setup; create a world with **Cyberpunk RED - CORE**. Install the **`lib-wrapper`** module (required in `system.json`).
+**Browser:** `http://127.0.0.1:30000`. Create a world with **Cyberpunk RED - CORE**; install **`lib-wrapper`**.
 
-**Why a previous session “lost” Foundry:** only `~/foundry-data` and `~/foundry-docker.env` persist user state. Ephemeral `/tmp/foundryvtt` was a Gulp-only stub, not a Foundry server. Without the committed compose/script (added in this repo), new agent sessions had nothing to restart.
+**Why bind-mounting `~/foundry-data` failed:** the agent pod and Docker host have separate filesystems. Only Docker named volumes or host paths that exist on the Docker host work for persistence.
 
 ### Core development commands
 
@@ -68,8 +67,9 @@ GitHub Actions CI (`.github/workflows/ci.yml`) runs **`npm ci` → version sync 
 
 By default, Gulp writes to `dist/`. For in-client development with Docker Foundry:
 
-1. Run `./scripts/foundry-docker.sh up` (creates `foundryconfig.json` with `dataPath: ~/foundry-data`).
-2. Run `npm run build` or `npm run watch` — output goes to `~/foundry-data/Data/systems/cyberpunk-red-core`.
+1. Run `./scripts/foundry-docker.sh up` (creates `foundryconfig.json` targeting `dist/`).
+2. Run `npm run build && ./scripts/foundry-docker.sh sync-system`.
+3. Run `npm run watch` for live rebuilds to `dist/`; re-run `sync-system` to push into Foundry.
 
 **Do not** point `dataPath` at this git repository or any directory containing a `.git` folder; Gulp will refuse to build there.
 

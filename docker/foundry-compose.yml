@@ -2,7 +2,9 @@
 # Managed by scripts/foundry-docker.sh — do not start manually unless debugging.
 #
 # Requires FOUNDRY_DATA_DIR and FOUNDRY_ENV_FILE (see foundry-docker.env.example).
-# User data persists on the host bind mount (default: ~/foundry-data).
+# User data persists in the Docker named volume `docker_cpr-foundry-data` (survives
+# agent pod restarts). The agent workspace is not on the Docker host filesystem,
+# so bind-mounting ~/foundry-data does not work in Cursor Cloud.
 
 services:
   foundry:
@@ -15,14 +17,14 @@ services:
     ports:
       - "30000:30000"
     volumes:
-      - type: bind
-        source: ${FOUNDRY_DATA_DIR}
-        target: /data
-    env_file:
-      - ${FOUNDRY_ENV_FILE}
+      - cpr-foundry-data:/data
     environment:
       CONTAINER_CACHE: /data/container_cache
       CONTAINER_PRESERVE_CONFIG: "true"
       FOUNDRY_ADMIN_KEY: ${FOUNDRY_ADMIN_KEY:-cpr-dev-admin}
       FOUNDRY_CSS_THEME: dark
-      FOUNDRY_VERSION: "14.360"
+      FOUNDRY_USERNAME: ${FOUNDRY_USERNAME:?Set FOUNDRY_USERNAME}
+      FOUNDRY_PASSWORD: ${FOUNDRY_PASSWORD:?Set FOUNDRY_PASSWORD}
+
+volumes:
+  cpr-foundry-data:
