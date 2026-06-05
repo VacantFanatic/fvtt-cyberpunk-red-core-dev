@@ -7,10 +7,10 @@ import createImageContextMenu from "../../utils/cpr-imageContextMenu.js";
 import CPRDialog from "../../dialog/cpr-dialog-application.js";
 import RoleAbilitySchema from "../../datamodels/item/components/role-ability-schema.js";
 import { ContainerUtils } from "../mixins/cpr-container.js";
+import enrichDocumentHTML from "../../utils/cpr-enrich-html.js";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
-const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
 /**
  * Normalize a sheet root reference (HTMLElement or jQuery-like) to an
@@ -192,9 +192,9 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
     }
 
     // Enrich the description so that links to foundry documents in item descriptions have proper functionality.
-    cprData.enrichedHTMLDescription = await TextEditor.enrichHTML(
+    cprData.enrichedHTMLDescription = await enrichDocumentHTML(
       item.system.description.value,
-      { async: true }
+      item
     );
 
     // Always merge an explicit `primary` tab group into context.tabs so the

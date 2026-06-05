@@ -9,6 +9,7 @@ import CPRMod from "../../rolls/cpr-modifiers.js";
 import CPRDialog from "../../dialog/cpr-dialog-application.js";
 import { ContainerUtils } from "../../item/mixins/cpr-container.js";
 import AdditionsTemplate from "../../additions/template.js";
+import enrichDocumentHTML from "../../utils/cpr-enrich-html.js";
 
 /**
  * Normalize sheet root to an HTMLElement (Application V2 passes `this.element`;
@@ -181,102 +182,69 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     cprData.measureDvInteractive = !!this._resolveDvTargetToken();
 
     cprData.enrichedHTML = [];
+    const enrich = (html) => enrichDocumentHTML(html, this.actor);
     if (this.actor.type !== "container") {
-      cprData.enrichedHTML.systemInformationNotes = await TextEditor.enrichHTML(
-        this.actor.system.information.notes,
-        {
-          async: true,
-        }
+      cprData.enrichedHTML.systemInformationNotes = await enrich(
+        this.actor.system.information.notes
       );
     }
     if (this.actor.type === "demon") {
-      cprData.enrichedHTML.systemNotes = await TextEditor.enrichHTML(
-        this.actor.system.notes,
-        {
-          async: true,
-        }
-      );
+      cprData.enrichedHTML.systemNotes = await enrich(this.actor.system.notes);
     }
     if (this.actor.type === "character") {
-      cprData.enrichedHTML.systemLifepathCulturalOrigin =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.culturalOrigin, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathLanguages =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.languages, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathPersonality =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.personality, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathClothingStyle =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.clothingStyle, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathHairStyle =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.hairStyle, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathAffectations =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.affectations, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathValueMost =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.valueMost, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathAboutPeople =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.aboutPeople, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathValuedPerson =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.valuedPerson, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathValuedPossession =
-        await TextEditor.enrichHTML(
-          this.actor.system.lifepath.valuedPossession,
-          { async: true }
-        );
-      cprData.enrichedHTML.systemLifepathFamilyBackground =
-        await TextEditor.enrichHTML(
-          this.actor.system.lifepath.familyBackground,
-          { async: true }
-        );
-      cprData.enrichedHTML.systemLifepathChildhoodEnvironment =
-        await TextEditor.enrichHTML(
-          this.actor.system.lifepath.childhoodEnvironment,
-          { async: true }
-        );
-      cprData.enrichedHTML.systemLifepathFamilyCrisis =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.familyCrisis, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathLifeGoals =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.lifeGoals, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathRoleLifepath =
-        await TextEditor.enrichHTML(this.actor.system.lifepath.roleLifepath, {
-          async: true,
-        });
-      cprData.enrichedHTML.systemLifepathFriends = await TextEditor.enrichHTML(
-        this.actor.system.lifepath.friends,
-        {
-          async: true,
-        }
+      cprData.enrichedHTML.systemLifepathCulturalOrigin = await enrich(
+        this.actor.system.lifepath.culturalOrigin
       );
-      cprData.enrichedHTML.systemLifepathTragicLoveAffairs =
-        await TextEditor.enrichHTML(
-          this.actor.system.lifepath.tragicLoveAffairs,
-          { async: true }
-        );
-      cprData.enrichedHTML.systemLifepathEnemies = await TextEditor.enrichHTML(
-        this.actor.system.lifepath.enemies,
-        {
-          async: true,
-        }
+      cprData.enrichedHTML.systemLifepathLanguages = await enrich(
+        this.actor.system.lifepath.languages
+      );
+      cprData.enrichedHTML.systemLifepathPersonality = await enrich(
+        this.actor.system.lifepath.personality
+      );
+      cprData.enrichedHTML.systemLifepathClothingStyle = await enrich(
+        this.actor.system.lifepath.clothingStyle
+      );
+      cprData.enrichedHTML.systemLifepathHairStyle = await enrich(
+        this.actor.system.lifepath.hairStyle
+      );
+      cprData.enrichedHTML.systemLifepathAffectations = await enrich(
+        this.actor.system.lifepath.affectations
+      );
+      cprData.enrichedHTML.systemLifepathValueMost = await enrich(
+        this.actor.system.lifepath.valueMost
+      );
+      cprData.enrichedHTML.systemLifepathAboutPeople = await enrich(
+        this.actor.system.lifepath.aboutPeople
+      );
+      cprData.enrichedHTML.systemLifepathValuedPerson = await enrich(
+        this.actor.system.lifepath.valuedPerson
+      );
+      cprData.enrichedHTML.systemLifepathValuedPossession = await enrich(
+        this.actor.system.lifepath.valuedPossession
+      );
+      cprData.enrichedHTML.systemLifepathFamilyBackground = await enrich(
+        this.actor.system.lifepath.familyBackground
+      );
+      cprData.enrichedHTML.systemLifepathChildhoodEnvironment = await enrich(
+        this.actor.system.lifepath.childhoodEnvironment
+      );
+      cprData.enrichedHTML.systemLifepathFamilyCrisis = await enrich(
+        this.actor.system.lifepath.familyCrisis
+      );
+      cprData.enrichedHTML.systemLifepathLifeGoals = await enrich(
+        this.actor.system.lifepath.lifeGoals
+      );
+      cprData.enrichedHTML.systemLifepathRoleLifepath = await enrich(
+        this.actor.system.lifepath.roleLifepath
+      );
+      cprData.enrichedHTML.systemLifepathFriends = await enrich(
+        this.actor.system.lifepath.friends
+      );
+      cprData.enrichedHTML.systemLifepathTragicLoveAffairs = await enrich(
+        this.actor.system.lifepath.tragicLoveAffairs
+      );
+      cprData.enrichedHTML.systemLifepathEnemies = await enrich(
+        this.actor.system.lifepath.enemies
       );
     }
 

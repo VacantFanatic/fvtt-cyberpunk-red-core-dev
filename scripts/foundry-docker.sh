@@ -5,6 +5,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 COMPOSE_FILE="${ROOT_DIR}/docker/foundry-compose.yml"
 SYSTEM_DEST="/data/Data/systems/cyberpunk-red-core"
+CONTAINER_NAME="cpr-foundry-dev"
 
 # Cloud VM Docker daemon is exposed on TCP, not a local socket.
 if [[ ! -S /var/run/docker.sock ]] && [[ -z "${DOCKER_HOST:-}" ]]; then
@@ -26,7 +27,16 @@ require_docker() {
   fi
 }
 
+container_running() {
+  docker inspect -f '{{.State.Running}}' "${CONTAINER_NAME}" 2>/dev/null | grep -q true
+}
+
+foundry_http_ok() {
+  curl -fsS --max-time 5 http://127.0.0.1:30000 >/dev/null 2>&1
+}
+
 materialize_env_file() {
+  # When Cursor secrets are injected, refresh the persisted file (overwrites manual edits).
   if [[ -n "${FOUNDRY_USERNAME:-}" && -n "${FOUNDRY_PASSWORD:-}" ]]; then
     umask 077
     {
@@ -72,7 +82,7 @@ compose() {
 wait_for_http() {
   local attempts="${1:-60}"
   for ((i = 1; i <= attempts; i++)); do
-    if curl -fsS --max-time 5 http://127.0.0.1:30000 >/dev/null 2>&1; then
+    if foundry_http_ok; then
       log "Foundry HTTP OK at http://127.0.0.1:30000 (${i} attempts)"
       return 0
     fi
@@ -83,12 +93,16 @@ wait_for_http() {
 
 cmd_sync_system() {
   require_docker
-  if [[ ! -d "${DIST_DIR}/system.json" && ! -f "${DIST_DIR}/system.json" ]]; then
+  if ! container_running; then
+    log "Container ${CONTAINER_NAME} is not running — run: ./scripts/foundry-docker.sh up"
+    return 1
+  fi
+  if [[ ! -f "${DIST_DIR}/system.json" ]]; then
     log "dist/ missing — run npm run build first"
     return 1
   fi
-  docker exec cpr-foundry-dev mkdir -p "${SYSTEM_DEST}" 2>/dev/null || true
-  docker cp "${DIST_DIR}/." "cpr-foundry-dev:${SYSTEM_DEST}/"
+  docker exec "${CONTAINER_NAME}" mkdir -p "${SYSTEM_DEST}" 2>/dev/null || true
+  docker cp "${DIST_DIR}/." "${CONTAINER_NAME}:${SYSTEM_DEST}/"
   log "Synced dist/ -> container:${SYSTEM_DEST}"
 }
 
@@ -97,8 +111,21 @@ cmd_up() {
   materialize_env_file
   export FOUNDRY_USERNAME FOUNDRY_PASSWORD
   sync_foundryconfig
+
+  if container_running && foundry_http_ok; then
+    log "Foundry already running at http://127.0.0.1:30000"
+    cmd_status
+    return 0
+  fi
+
   log "Starting Foundry (Docker volume: docker_cpr-foundry-data)"
-  compose up -d --remove-orphans --force-recreate
+  local -a up_args=(-d --remove-orphans)
+  if [[ "${FOUNDRY_RECREATE:-}" == "1" ]]; then
+    up_args+=(--force-recreate)
+    log "FOUNDRY_RECREATE=1 — recreating container"
+  fi
+  compose up "${up_args[@]}"
+
   if wait_for_http 90; then
     cmd_status
   else
@@ -115,9 +142,9 @@ cmd_down() {
 
 cmd_status() {
   require_docker
-  if compose ps 2>/dev/null | grep -q cpr-foundry-dev; then
+  if compose ps 2>/dev/null | grep -q "${CONTAINER_NAME}"; then
     compose ps
-    if curl -fsS --max-time 3 http://127.0.0.1:30000 >/dev/null 2>&1; then
+    if foundry_http_ok; then
       log "Foundry HTTP OK at http://127.0.0.1:30000"
     else
       log "Container running; Foundry may still be downloading or starting"
@@ -145,6 +172,9 @@ Usage: $(basename "$0") {up|down|status|logs|sync-system}
 
 Build workflow:
   npm run build && ./scripts/foundry-docker.sh sync-system
+
+Environment:
+  FOUNDRY_RECREATE=1   Force container recreate (e.g. after compose file changes)
 
 Persistence:
   Worlds/modules/config -> Docker volume docker_cpr-foundry-data (on Docker host)
