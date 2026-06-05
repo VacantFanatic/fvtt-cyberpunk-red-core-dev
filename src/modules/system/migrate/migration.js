@@ -94,7 +94,7 @@ export default class MigrationRunner {
   }
 
   get app() {
-    return MigrationRunner.app;
+    return this.constructor.app;
   }
 
   /**
@@ -380,21 +380,21 @@ export default class MigrationRunner {
    * @return {Array<CPRActor|CPRItem>} An array of filtered Actors or Items (but not both).
    */
   filterDocuments(docList) {
-    if (!Array.isArray(docList)) docList = Array.from(docList);
-    if (!docList.length) return docList;
+    const documents = Array.isArray(docList) ? docList : Array.from(docList);
+    if (!documents.length) return documents;
 
-    const docName = docList[0].documentName;
+    const docName = documents[0].documentName;
     // Filter tokens, convert them to actors, and then run this function again,
     // which will skip this block, because now an Array of Actors is being passed.
     if (docName === "Token") {
-      const filteredTokens = MigrationRunner.filterTokens(docList);
+      const filteredTokens = MigrationRunner.filterTokens(documents);
       const tokenActors = filteredTokens.map((token) => token.actor);
       return this.filterDocuments(tokenActors);
     }
 
     // Filter for docs that are not already migrated, in the case of an incomplete migration.
     const { remigrateAlreadyMigrated } = DEV_MODE.migrations;
-    const nonMigratedDocs = docList.filter((doc) => {
+    const nonMigratedDocs = documents.filter((doc) => {
       return !this.alreadyMigrated(doc, remigrateAlreadyMigrated);
     });
 
@@ -682,13 +682,21 @@ export default class MigrationRunner {
    * @return {void}
    */
   updateMigrationRecord(update, isToken = false) {
-    if (!update.flags[game.system.id]) update.flags[game.system.id] = {};
     const migrationData = {
       previous: this.currentDataModelVersion,
       current: this.newDataModelVersion,
     };
     if (isToken) migrationData.isToken = true;
-    update.flags[game.system.id]._migration = migrationData;
+    const systemId = game.system.id;
+    const existingFlags = update.flags[systemId] ?? {};
+    // eslint-disable-next-line no-param-reassign -- Foundry update payloads are mutated in place.
+    update.flags = {
+      ...update.flags,
+      [systemId]: {
+        ...existingFlags,
+        _migration: migrationData,
+      },
+    };
   }
 
   /**

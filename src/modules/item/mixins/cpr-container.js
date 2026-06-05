@@ -344,7 +344,9 @@ const Container = function Container() {
     const difference = currentInstalledIDs.filter(
       (id) => !oldItemIDs.includes(id)
     );
-    installedItems.list = [...difference, ...newItemIDs];
+    const updatedInstallList = [...difference, ...newItemIDs];
+    // eslint-disable-next-line no-param-reassign -- Mutates Foundry system data in place.
+    Object.assign(installedItems, { list: updatedInstallList });
 
     for (const item of newItems) {
       // Skip this iteration of the loop if the new item doesn't have installed items itself.
