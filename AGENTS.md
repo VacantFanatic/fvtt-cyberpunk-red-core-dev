@@ -72,8 +72,7 @@ CI uses **Node 20**. The repo requires Node **≥15**; Node 22 on the cloud VM w
 
 ### Gotchas
 
-- **`foundryconfig.json` missing** — build still succeeds; output goes to `dist/` with a Gulp warning. On the cloud VM, copy `foundryconfig.json.example` to `foundryconfig.json` and set `dataPath` to `/tmp/foundryvtt` (or your Foundry user-data path) to silence the warning and build directly into a Foundry systems folder.
+- **`foundryconfig.json` missing** — build still succeeds; output goes to `dist/` with a Gulp warning.
 - **`npm run watch`** — long-running; use tmux for background watch sessions.
-- **Clean console checks** — after `npm ci`, these should exit with no warnings: `npm run lint`, `npm run stylelint`, and `npm run build`.
 - **No automated browser/E2E tests** — validation is static (lint, schema, shell checks) plus manual Foundry testing.
 - **Pack schema validation** (`test-packs.sh`) may report many errors on some branches; the primary GitHub Actions workflow does not gate on this job.
