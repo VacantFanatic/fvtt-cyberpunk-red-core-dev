@@ -70,14 +70,14 @@ export default class ProgramDataModel extends CPRSystemDataModel.mixin(
 
   /** @inheritdoc */
   static migrateData(source) {
-    // v0.89
-    if (typeof source.rez === "number") {
-      source.rez = {
-        value: source.rez,
-        max: source.rez,
-      };
-    }
+    const migratedSource =
+      typeof source.rez === "number"
+        ? {
+            ...source,
+            rez: { value: source.rez, max: source.rez },
+          }
+        : source;
 
-    return super.migrateData(source);
+    return super.migrateData(migratedSource);
   }
 }

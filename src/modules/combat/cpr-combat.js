@@ -52,10 +52,7 @@ export default class CPRCombat extends Combat {
    * @return {Promise<Combat>}        A promise which resolves to the updated Combat entity once updates are complete.
    */
   // eslint-disable-next-line no-unused-vars
-  async rollInitiative(
-    ids,
-    { formula = null, updateTurn = true, messageOptions = {} } = {}
-  ) {
+  async rollInitiative(ids, { updateTurn = true } = {}) {
     // Structure input data
     const combatantIds = typeof ids === "string" ? [ids] : ids;
     const currentId = this.combatant ? this.combatant.id : null;

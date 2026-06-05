@@ -31,9 +31,9 @@ export default class MigrationError extends Error {
     this.data.message = this.message;
     this.data.originError = {
       message: options.cause?.message,
-      stack: this.sanitizeStackTrace(options.cause?.stack || ""),
+      stack: MigrationError.sanitizeStackTrace(options.cause?.stack || ""),
     };
-    this.data.stack = this.sanitizeStackTrace(this.stack || "");
+    this.data.stack = MigrationError.sanitizeStackTrace(this.stack || "");
   }
 
   /**
@@ -43,7 +43,7 @@ export default class MigrationError extends Error {
    * @param {string} trace - The error's stack trace.
    * @returns {string} - The sanitized stack trace.
    */
-  sanitizeStackTrace(trace) {
+  static sanitizeStackTrace(trace) {
     return trace.replace(
       /\b(https?|wss?):\/\/([^/:]+)(:\d+)?/g,
       (match, protocol, host, port) => {

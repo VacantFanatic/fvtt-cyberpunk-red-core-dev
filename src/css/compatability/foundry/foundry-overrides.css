@@ -233,7 +233,7 @@ select,
 button,
 .sidebar-tab .directory-header .header-search input,
 .cpr-cyberpunkred-com-import .character-import-name.invalid-code {
-  color: var(--color-level-error, #c62828);
+  color: var(--color-level-error, var(--cpr-dark-red));
 }
 
 .dialog .dialog-buttons button,

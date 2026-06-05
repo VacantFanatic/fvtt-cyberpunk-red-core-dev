@@ -216,9 +216,10 @@ export default class CPRActor extends Actor {
 
     // Don't add core items.
     const coreItemIds = items.filter((i) => i.system?.core).map((i) => i._id);
+    let itemsToCreate = items;
     if (coreItemIds.length > 0) {
       Rules.lawyer(false, "CPR.messages.dontAddCoreItems");
-      items = items.filter((i) => !coreItemIds.includes(i._id));
+      itemsToCreate = items.filter((i) => !coreItemIds.includes(i._id));
     }
 
     // Stack items.
@@ -231,7 +232,7 @@ export default class CPRActor extends Actor {
     if (canStack && !context.CPRsplitStack) {
       LOGGER.debug("Attempting to stack items on an actor sheet");
       const dontCreate = [];
-      for (const doc of items) {
+      for (const doc of itemsToCreate) {
         // eslint-disable-next-line no-continue
         if (!doc.system) continue;
         const [returnValue] = await this.automaticallyStackItems(doc);
@@ -243,13 +244,13 @@ export default class CPRActor extends Actor {
         }
       }
       // Don't create items that we should stack.
-      items = items.filter((i) => !dontCreate.includes(i._id));
+      itemsToCreate = itemsToCreate.filter((i) => !dontCreate.includes(i._id));
     }
 
     // Create the items
     const createdItems = await super.createEmbeddedDocuments(
       embeddedName,
-      items,
+      itemsToCreate,
       context
     );
 

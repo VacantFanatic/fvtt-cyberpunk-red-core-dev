@@ -46,11 +46,12 @@ export default class CPRActiveEffectSheet extends ActiveEffectConfig {
     const modList = CPRMod.getAllModifiers([this.object], true);
 
     // Prepare input elements for each Change.
-    modList.forEach((change, i) => {
+    cprData.modList = modList.map((change, i) => {
+      const preparedChange = { ...change };
       const name = `changes.${i}.key`;
       const selectClasses = ["key-key", "force-submit"];
-      const value = change.key;
-      switch (change.category) {
+      const value = preparedChange.key;
+      switch (preparedChange.category) {
         // Prepare the select drop-down for skill keys.
         case "skill": {
           const skillOptionConfigs = CPRActiveEffectSheet.getSkillOptionConfigs(
@@ -62,7 +63,7 @@ export default class CPRActiveEffectSheet extends ActiveEffectConfig {
             value,
           });
           select.classList.add(...selectClasses);
-          change.keyInput = new Handlebars.SafeString(select.outerHTML);
+          preparedChange.keyInput = new Handlebars.SafeString(select.outerHTML);
           break;
         }
         // Prepare the text input for custom keys.
@@ -72,7 +73,9 @@ export default class CPRActiveEffectSheet extends ActiveEffectConfig {
             value,
           });
           textInput.classList.add("key-input");
-          change.keyInput = new Handlebars.SafeString(textInput.outerHTML);
+          preparedChange.keyInput = new Handlebars.SafeString(
+            textInput.outerHTML
+          );
           break;
         }
         // Prepare the select drop-down for all other keys.
@@ -82,17 +85,17 @@ export default class CPRActiveEffectSheet extends ActiveEffectConfig {
           );
           const select = foundry.applications.fields.createSelectInput({
             name,
-            options: otherOptionConfigs[change.category],
+            options: otherOptionConfigs[preparedChange.category],
             value,
           });
           select.classList.add(...selectClasses);
-          change.keyInput = new Handlebars.SafeString(select.outerHTML);
+          preparedChange.keyInput = new Handlebars.SafeString(select.outerHTML);
           break;
         }
       }
+      return preparedChange;
     });
 
-    cprData.modList = modList;
     return foundry.utils.mergeObject(data, cprData);
   }
 

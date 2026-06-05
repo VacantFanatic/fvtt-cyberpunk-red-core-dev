@@ -37,7 +37,7 @@ export default class MigrationApp extends HandlebarsApplicationMixin(
   static PHASES = {
     // This following phases are the standard flow of migrations,
     // from initialization to success.
-    init: {}, // TODO: Delete this?
+    init: {}, // Legacy phase retained for migration state machine compatibility.
     userConfirm: {
       statusChange: true,
       addMessage: true,
@@ -322,9 +322,9 @@ export default class MigrationApp extends HandlebarsApplicationMixin(
   }
 
   /** @override */
-  _onRender(context, options) {
+  _onRender(_context, _options) {
     const dialog = this.element;
-    dialog.addEventListener("keydown", this._preventEscape.bind(this));
+    dialog.addEventListener("keydown", MigrationApp._preventEscape);
   }
 
   /**
@@ -332,7 +332,7 @@ export default class MigrationApp extends HandlebarsApplicationMixin(
    * @param {KeyboardEvent} event  The triggering event.
    * @protected
    */
-  _preventEscape(event) {
+  static _preventEscape(event) {
     // Capture Escape keypresses for dialogs to ensure that close is called properly.
     // The default behavior of `<dialog>` elements is to close on Escape keypress.
     if (event.key === "Escape") {
@@ -345,7 +345,8 @@ export default class MigrationApp extends HandlebarsApplicationMixin(
    * Prevent user from closing dialog.
    * @override
    */
-  close(options = {}) {
+  // eslint-disable-next-line class-methods-use-this -- Intentional no-op override of Application.close.
+  close(_options = {}) {
     // Should not be able to close the dialog for any reason.
     // Leaving this empty function as an override, so that the
     // super method cannot be called.
@@ -680,7 +681,7 @@ export default class MigrationApp extends HandlebarsApplicationMixin(
 
     // Hide the progress count until we actually have calculated the max.
     progressElement.querySelectorAll(".progress-count").forEach((elem) => {
-      elem.style = "display: none";
+      elem.setAttribute("style", "display: none");
     });
 
     // Replace form with progress element.
@@ -708,7 +709,7 @@ export default class MigrationApp extends HandlebarsApplicationMixin(
 
     // Show the progress count once we have calculated the max.
     this.element.querySelectorAll(".progress-count").forEach((elem) => {
-      elem.style = "";
+      elem.removeAttribute("style");
     });
   }
 

@@ -17,7 +17,14 @@
     "no-underscore-dangle": "off",
     "no-param-reassign": ["warn"],
     "class-methods-use-this": ["warn"],
-    "no-unused-vars": ["warn"],
+    "no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
     "no-nested-ternary": "off",
     "no-restricted-syntax": [
       "warn",
@@ -86,5 +93,20 @@
   },
   "settings": {
     "import/extensions": [".js"]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["gulp/**/*.mjs", "gulpfile.mjs"],
+      "rules": {
+        "func-names": "off",
+        "no-param-reassign": "off"
+      }
+    },
+    {
+      "files": ["src/modules/system/migrate/scripts/**/*.js"],
+      "rules": {
+        "class-methods-use-this": "off"
+      }
+    }
+  ]
 }

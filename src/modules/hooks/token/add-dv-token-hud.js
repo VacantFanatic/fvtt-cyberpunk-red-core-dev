@@ -30,7 +30,7 @@ const AddDvTokenHud = () => {
     const token = tokenDocumentFromHud(hud, thirdArg);
     if (!token) return;
 
-    const $html = $(html); // TODO: Remove JQuery.
+    const $html = $(html); // NOTE: Replace jQuery when Foundry provides native DOM APIs.
     const dvHudTemplate = `systems/${game.system.id}/templates/hud/dv.hbs`;
     const dvDisplay = await foundry.applications.handlebars.renderTemplate(
       dvHudTemplate,
