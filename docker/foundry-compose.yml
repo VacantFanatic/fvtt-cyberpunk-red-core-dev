@@ -1,0 +1,28 @@
+# Foundry VTT dev server for Cursor Cloud / local Docker.
+# Managed by scripts/foundry-docker.sh — do not start manually unless debugging.
+#
+# Requires FOUNDRY_DATA_DIR and FOUNDRY_ENV_FILE (see foundry-docker.env.example).
+# User data persists on the host bind mount (default: ~/foundry-data).
+
+services:
+  foundry:
+    image: ghcr.io/felddy/foundryvtt:14
+    container_name: cpr-foundry-dev
+    # Stable hostname keeps Foundry license activation valid across container restarts.
+    hostname: cpr-foundry-cloud-dev
+    init: true
+    restart: unless-stopped
+    ports:
+      - "30000:30000"
+    volumes:
+      - type: bind
+        source: ${FOUNDRY_DATA_DIR}
+        target: /data
+    env_file:
+      - ${FOUNDRY_ENV_FILE}
+    environment:
+      CONTAINER_CACHE: /data/container_cache
+      CONTAINER_PRESERVE_CONFIG: "true"
+      FOUNDRY_ADMIN_KEY: ${FOUNDRY_ADMIN_KEY:-cpr-dev-admin}
+      FOUNDRY_CSS_THEME: dark
+      FOUNDRY_VERSION: "14.360"
