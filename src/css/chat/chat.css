@@ -22,6 +22,22 @@
   }
 }
 
+.rollcard .clickable {
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.15em;
+}
+
+.rollcard .clickable:hover {
+  color: var(--cpr-text-foundry-hover);
+}
+
+.blind-roll-placeholder {
+  font-style: italic;
+  opacity: 0.85;
+  margin: 0.25rem 0;
+}
+
 .rollcard-top {
   padding-bottom: 0.313rem;
 }
