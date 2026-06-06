@@ -471,13 +471,16 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     );
 
     root.addEventListener(
-      "keyup",
+      "input",
       (event) => {
         const matched = event.target?.closest?.(".filter-contents");
         if (!matched || !root.contains(matched)) return;
-        this._applyContentFilter(
-          CPRActorSheet._wrapDelegatedEvent(event, matched)
-        );
+        clearTimeout(this._contentFilterDebounce);
+        this._contentFilterDebounce = setTimeout(() => {
+          this._applyContentFilter(
+            CPRActorSheet._wrapDelegatedEvent(event, matched)
+          );
+        }, 300);
       },
       { signal }
     );
