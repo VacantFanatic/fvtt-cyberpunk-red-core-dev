@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 1.4.4
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- CI runs `npm run test:regression` for Handlebars template syntax checks.
+- [docs/REGRESSION-TESTING.md](docs/REGRESSION-TESTING.md) documents automated regression scripts and the Foundry E2E smoke checklist.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed character sheet Gear tab failing to render: empty-category markup used invalid Handlebars syntax `(cprGetProp ...).length` (parse error on line 63 of `cpr-gear.hbs`).
+
 ## Version 1.4.3
 
 ### Action Needed
