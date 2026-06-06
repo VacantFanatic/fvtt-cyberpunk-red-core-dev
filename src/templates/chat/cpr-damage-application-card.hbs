@@ -24,6 +24,18 @@
   </div>
   <div class="rollcard-bottom">
     <div class="cpr-block">
+      <div class="damage-summary text-center text-normal text-semi text-padding-top">
+        {{#if rezReduction }}
+          {{localize "CPR.chat.damageApplication.rezReducedBy"}} {{hpReduction}}
+        {{else if (cprCompare hpReduction "===" 0) }}
+          {{localize "CPR.chat.damageApplication.damageNegatedByDamageReduction"}}
+        {{else}}
+          {{localize "CPR.chat.damageApplication.healthReducedBy"}} {{hpReduction}}
+          {{#if (cprCompare location "&&" (cprCompare location "!==" "body")) }}
+            ({{localize (cprFindConfigValue "damageLocation" location)}})
+          {{/if}}
+        {{/if}}
+      </div>
       <div class="cpr-d6-rollcard-data"></div>
       <div class="d6-dice-div"></div>
       <div class="d6-number-div">
