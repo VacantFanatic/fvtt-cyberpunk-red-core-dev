@@ -60,6 +60,11 @@
               {{!-- {{cprNestedInstalledGearTab item}} --}}
             {{/if}}
           {{/each}}
+          {{#unless (cprCompare (cprGetProp ../actor.itemTypes c).length ">" 0) }}
+            <li class="sheet-empty-state text-normal text-padding-left-smallest">
+              {{localize "CPR.characterSheet.rightPane.gear.categoryEmpty"}}
+            </li>
+          {{/unless}}
         </ol>
       </div>
     {{/each}}

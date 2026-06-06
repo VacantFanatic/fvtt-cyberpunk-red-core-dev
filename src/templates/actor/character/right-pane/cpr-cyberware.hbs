@@ -1,4 +1,9 @@
 <div class="cyberware-tab">
+  {{#if (cprIsEmpty actor.itemTypes.cyberware) }}
+    <p class="sheet-empty-state text-normal text-padding-left-smallest">
+      {{localize "CPR.characterSheet.rightPane.cyberware.noCyberware"}}
+    </p>
+  {{else}}
   <ol class="items-list cyberware-list">
     {{#each (cprFindConfigObj "cyberwareTypes") as |type t| }}
       <div >
@@ -20,4 +25,5 @@
       </div>
     {{/each}}
   </ol>
+  {{/if}}
 </div>

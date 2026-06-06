@@ -15,8 +15,11 @@
     </div>
 
     <div class="item-details">
-      <div class="item-details-name text-large text-hero">
-        {{localize (cprGetLocalizedlNameKey item)}}
+      <div class="item-details-name text-large text-hero" data-tooltip="{{item.name}}">
+        <div class="item-details-title">{{item.name}}</div>
+        <div class="item-details-type text-normal text-semi">
+          {{localize (cprGetLocalizedlNameKey item)}}
+        </div>
       </div>
 
       <div class="item-details-info">
