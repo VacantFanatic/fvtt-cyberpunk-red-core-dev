@@ -52,11 +52,13 @@ If you'd like to get a sense of the project's direction, the tools we use, and h
 
 In-repo developer references for contributors:
 
-| Document | What it covers |
-|---|---|
-| [Architecture](docs/ARCHITECTURE.md) | Module map, entity factory, data models, item mixin system, rolls, hooks, migration |
-| [Contributing](docs/CONTRIBUTING.md) | Setup, build workflow, code style, common tasks (adding types/hooks/migrations) |
-| [Active Effects](docs/ACTIVE-EFFECTS.md) | Suppression, V14 change types, CPRMod, situational modifiers, key reference |
+| Document                                     | What it covers                                                                      |
+| -------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [Contributing (start here)](CONTRIBUTING.md) | Entry point and links to all contributor docs                                       |
+| [Contributing guide](docs/CONTRIBUTING.md)   | Setup, build workflow, code style, task checklists, performance patterns            |
+| [Architecture](docs/ARCHITECTURE.md)         | Module map, entity factory, data models, item mixin system, rolls, hooks, migration |
+| [Active Effects](docs/ACTIVE-EFFECTS.md)     | Suppression, V14 change types, CPRMod, situational modifiers, key reference         |
+| [AGENTS.md](AGENTS.md)                       | Cloud agent and Docker Foundry setup                                                |
 
 ---
 

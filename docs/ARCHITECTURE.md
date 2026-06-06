@@ -1,6 +1,6 @@
 # System Architecture
 
-This document describes the runtime architecture of **Cyberpunk RED - CORE**, a Foundry VTT game system. It is aimed at contributors who want to understand how the pieces fit together before making changes.
+This document describes the runtime architecture of **Cyberpunk RED - CORE**, a Foundry VTT game system. It is aimed at contributors who want to understand how the pieces fit together before making changes. For setup and task walkthroughs, see [CONTRIBUTING.md](./CONTRIBUTING.md); the repo root [CONTRIBUTING.md](../CONTRIBUTING.md) links all contributor docs.
 
 ## Table of contents
 
@@ -14,6 +14,7 @@ This document describes the runtime architecture of **Cyberpunk RED - CORE**, a 
 - [Rolls pipeline](#rolls-pipeline)
 - [Active effects](#active-effects)
 - [Hooks system](#hooks-system)
+- [Chat cards](#chat-cards)
 - [Migration system](#migration-system)
 - [Public API (`game.cpr.api`)](#public-api-gamecprapi)
 - [Build system](#build-system)
@@ -31,7 +32,7 @@ Foundry VTT
        ├─ Registers actor + item sheets
        ├─ Registers data models (CONFIG.*.dataModels)
        ├─ Loads settings, templates, Handlebars helpers
-       ├─ Loads hook registrations (system/hooks.js)
+       ├─ (module load) registerHooks() from system/hooks.js — before "init" fires
        └─ (on "ready", GM only) Runs MigrationRunner
 ```
 
@@ -49,8 +50,9 @@ There are no server-side components. Every JS file runs in the browser inside th
 4. **Exposes `game.cpr`** — the system's global namespace with `apps`, `macro`, and `api`.
 5. **Sets `CONFIG.ActiveEffect.legacyTransferral = false`** — required so item-owned effects are not auto-promoted to actor-owned on transfer.
 6. **Registers status effects** from `system.json` flags rather than a hardcoded list.
-7. **Calls `registerHooks()`** to load all `hooks/` modules.
-8. **Instantiates `MigrationRunner`** (stored at `game.cpr.MigrationRunner`).
+7. **Instantiates `MigrationRunner`** (stored at `game.cpr.MigrationRunner`).
+
+Hook modules are loaded by `registerHooks()` at the **bottom of `cpr.js`** when the module is evaluated — before `Hooks.once("init")` runs. Each hook file's default export registers its `Hooks.on` listeners immediately.
 
 `Hooks.once("ready")` runs GM-only world migration if the stored `dataModelVersion` is below the current target and shows a changelog popup if migration just completed.
 
@@ -103,7 +105,8 @@ function factory(entities, baseClass) {
       return new constructor(data, options);
     },
     get: (target, prop) => {
-      if (prop === "create") return (data, opts) => entities[data.type].create(data, opts);
+      if (prop === "create")
+        return (data, opts) => entities[data.type].create(data, opts);
       return baseClass[prop];
     },
   });
@@ -116,33 +119,33 @@ The proxy intercepts `new Actor(data)` and `Actor.create(data)` and routes to th
 
 ### Actor type map
 
-| `data.type` | Class |
-|---|---|
+| `data.type` | Class               |
+| ----------- | ------------------- |
 | `character` | `CPRCharacterActor` |
-| `mook` | `CPRMookActor` |
-| `blackIce` | `CPRBlackIceActor` |
-| `demon` | `CPRDemonActor` |
+| `mook`      | `CPRMookActor`      |
+| `blackIce`  | `CPRBlackIceActor`  |
+| `demon`     | `CPRDemonActor`     |
 | `container` | `CPRContainerActor` |
 
 ### Item type map
 
-| `data.type` | Class |
-|---|---|
-| `ammo` | `CPRAmmoItem` |
-| `armor` | `CPRArmorItem` |
-| `clothing` | `CPRClothingItem` |
+| `data.type`      | Class                   |
+| ---------------- | ----------------------- |
+| `ammo`           | `CPRAmmoItem`           |
+| `armor`          | `CPRArmorItem`          |
+| `clothing`       | `CPRClothingItem`       |
 | `criticalInjury` | `CPRCriticalInjuryItem` |
-| `cyberdeck` | `CPRCyberdeckItem` |
-| `cyberware` | `CPRCyberwareItem` |
-| `drug` | `CPRDrugItem` |
-| `gear` | `CPRGearItem` |
-| `itemUpgrade` | `CPRUpgradeItem` |
-| `netarch` | `CPRNetArchItem` |
-| `program` | `CPRProgramItem` |
-| `role` | `CPRRoleItem` |
-| `skill` | `CPRSkillItem` |
-| `vehicle` | `CPRVehicleItem` |
-| `weapon` | `CPRWeaponItem` |
+| `cyberdeck`      | `CPRCyberdeckItem`      |
+| `cyberware`      | `CPRCyberwareItem`      |
+| `drug`           | `CPRDrugItem`           |
+| `gear`           | `CPRGearItem`           |
+| `itemUpgrade`    | `CPRUpgradeItem`        |
+| `netarch`        | `CPRNetArchItem`        |
+| `program`        | `CPRProgramItem`        |
+| `role`           | `CPRRoleItem`           |
+| `skill`          | `CPRSkillItem`          |
+| `vehicle`        | `CPRVehicleItem`        |
+| `weapon`         | `CPRWeaponItem`         |
 
 ---
 
@@ -182,20 +185,20 @@ class WeaponDataModel extends CPRSystemDataModel.mixin(
 
 `datamodels/item/mixins/` contains one schema file per capability:
 
-| File | Capability |
-|---|---|
-| `attackable-schema.js` | Weapon attack data (range, ROF, DV table) |
-| `common-schema.js` | Name / description fields shared by all items |
-| `effects-schema.js` | `usage` field for active effect suppression |
-| `electronic-schema.js` | `isElectronic`, `hardening` (EMP) |
-| `equippable-schema.js` | Equip state (equipped, carried, owned) |
-| `installable-schema.js` | Cyberware install slot |
-| `loadable-schema.js` | Magazine capacity + loaded ammo |
-| `physical-schema.js` | Weight |
-| `quality-schema.js` | Poor / standard / excellent |
-| `stackable-schema.js` | Quantity |
-| `upgradable-schema.js` | Upgrade slots |
-| `valuable-schema.js` | Price |
+| File                    | Capability                                    |
+| ----------------------- | --------------------------------------------- |
+| `attackable-schema.js`  | Weapon attack data (range, ROF, DV table)     |
+| `common-schema.js`      | Name / description fields shared by all items |
+| `effects-schema.js`     | `usage` field for active effect suppression   |
+| `electronic-schema.js`  | `isElectronic`, `hardening` (EMP)             |
+| `equippable-schema.js`  | Equip state (equipped, carried, owned)        |
+| `installable-schema.js` | Cyberware install slot                        |
+| `loadable-schema.js`    | Magazine capacity + loaded ammo               |
+| `physical-schema.js`    | Weight                                        |
+| `quality-schema.js`     | Poor / standard / excellent                   |
+| `stackable-schema.js`   | Quantity                                      |
+| `upgradable-schema.js`  | Upgrade slots                                 |
+| `valuable-schema.js`    | Price                                         |
 
 ### Actor models
 
@@ -203,7 +206,14 @@ class WeaponDataModel extends CPRSystemDataModel.mixin(
 
 ### Legacy `template.json`
 
-`src/template.json` is retained for backwards compatibility. The authoritative schema at runtime is the `DataModel` class, not `template.json`. Do not add new fields to `template.json`; add them to the appropriate `DataModel` instead.
+`src/template.json` is retained for backwards compatibility. The authoritative schema at runtime is the `DataModel` class, not `template.json`.
+
+| Action                                                                                           | Allowed in `template.json`?                            |
+| ------------------------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| Add a new **type stub** under `Actor.types` or `Item.types` when registering a new document type | Yes — prevents Foundry warnings about unknown types    |
+| Add new **field definitions** or defaults for existing types                                     | No — add fields to the appropriate `DataModel` instead |
+
+See [CONTRIBUTING.md — Document registration](./CONTRIBUTING.md#document-registration-systemjson-and-templatejson) for the full checklist when adding types.
 
 ---
 
@@ -217,28 +227,40 @@ Located in `datamodels/item/mixins/`, these define the **Foundry DataModel schem
 
 ### Layer 2 — Runtime mixins (behavior)
 
-Located in `item/mixins/`, these attach **methods** to item instances at runtime. They are plain JavaScript objects/functions called via `SystemUtils.getMixins(type)` inside `CPRItem.prepareData()`:
+Located in `item/mixins/`, these attach **methods** to item instances at runtime. `CPRItem.prepareDerivedData()` calls `loadMixins()` on every data-prep cycle (matching the dnd5e pattern). Keep mixin bodies lightweight — expensive work here runs for every item whenever actor data is prepared.
 
 ```js
 // cpr-item.js (simplified)
-prepareData() {
-  super.prepareData();
-  const mixins = SystemUtils.getMixins(this.type);
-  mixins.forEach((mixin) => mixin.call(this));
+prepareDerivedData() {
+  super.prepareDerivedData();
+  const mixins = SystemUtils.getMixins(this.type); // e.g. ["attackable", "loadable"]
+  for (const mixin of mixins) {
+    switch (mixin) {
+      case "attackable":
+        Attackable.call(this);
+        break;
+      // ...
+    }
+  }
 }
 ```
 
-Each runtime mixin file exports a function that is called with `this` bound to the item instance. This gives items methods like `rollAttack()`, `loadAmmo()`, `equip()` without inheritance chains.
+Each runtime mixin file exports a function called with `.call(this)`. Mixin keys match schema `mixinName` values (unprefixed, e.g. `"attackable"`).
 
-| Runtime mixin | Methods added |
-|---|---|
-| `cpr-attackable` | `rollAttack`, `getDVTable`, ammo management |
-| `cpr-loadable` | `loadAmmo`, `unloadAmmo` |
-| `cpr-equippable` | `equip`, `unequip`, `areEffectsSuppressed` |
-| `cpr-installable` | `install`, `uninstall` |
-| `cpr-container` | `getInstalledItems`, install trees |
-| `cpr-effects` | `getActiveEffects`, `transferEffects` |
-| `cpr-electronic` | EMP / hardening checks |
+| Runtime mixin | Methods added                                         |
+| ------------- | ----------------------------------------------------- |
+| `attackable`  | `_createAttackRoll`, `_weaponAction`, `dischargeItem` |
+| `loadable`    | `load`, `reload`, discharge tracking                  |
+| `equippable`  | `equip`, `unequip`, `areEffectsSuppressed`            |
+| `installable` | install/uninstall into actors/containers              |
+| `container`   | install tree management, `ContainerUtils`             |
+| `effects`     | item-granted Active Effects, usage mode toggling      |
+| `upgradable`  | upgrade attachment, modifier aggregation              |
+| `stackable`   | quantity management                                   |
+| `quality`     | quality modifier lookups                              |
+| `valuable`    | price/value fields                                    |
+| `physical`    | weight, concealability                                |
+| `electronic`  | EMP vulnerability and hardening flags                 |
 
 ### Why two layers?
 
@@ -271,32 +293,33 @@ Replaces V1 `getData()`. Returns a plain object; Handlebars receives it as `{{co
 
 V2 calls `_onRender → activateListeners` on **every** render, including tab switches. Without cleanup, `addEventListener` calls stack on the same DOM nodes, degrading FPS.
 
-CPR uses an `AbortController` per sheet instance:
+CPR actor sheets use `_sheetListenersAbort` in `CPRActorSheet.activateListeners`:
 
 ```js
-activateListeners(html) {
-  // Abort any listeners from the previous render
-  if (this._listenersAbort) this._listenersAbort.abort();
-  this._listenersAbort = new AbortController();
-  const { signal } = this._listenersAbort;
-
-  html.querySelector(".rollable")?.addEventListener("click", this._onRoll.bind(this), { signal });
-  // All listeners pass { signal }, so they are all removed on the next abort.
-}
+this._sheetListenersAbort?.abort();
+this._sheetListenersAbort = new AbortController();
+const { signal } = this._sheetListenersAbort;
+const onClick = (selector, listener) =>
+  this._bindDelegatedClick(root, signal, selector, listener);
+onClick(".rollable", (event) => this._onRoll(event));
 ```
 
-Subclasses (`CPRCharacterActorSheet`, etc.) call `super.activateListeners(html)` first and then attach their own handlers with the same shared `signal`.
+Subclasses register delegated clicks via `_bindSubclassSheetClicks(onClick)`. If a subclass needs additional listeners, call `super.activateListeners(html)` **first**, then attach handlers with the shared `signal` (see `cpr-character-sheet.js`). Item sheets use `_itemSheetListenersAbort` in `cpr-item-sheet.js`.
 
 ### Delegated event handlers
 
 For repeated elements (item rows, gear cards) CPR uses event delegation on a parent element rather than binding per-row:
 
 ```js
-html.addEventListener("click", (event) => {
-  const target = event.target.closest("[data-item-id]");
-  if (!target) return;
-  this._onItemAction(event, target.dataset.itemId);
-}, { signal });
+html.addEventListener(
+  "click",
+  (event) => {
+    const target = event.target.closest("[data-item-id]");
+    if (!target) return;
+    this._onItemAction(event, target.dataset.itemId);
+  },
+  { signal },
+);
 ```
 
 ### Hook names
@@ -319,21 +342,21 @@ V2 fires `renderActorSheetV2` and `closeActorSheetV2` (not the V1 `renderActorSh
 
 Specialized subclasses inherit from `CPRRoll`:
 
-| Class | Scenario |
-|---|---|
-| `CPRStatRoll` | Raw stat check (1d10 + stat value) |
-| `CPRSkillRoll` | Skill check (1d10 + skill + stat) |
-| `CPRAttackRoll` | Weapon attack |
-| `CPRAimedAttackRoll` | Aimed shot |
-| `CPRAutofireRoll` | Autofire |
-| `CPRSuppressiveFireRoll` | Suppressive fire |
-| `CPRInitiative` | Combat initiative |
-| `CPRDeathSaveRoll` | Death save (no crit die) |
-| `CPRDamageRoll` | Damage computation |
-| `CPRRoleRoll` | Role ability roll |
-| `CPRInterfaceRoll` | Netrunning interface action |
-| `CPRHumanityLossRoll` | Humanity loss on cyberware |
-| `CPRTableRoll` | Rollable table lookup |
+| Class                    | Scenario                           |
+| ------------------------ | ---------------------------------- |
+| `CPRStatRoll`            | Raw stat check (1d10 + stat value) |
+| `CPRSkillRoll`           | Skill check (1d10 + skill + stat)  |
+| `CPRAttackRoll`          | Weapon attack                      |
+| `CPRAimedAttackRoll`     | Aimed shot                         |
+| `CPRAutofireRoll`        | Autofire                           |
+| `CPRSuppressiveFireRoll` | Suppressive fire                   |
+| `CPRInitiative`          | Combat initiative                  |
+| `CPRDeathSaveRoll`       | Death save (no crit die)           |
+| `CPRDamageRoll`          | Damage computation                 |
+| `CPRRoleRoll`            | Role ability roll                  |
+| `CPRInterfaceRoll`       | Netrunning interface action        |
+| `CPRHumanityLossRoll`    | Humanity loss on cyberware         |
+| `CPRTableRoll`           | Rollable table lookup              |
 
 ### `CPRMod`
 
@@ -348,7 +371,9 @@ const mod = new CPRMod(activeEffect, change);
 // mod.onByDefault   — situational mods pre-checked in dialog?
 ```
 
-`CPRMod.getAllModifiers(actor.effects)` collects all active, non-suppressed mods. `CPRMod.getRelevantMods(mods, key)` filters to a specific stat/skill. `CPRMod.getSituationalRollMods(mods)` returns mods shown in the roll dialog.
+`CPRMod.getAllModifiers(effects)` collects all active, non-suppressed mods from an effect set. Batch this once per roll on `actor.allApplicableEffects()`, then filter with `CPRMod.getRelevantMods(mods, "universalAttack")` — keys are passed **without** the `bonuses.` prefix. `CPRMod.getSituationalRollMods(rollData, effects, item, actor)` returns mods shown in the roll dialog.
+
+Rolls use `cprRoll.addMod([mod])` — `addMod` expects an array; `removeMod(id)` takes a mod id string.
 
 ---
 
@@ -360,7 +385,7 @@ See the dedicated [Active Effects guide](./ACTIVE-EFFECTS.md) for full details. 
 
 - `CPRActiveEffect` extends Foundry `ActiveEffect`. It is registered as `CONFIG.ActiveEffect.documentClass`.
 - `CONFIG.ActiveEffect.legacyTransferral = false` — item effects stay on the item; they are not copied to the owning actor automatically.
-- **Suppression**: effects on items are suppressed when the item is not in an active usage state (e.g., unequipped weapon). Effects directly on actors are never suppressed.
+- **Suppression**: `CPRActiveEffect.determineSuppression()` (called from `CPRActor.applyActiveEffects()`) sets `system.isSuppressed` based on `doc.areEffectsSuppressed()` from the equippable mixin. Effects on unequipped/uninstalled items are suppressed; effects directly on actors are not.
 - **Change types**: Foundry V14 uses string `change.type` (`"add"`, `"multiply"`, etc.) instead of numeric `change.mode`. All CPR code uses the string form. `CPRMod.normalizeChangeType()` handles legacy numeric values from older worlds.
 
 ---
@@ -369,36 +394,50 @@ See the dedicated [Active Effects guide](./ACTIVE-EFFECTS.md) for full details. 
 
 **`src/modules/hooks/`** and **`src/modules/system/hooks.js`**
 
-Hook registrations are split into small, single-concern files rather than one large bootstrap. `system/hooks.js` maintains a manifest array and dynamically imports each file on `init`:
+Hook registrations are split into small, single-concern files. `system/hooks.js` maintains a manifest array; `registerHooks()` is called at the bottom of `cpr.js` when the module loads (before `Hooks.once("init")` fires) and dynamically imports each file:
 
 ```js
-// system/hooks.js
-const hooksImports = [
-  "actor/check-emp-and-luck.js",
-  "actor/sheet/persist-section-views.js",
-  // ...
-];
-
+// system/hooks.js (simplified)
 export default async function registerHooks() {
-  const modules = await Promise.all(
-    hooksImports.map((path) => import(`../hooks/${path}`))
+  const importedModules = await Promise.all(
+    hooksImports.map((path) => import(`../hooks/${path}`)),
   );
-  modules.forEach((m) => m.default()); // each file's default export is a registration function
+  importedModules.forEach((m) => m.default?.());
 }
 ```
 
-Each hook file's default export is a **nullary function** that registers its Hooks.on/once listeners:
+Each hook file's default export is a **nullary function** that registers its `Hooks.on` listeners:
 
 ```js
-// hooks/actor/check-emp-and-luck.js
-export default function registerCheckEmpAndLuck() {
-  Hooks.on("preUpdateActor", (actor, diff) => {
-    // ...
+// hooks/actor/update-role-from-item.js
+const UpdateRoleFromItem = () => {
+  Hooks.on("createItem", async (doc) => {
+    /* ... */
   });
-}
+};
+export default UpdateRoleFromItem;
 ```
 
-To add a new hook: create a file under `hooks/`, export a registration function as default, add its path to the `hooksImports` array in `system/hooks.js`.
+To add a new hook: create a file under `hooks/`, export a registration function as default, add its path to `hooksImports` in `system/hooks.js`.
+
+**Update batching:** merge field changes into a single `update()` call where possible; guard on `diff` before writing; avoid update→hook→update cascades. See [CONTRIBUTING.md — Performance and update patterns](./CONTRIBUTING.md#performance-and-update-patterns).
+
+---
+
+## Chat cards
+
+**`src/modules/chat/cpr-chat.js`**
+
+`CPRChat` is a static utility class (not a `ChatMessage` subclass) for rendering roll cards, item previews, and damage application prompts.
+
+| Method                                            | When to call                      |
+| ------------------------------------------------- | --------------------------------- |
+| `CPRChat.RenderRollCard(cprRoll)`                 | After `await cprRoll.roll()`      |
+| `CPRChat.RenderItemCard(item)`                    | Preview an item in chat           |
+| `CPRChat.RenderDamageApplicationCard(damageData)` | After `actor._applyDamage(...)`   |
+| `CPRChat.HandleCPRCommand(data)`                  | From the `/red` chat command hook |
+
+Click handlers are registered in `CPRChat.chatListeners(html)`, wired from `hooks/chat/add-glyphs.js` on `renderChatMessageHTML`. Because message HTML can re-render, new chat bindings must be idempotent — see [CONTRIBUTING.md — Chat listener lifecycle](./CONTRIBUTING.md#chat-listener-lifecycle).
 
 ---
 
@@ -414,11 +453,11 @@ The migration system updates actor and item data in an existing Foundry world wh
 2. On `ready` (GM only), `MigrationRunner.migrateWorld()` runs if `dataModelVersion < LATEST_VERSION`.
 3. `MigrationRunner` discovers all scripts in `migrate/scripts/index.js` whose `static version` is greater than the current world version.
 4. Each script extends `BaseMigrationScript` and overrides:
-   - `static version` — the version this script migrates *to* (integer).
+   - `static version` — the version this script migrates _to_ (integer).
    - `static name` — human-readable name shown in the UI.
    - `static documentFilters` — which actor/item types to process.
-   - `updateItem(item, actor)` — transform item data in-place.
-   - `updateActor(actor)` — transform actor data in-place.
+   - `updateItem(itemData, actorData)` — mutate item data in place (do not call `item.update()`).
+   - `updateActor(actorData)` — mutate actor data in place.
 5. After all scripts run, `dataModelVersion` is updated and the changelog popup is shown.
 
 ### Adding a migration script
@@ -441,9 +480,9 @@ export default class Migration045 extends BaseMigrationScript {
     Item: { types: ["weapon"] },
   };
 
-  updateItem(item) {
-    if (item.system.newField === undefined) {
-      item.system.newField = 0;
+  async updateItem(itemData) {
+    if (itemData.system.newField === undefined) {
+      itemData.system.newField = 0;
     }
   }
 }
@@ -463,11 +502,11 @@ export default class Migration045 extends BaseMigrationScript {
 
 ### Namespaces
 
-| Namespace | Members |
-|---|---|
-| `game.cpr.api.actor` | `getEMPableItems(actor)` — returns electronic items on the actor |
-| `game.cpr.api.additions` | `createCover(...)`, `createTemplate(...)`, `createExplosiveTemplate(...)` |
-| `game.cpr.api.import` | `runImportFlow(actor?)`, `fetchCharacter(code)`, `showImportDialog()`, `importCharacter(actor, data)`, `createAndImport(data)`, `loadItemDatabases()` |
+| Namespace                | Members                                                                                                                                               |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `game.cpr.api.actor`     | `getEMPableItems(actor)` — returns electronic items on the actor                                                                                      |
+| `game.cpr.api.additions` | `createCover(...)`, `createTemplate(...)`, `createExplosiveTemplate(...)`                                                                             |
+| `game.cpr.api.import`    | `runImportFlow(actor?)`, `fetchCharacter(code)`, `showImportDialog()`, `importCharacter(actor, data)`, `createAndImport(data)`, `loadItemDatabases()` |
 
 ### Adding a new API function
 
@@ -482,14 +521,14 @@ Actor API functions are auto-discovered if they are listed in the `modules` arra
 
 **`gulpfile.mjs`** and **`gulp/`**
 
-| Task | Command | What it does |
-|---|---|---|
-| `build` | `npm run build` | `clean` → parallel asset pipeline |
-| `watch` | `npm run watch` | Asset pipeline (no clean) + file watchers |
-| `clean` | `npx gulp clean` | Delete `dist/` |
-| `generatePacks` | `npx gulp generatePacks` | Build compendium LevelDB packs from `src/packs/` YAML |
-| `extractPacks` | `npm run extractPacks` | Export built packs back to YAML |
-| `generateBabele` | `npm run generateBabele` | Babele translation stubs |
+| Task             | Command                  | What it does                                          |
+| ---------------- | ------------------------ | ----------------------------------------------------- |
+| `build`          | `npm run build`          | `clean` → parallel asset pipeline                     |
+| `watch`          | `npm run watch`          | Asset pipeline (no clean) + file watchers             |
+| `clean`          | `npx gulp clean`         | Delete `dist/`                                        |
+| `generatePacks`  | `npx gulp generatePacks` | Build compendium LevelDB packs from `src/packs/` YAML |
+| `extractPacks`   | `npm run extractPacks`   | Export built packs back to YAML                       |
+| `generateBabele` | `npm run generateBabele` | Babele translation stubs                              |
 
 ### Output location (`gulp/config.mjs`)
 
