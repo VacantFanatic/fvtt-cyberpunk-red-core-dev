@@ -125,7 +125,7 @@ npx prettier --write src/modules/ gulp/ gulpfile.mjs
 
 ## Testing your changes
 
-There is no automated test suite at the unit level. Testing is done by running CPR inside a live Foundry world.
+There is no automated unit test suite. Run `npm run test:regression` for template syntax checks, then smoke-test in Foundry — see [REGRESSION-TESTING.md](./REGRESSION-TESTING.md) for the full E2E checklist (required for sheet, template, and dialog changes).
 
 ### Smoke test checklist
 

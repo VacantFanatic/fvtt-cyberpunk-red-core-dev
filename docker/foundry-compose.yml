@@ -6,3 +6,24 @@
 # foundry-docker.env.example and scripts/foundry-docker.sh).
 
 services:
+  foundry:
+    image: ghcr.io/felddy/foundryvtt:14
+    container_name: cpr-foundry-dev
+    # Stable hostname keeps Foundry license activation valid across container restarts.
+    hostname: cpr-foundry-cloud-dev
+    init: true
+    restart: unless-stopped
+    ports:
+      - "30000:30000"
+    volumes:
+      - cpr-foundry-data:/data
+    environment:
+      CONTAINER_CACHE: /data/container_cache
+      CONTAINER_PRESERVE_CONFIG: "true"
+      FOUNDRY_ADMIN_KEY: ${FOUNDRY_ADMIN_KEY:-cpr-dev-admin}
+      FOUNDRY_CSS_THEME: dark
+      FOUNDRY_USERNAME: ${FOUNDRY_USERNAME:?Set FOUNDRY_USERNAME}
+      FOUNDRY_PASSWORD: ${FOUNDRY_PASSWORD:?Set FOUNDRY_PASSWORD}
+
+volumes:
+  cpr-foundry-data:

@@ -20,9 +20,18 @@ log() {
   printf '[foundry-docker] %s\n' "$*"
 }
 
+normalize_foundry_credentials() {
+  # Cursor Cloud may inject alternate secret names; normalize before compose runs.
+  export FOUNDRY_USERNAME="${FOUNDRY_USERNAME:-${FOUNDRY_USER:-}}"
+  export FOUNDRY_PASSWORD="${FOUNDRY_PASSWORD:-${FOUNDRY_ACCOUNT_PASSWORD:-}}"
+}
+
 require_docker() {
+  # shellcheck disable=SC1091
+  source "${ROOT_DIR}/scripts/ensure-docker-cli.sh"
+  main
   if ! command -v docker >/dev/null 2>&1; then
-    echo "docker CLI not found. Install docker-ce-cli and docker-compose-plugin." >&2
+    echo "docker CLI not found after ensure-docker-cli." >&2
     exit 1
   fi
 }
@@ -36,6 +45,8 @@ foundry_http_ok() {
 }
 
 materialize_env_file() {
+  normalize_foundry_credentials
+
   # When Cursor secrets are injected, refresh the persisted file (overwrites manual edits).
   if [[ -n "${FOUNDRY_USERNAME:-}" && -n "${FOUNDRY_PASSWORD:-}" ]]; then
     umask 077
@@ -63,9 +74,10 @@ materialize_env_file() {
   fi
 
   echo "Foundry credentials missing." >&2
-  echo "  Set Cursor secrets FOUNDRY_USERNAME + FOUNDRY_PASSWORD, or" >&2
+  echo "  Set Cursor secrets FOUNDRY_USERNAME + FOUNDRY_PASSWORD" >&2
+  echo "  (aliases FOUNDRY_USER / FOUNDRY_ACCOUNT_PASSWORD also work), or" >&2
   echo "  copy foundry-docker.env.example to ~/foundry-docker.env" >&2
-  return 1
+  return 2
 }
 
 sync_foundryconfig() {
@@ -108,7 +120,9 @@ cmd_sync_system() {
 
 cmd_up() {
   require_docker
-  materialize_env_file
+  if ! materialize_env_file; then
+    return $?
+  fi
   export FOUNDRY_USERNAME FOUNDRY_PASSWORD
   sync_foundryconfig
 

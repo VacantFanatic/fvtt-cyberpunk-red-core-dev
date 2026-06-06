@@ -12,10 +12,11 @@ Runtime testing requires **Foundry VTT v13–14** and the **`lib-wrapper`** modu
 
 ### Automatic startup (update script)
 
-The VM update script runs:
+The VM update script runs `./scripts/cloud-update.sh`, which:
 
 1. `npm ci`
-2. `./scripts/foundry-docker.sh up` (starts Foundry if credentials exist; no-op with a log message if missing)
+2. `./scripts/ensure-docker-cli.sh` (installs a portable Docker CLI + Compose plugin when missing)
+3. `./scripts/foundry-docker.sh up` (starts Foundry when credentials exist; exits 0 with a log message if missing)
 
 Do **not** add `npm run watch` or `npm run build` to the update script.
 
@@ -26,13 +27,17 @@ Foundry runs in Docker via [felddy/foundryvtt-docker](https://github.com/felddy/
 | Path | Purpose |
 |------|---------|
 | `docker/foundry-compose.yml` | Compose service (Foundry 14.x) |
+| `scripts/ensure-docker-cli.sh` | Bootstrap Docker CLI + Compose for Cursor Cloud pods |
+| `scripts/cloud-update.sh` | VM update entrypoint (`npm ci` + Docker CLI + Foundry) |
 | `scripts/foundry-docker.sh` | `up` / `down` / `status` / `logs` / `sync-system` |
 | Docker volume `docker_cpr-foundry-data` | Worlds, modules, Foundry config (persists on Docker host) |
 | `~/foundry-docker.env` | Credentials (`%q`-quoted bash source file, mode 600) |
 | `foundryconfig.json` | Optional; omit for `dist/` builds (default). Use only for native Foundry user-data paths. |
 | `dist/` → `sync-system` | Deploy built system into the container |
 
-**Credentials:** Cursor Cloud secrets **`FOUNDRY_USERNAME`** and **`FOUNDRY_PASSWORD`**. The script exports them to Compose (avoids `$` corruption in env files) and writes `~/foundry-docker.env` for sessions without re-injected secrets.
+**Credentials:** Cursor Cloud secrets **`FOUNDRY_USERNAME`** and **`FOUNDRY_PASSWORD`** (aliases **`FOUNDRY_USER`** / **`FOUNDRY_ACCOUNT_PASSWORD`** are also accepted). The script exports them to Compose (avoids `$` corruption in env files) and writes `~/foundry-docker.env` for sessions without re-injected secrets.
+
+**Docker CLI:** Agent pods do not ship with `docker` on PATH. The daemon runs on the host at `tcp://127.0.0.1:2375`. `ensure-docker-cli.sh` downloads matching static binaries on first use.
 
 **Commands:**
 
@@ -109,4 +114,6 @@ CI uses **Node 20**. The repo requires Node **≥15**; Node 22 on the cloud VM w
 - **`foundryconfig.json` missing** — run `./scripts/foundry-docker.sh up` or copy `foundryconfig.json.example`; otherwise build goes to `dist/` with a Gulp warning.
 - **`npm run watch`** — long-running; use tmux for background watch sessions.
 - **Foundry credentials missing** — update script skips Foundry start; add `FOUNDRY_USERNAME` / `FOUNDRY_PASSWORD` secrets and re-run `./scripts/foundry-docker.sh up`.
+- **`docker CLI not found`** — run `./scripts/ensure-docker-cli.sh` (also invoked automatically by `foundry-docker.sh` and `cloud-update.sh`).
+- **`docker/foundry-compose.yml` must define the `foundry` service** — an empty `services:` block prevents Compose from starting Foundry.
 - **Pack schema validation** (`test-packs.sh`) may report many errors on some branches; the primary GitHub Actions workflow does not gate on this job.
