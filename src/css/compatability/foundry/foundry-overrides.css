@@ -118,15 +118,15 @@ code {
     line-height: inherit;
     user-select: text;
     height: 100%;
-    background: none;
+    background-color: var(--cpr-background-row-odd);
 
     &:hover {
       color: var(--cpr-text-foundry-hover) !important;
     }
 
     &:focus-visible {
-      outline: 2px solid var(--cpr-background-border);
-      outline-offset: 1px;
+      outline: 0.125rem solid var(--cpr-background-border);
+      outline-offset: 0.063rem;
     }
   }
 }
