@@ -13,6 +13,10 @@
     position: sticky;
     bottom: 0;
     padding: 0.313rem;
+
+    .cpr-dialog-button {
+      min-height: var(--cpr-touch-min);
+    }
   }
 
   hr {
