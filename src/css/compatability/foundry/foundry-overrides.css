@@ -123,6 +123,11 @@ code {
     &:hover {
       color: var(--cpr-text-foundry-hover) !important;
     }
+
+    &:focus-visible {
+      outline: 2px solid var(--cpr-background-border);
+      outline-offset: 1px;
+    }
   }
 }
 
@@ -222,16 +227,6 @@ body.sidebar-collapsed #ui-right #chat-log,
   box-sizing: border-box;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="password"],
-input[type="date"],
-input[type="time"],
-input[type="search"],
-input,
-select,
-button,
-.sidebar-tab .directory-header .header-search input,
 .cpr-cyberpunkred-com-import .character-import-name.invalid-code {
   color: var(--color-level-error, var(--cpr-dark-red));
 }

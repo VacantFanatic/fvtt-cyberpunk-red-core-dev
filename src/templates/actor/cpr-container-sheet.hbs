@@ -18,6 +18,7 @@
       </div>
       {{!-- General Settings --}}
       <div class="settings-section">
+        <ul>
         <li class="item flexrow">
           <div class="item-name text-nowrap trade-with-label text-semi">
             {{localize "CPR.containerSheet.action.tradeWith"}}:
@@ -28,9 +29,11 @@
             </select>
           </div>
         </li>
+        </ul>
       </div>
       {{!-- Eurobucks --}}
       <div class="eurobucks-section">
+        <ul>
         <li class="item text-align-last-end flexrow">
           <div class="item-name text-nowrap eurobucks-label text-semi">
             {{localize "CPR.containerSheet.settings.eurobucks.label"}}:
@@ -53,10 +56,12 @@
             {{/if}}
           {{/if}}
         </li>
+        </ul>
       </div>
       {{!-- GM Settings --}}
       {{#if isGM }}
         <div class="settings-gm-section">
+          <ul>
           <li class="item flexrow">
             <div class="text-center text-semi text-normal">
               {{localize "CPR.containerSheet.settings.title"}}
@@ -179,6 +184,7 @@
             </div>
           </li>
         {{/if}}
+          </ul>
       </div>
     {{/if}}
   </div>

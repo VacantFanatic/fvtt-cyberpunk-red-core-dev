@@ -62,6 +62,9 @@ export default class CPRChat {
   static RenderRollCard(incomingRoll) {
     const cprRoll = incomingRoll;
 
+    // Handlebars reads a property; totalMods() is a method on CPRRoll.
+    cprRoll.modsTotal = cprRoll.totalMods();
+
     cprRoll.criticalCard = cprRoll.wasCritical();
     if (cprRoll instanceof CPRInitiative && !cprRoll.calculateCritical) {
       cprRoll.criticalCard = false;

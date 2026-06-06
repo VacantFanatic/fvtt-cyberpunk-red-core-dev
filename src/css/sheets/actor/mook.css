@@ -1,10 +1,6 @@
 /* Cyberpunk Red Core Mook Sheet Styling */
 
 /* Overall Sheet Layout */
-*:focus {
-  outline: none;
-}
-
 .side-banner {
   writing-mode: vertical-lr;
   transform: rotate(180deg);
