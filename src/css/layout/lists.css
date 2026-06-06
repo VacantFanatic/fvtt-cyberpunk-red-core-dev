@@ -441,6 +441,12 @@
 }
 
 .zero-not-visible:not(:hover, :focus-within) {
-  opacity: 0;
+  opacity: 0.35;
   transition: opacity 0.2s ease;
+}
+
+@media (hover: none) {
+  .zero-not-visible:not(:focus-within) {
+    opacity: 0.65;
+  }
 }

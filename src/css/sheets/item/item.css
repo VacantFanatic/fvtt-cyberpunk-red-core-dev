@@ -62,12 +62,25 @@
 
       .item-details-name {
         grid-area: item-details-name;
-        display: grid;
-        justify-content: left;
-        align-content: start;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
         padding: 0 0.118rem;
         overflow: hidden;
-        white-space: nowrap;
+        min-width: 0;
+
+        .item-details-title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 100%;
+        }
+
+        .item-details-type {
+          font-size: var(--cpr-font-smaller);
+          opacity: 0.85;
+        }
       }
 
       .item-details-info {
