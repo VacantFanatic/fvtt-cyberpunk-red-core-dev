@@ -21,7 +21,7 @@
     .sub-list-header {
       padding: 0.2rem 0.2rem 0.2rem 0.4rem;
       background-color: var(--cpr-background-item-dir-installed-header);
-      opacity: 20;
+      opacity: 0.2;
       border-left: 0.4rem solid var(--cpr-item-dir-border);
     }
 

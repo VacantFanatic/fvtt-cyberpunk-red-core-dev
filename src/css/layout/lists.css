@@ -246,7 +246,7 @@
     align-items: center;
     text-overflow: ellipsis;
 
-    &item {
+    & .effect-item {
       flex: 0 0 85%;
     }
   }
