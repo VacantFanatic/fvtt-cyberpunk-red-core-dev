@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 1.4.2
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- Contributor documentation consolidated: root [CONTRIBUTING.md](CONTRIBUTING.md) is now a short hub; [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) is the canonical workflow guide; [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/ACTIVE-EFFECTS.md](docs/ACTIVE-EFFECTS.md) cover architecture and Active Effects in depth.
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) corrected for current code (runtime mixins, hooks load timing, sheet `AbortController` pattern, `CPRMod` API, migration signatures, suppression flow).
+- [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) adds performance guidance for hook update batching, chat listener lifecycle, and sheet/data-prep hot paths; reconciles `system.json` vs `template.json` registration rules.
+- README developer documentation table updated to link all contributor docs and [AGENTS.md](AGENTS.md).
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- None.
+
 ## Version 1.4.1
 
 ### Action Needed
