@@ -21,6 +21,17 @@
     letter-spacing: 10px;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .pause-glitch {
+      animation: none;
+
+      &::before,
+      &::after {
+        display: none;
+      }
+    }
+  }
+
   /* Animated glitch text */
   .pause-glitch {
     position: relative;

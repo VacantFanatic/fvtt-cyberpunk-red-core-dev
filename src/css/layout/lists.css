@@ -408,6 +408,14 @@
     min-width: 7.188rem;
     padding-right: 0.438rem !important;
 
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: var(--cpr-touch-min);
+      min-height: var(--cpr-touch-min);
+    }
+
     .fa-trash-can {
       color: var(--cpr-text-icon-highlight);
     }
