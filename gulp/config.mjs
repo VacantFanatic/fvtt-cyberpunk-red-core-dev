@@ -99,7 +99,7 @@ function _getDestDir() {
           `If you have previously \n` +
           `cloned the git repo to ` +
           `'${dataPath}'\n` +
-          `please check CONTRIBUTING.md and clone the repo to another ` +
+          `please check docs/CONTRIBUTING.md and clone the repo to another ` +
           `location.`
       );
     } else {
