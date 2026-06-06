@@ -1,3 +1,10 @@
+.sheet-empty-state {
+  font-style: italic;
+  opacity: 0.85;
+  margin: 0.25rem 0;
+  list-style: none;
+}
+
 /* For stats that have 2 values (HP, Humanity, Luck, Emp) */
 .min-of-max-container {
   display: flex;

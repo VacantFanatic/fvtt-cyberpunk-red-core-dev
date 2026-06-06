@@ -453,6 +453,16 @@ export default class CPRChat {
           const actor = Object.keys(game.actors.tokens).includes(tokenId)
             ? game.actors.tokens[tokenId]
             : game.actors.find((a) => a.id === actorId);
+          const confirmed = await Dialog.confirm({
+            title: SystemUtils.Localize(
+              "CPR.chat.damageApplication.reverseDamageConfirmTitle"
+            ),
+            content: SystemUtils.Format(
+              "CPR.chat.damageApplication.reverseDamageConfirmContent",
+              { name: actor?.name ?? "", hp: hpReduction }
+            ),
+          });
+          if (!confirmed || !actor) break;
           actor._reverseDamage(hpReduction, location, ablation, shieldAblation);
           break;
         }

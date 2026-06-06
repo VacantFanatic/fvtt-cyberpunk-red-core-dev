@@ -1,3 +1,5 @@
+import SystemUtils from "../../utils/cpr-systemUtils.js";
+
 const HideBlindRolls = () => {
   /**
    * Inject UI "tags" for rolls and whispers make it more clear that private
@@ -15,9 +17,12 @@ const HideBlindRolls = () => {
     // Foundry doesn't support blind chat messages so this is how we get around
     // that.
     if ($html.hasClass("blind") && !game.user.isGM) {
-      // Remove header so Foundry does not attempt to update its timestamp
-      $html.find(".message-header").remove();
-      $html.html("").css("display", "none");
+      const placeholder = SystemUtils.Localize("CPR.chat.blindRollHidden");
+      $html
+        .find(".message-content")
+        .html(
+          `<p class="blind-roll-placeholder text-normal">${placeholder}</p>`
+        );
     }
   });
 };

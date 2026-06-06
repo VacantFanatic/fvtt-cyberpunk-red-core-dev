@@ -1,4 +1,9 @@
 <div class="skills-tab">
+  {{#if (cprIsEmpty actor.itemTypes.skill) }}
+    <p class="sheet-empty-state text-normal text-padding-left-smallest">
+      {{localize "CPR.characterSheet.rightPane.skills.noSkills"}}
+    </p>
+  {{else}}
   <div class="skills-container">
     <ol class="left-pane-skills items-list">
       {{#each (cprFindConfigObj "skillCategories") as |category c| }}
@@ -15,4 +20,5 @@
       {{/each}}
     </ol>
   </div>
+  {{/if}}
 </div>

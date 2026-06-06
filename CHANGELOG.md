@@ -1,5 +1,38 @@
 # Changelog
 
+## Version 1.4.3
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- Character and item sheet tab strips are taller (2rem) with larger touch targets on icon actions and dialog buttons.
+- Sheet inputs use a subtle background so editable fields are visually distinct from static text.
+- Pause-screen glitch animation is disabled when the user prefers reduced motion.
+- Content filter on the character sheet is debounced (300ms) to reduce full-sheet re-renders while typing.
+- Skill and role modifier values remain visible at reduced opacity instead of hiding until hover.
+- Item sheet header shows the item name with the type as a subtitle.
+- Empty-state guidance added to fight, skills, cyberware, and gear tabs when categories have no items.
+- Roll dialog shows a Ctrl/Cmd skip hint; damage application tooltips document the same shortcut.
+- Blind rolls show a placeholder message to players instead of leaving gaps in the chat log.
+- Damage application cards show a one-line outcome summary without expanding details.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Global CSS no longer paints all inputs and buttons in error red; only invalid cyberpunkred.com import codes use that color.
+- Fixed `.effect-name .effect-item` CSS selector and item-directory header opacity.
+- Restored keyboard focus visibility on actor sheets (removed mook `outline: none`; added `:focus-visible` rings).
+- Fixed malformed HTML in the fight tab, container sheet list structure, and content-filter input attributes.
+- Chat roll cards now display modifier totals (`modsTotal`) correctly.
+- Reversing applied damage requires confirmation before undoing HP changes.
+- Ledger dialog includes Done/Cancel footer buttons.
+
 ## Version 1.4.2
 
 ### Action Needed
