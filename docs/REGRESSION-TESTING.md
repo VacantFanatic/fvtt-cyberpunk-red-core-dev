@@ -24,10 +24,11 @@ Extended handlebars jobs (gitlab-ci-local / `make lint`) cover helpers, tooltips
 
 ## Foundry E2E smoke test (required for sheet / template / dialog changes)
 
-1. `./scripts/foundry-docker.sh up`
-2. `npm run build && ./scripts/foundry-docker.sh sync-system`
-3. Open `http://127.0.0.1:30000`, load a **Cyberpunk RED - CORE** world with **lib-wrapper** enabled.
-4. Verify:
+1. `./scripts/ensure-docker-cli.sh` (automatic when using `foundry-docker.sh` or `cloud-update.sh`)
+2. `./scripts/foundry-docker.sh up`
+3. `npm run build && ./scripts/foundry-docker.sh sync-system`
+4. Open `http://127.0.0.1:30000`, load a **Cyberpunk RED - CORE** world with **lib-wrapper** enabled.
+5. Verify:
 
 - [ ] Character sheet opens (all tabs: Skills, Gear, Cyberware, Effects, Role, Fight, Lifepath)
 - [ ] Mook and container sheets open
@@ -35,7 +36,9 @@ Extended handlebars jobs (gitlab-ci-local / `make lint`) cover helpers, tooltips
 - [ ] Skill check produces a chat card with modifier total
 - [ ] No errors in the browser console on sheet render
 
-5. After template edits, re-run `npm run test:regression` before opening a PR.
+6. After template edits, re-run `npm run test:regression` before opening a PR.
+
+Cursor Cloud agents can run the full update path with `./scripts/cloud-update.sh` (requires `FOUNDRY_USERNAME` / `FOUNDRY_PASSWORD` secrets).
 
 ## When to add a new regression script
 
