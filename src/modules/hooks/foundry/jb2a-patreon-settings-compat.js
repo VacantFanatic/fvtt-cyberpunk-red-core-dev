@@ -16,8 +16,7 @@ function registerJb2aPatreonSetting(key, config) {
  */
 export function registerJb2aPatreonSettingsCompat() {
   const patreonModule = game.modules.get(JB2A_PATREON_ID);
-  const freeJb2aModule = game.modules.get("JB2A_DnD5e");
-  if (!patreonModule && !freeJb2aModule?.active) return;
+  if (!patreonModule) return;
 
   registerJb2aPatreonSetting("runonlyonce", {
     name: "JB2A Patreon Run Only Once",
