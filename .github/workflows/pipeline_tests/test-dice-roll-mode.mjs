@@ -17,7 +17,7 @@ global.game = {
   },
 };
 
-const { resolveDiceRollVisibility } = await import(
+const { default: resolveDiceRollVisibility } = await import(
   "../../../src/modules/extern/cpr-dice-roll-mode.js"
 );
 

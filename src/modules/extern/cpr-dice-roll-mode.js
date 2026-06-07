@@ -4,7 +4,7 @@
  * @param {string} rollMode - core messageMode value
  * @returns {{ whisper: string[]|null|undefined, blind: boolean }}
  */
-export function resolveDiceRollVisibility(rollMode) {
+export default function resolveDiceRollVisibility(rollMode) {
   switch (rollMode) {
     case "blindroll":
       return { whisper: undefined, blind: true };

@@ -1,4 +1,4 @@
-import { resolveDiceRollVisibility } from "./cpr-dice-roll-mode.js";
+import resolveDiceRollVisibility from "./cpr-dice-roll-mode.js";
 
 /**
  * We use custom chat cards for dice rolls, so we have to override the dice card behaviours
