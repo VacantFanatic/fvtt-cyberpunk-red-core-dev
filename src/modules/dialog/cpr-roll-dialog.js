@@ -131,7 +131,6 @@ export class CPRRollDialog extends CPRDialog {
    */
   activateListeners(html) {
     super.activateListeners(html);
-    if (!this.options.editable) return;
 
     const root = resolveDialogRoot(html) ?? this.element;
     if (!(root instanceof HTMLElement)) return;

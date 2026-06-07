@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.12
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed core situational modifier toggles in roll dialogs still not responding after v1.4.10 (#58). `CPRRollDialog` no longer gates listener binding on `options.editable`, which Application V2 does not set (so it was always `undefined` and listeners were never attached). Dialogs now bind click handlers from `_attachPartListeners`, the Application V2 part lifecycle hook.
+
 ## Version 1.4.11
 
 ### Action Needed
