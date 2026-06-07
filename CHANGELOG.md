@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.13
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed explosive blast templates spanning all scene levels instead of staying on the active level when a grenade or rocket is thrown on a multi-level map (#63). Measured templates now set `elevation` from the Portal pick, the attacking token, or the current canvas level.
+
 ## Version 1.4.12
 
 ### Action Needed
