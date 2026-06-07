@@ -2,6 +2,7 @@
 import CPRMod from "../rolls/cpr-modifiers.js";
 import SystemUtils from "../utils/cpr-systemUtils.js";
 import CPRDialog from "./cpr-dialog-application.js";
+import normalizeRollDialogFormData from "./cpr-roll-dialog-form-data.js";
 
 export class CPRRollDialog extends CPRDialog {
   /**
@@ -20,6 +21,11 @@ export class CPRRollDialog extends CPRDialog {
       {
         title: rollData.rollTitle,
         template: rollData.rollPrompt,
+        form: {
+          handler: CPRRollDialog.#onSubmitForm,
+          submitOnChange: true,
+          closeOnSubmit: false,
+        },
       },
       { inplace: false }
     );
@@ -188,42 +194,18 @@ export class CPRRollDialog extends CPRDialog {
     this.render();
   }
 
-  /**
-   * We ovverride this function to process Additional Mods added by the user in the dialog.
-   *
-   * @param {*} event
-   * @param {Object} formData - Updated dialog data to be merged with the original object.
-   * @override
-   */
-  async _updateObject(event, formData) {
-    const fd = foundry.utils.duplicate(formData);
-    if (formData.additionalMods) {
-      // Replace all spaces/commas and then split into an array at each comma.
-      fd.additionalMods = fd.additionalMods.replace(/ +/g, ",");
-      fd.additionalMods = fd.additionalMods.replace(/,+/g, ",");
-      fd.additionalMods = fd.additionalMods.split(",");
-
-      // Sanitize data input by checking if anything inputted is not a number. Warn user if so.
-      // eslint-disable-next-line no-restricted-globals
-      if (fd.additionalMods.some((m) => isNaN(m))) {
-        SystemUtils.DisplayMessage(
-          "warn",
-          "CPR.rolls.modifiers.additionalModWarning"
-        );
-      }
-      fd.additionalMods.forEach((m, i) => {
-        // eslint-disable-next-line no-restricted-globals
-        if (isNaN(m)) {
-          fd.additionalMods.splice(i, 1);
-        }
-      });
-
-      // Convert each additional mod into a number
-      fd.additionalMods = fd.additionalMods.map(Number);
-    } else {
-      fd.additionalMods = [];
+  static async #onSubmitForm(_event, _form, formData) {
+    const { data, invalidAdditionalMods } = normalizeRollDialogFormData(
+      formData.object
+    );
+    if (invalidAdditionalMods) {
+      SystemUtils.DisplayMessage(
+        "warn",
+        "CPR.rolls.modifiers.additionalModWarning"
+      );
     }
-    super._updateObject(event, fd);
+    foundry.utils.mergeObject(this.object, data);
+    this.render(true);
   }
 }
 

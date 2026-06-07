@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.8
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed roll dialog luck and additional modifier fields not applying to rolls after the Application V2 dialog migration (#55). Roll prompt templates no longer nest a `<form>` inside the dialog form, and roll dialog form data is normalized and flushed on confirm.
+
 ## Version 1.4.7
 
 ### Action Needed

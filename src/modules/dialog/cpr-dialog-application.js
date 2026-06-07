@@ -220,6 +220,18 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
     this.render(true);
   }
 
+  /**
+   * Reads the current form state and merges it onto the dialog object.
+   * Used before confirm so in-progress input is captured without a blur event.
+   */
+  async _flushFormData() {
+    const form = this.element;
+    if (!form || form.tagName !== "FORM") return;
+    const handler = this.options.form?.handler ?? CPRDialog.#onSubmitForm;
+    const formData = new FormDataExtended(form);
+    await handler.call(this, null, form, formData);
+  }
+
   async _prepareContext(options) {
     const data = await super._prepareContext(options);
     Object.entries(this.object ?? {}).forEach(([key, value]) => {
@@ -285,6 +297,7 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
 
   async confirmDialog(_event, options) {
     // Taken from Starfinder: Fire callback that resolves original promise.
+    await this._flushFormData();
     this._confirmDialog?.();
     return this.close(options);
   }

@@ -1,6 +1,6 @@
 {
   "name": "fvtt-cyberpunk-red-core",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "type": "module",
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
     "stylelint": "npx stylelint 'src/**/*.css'",
     "stylelint:fix": "npx stylelint 'src/**/*.css' --fix",
     "watch": "npx gulp watch",
-    "test:regression": "bash .github/workflows/pipeline_tests/test-handlebars-subexpression-syntax.sh && bash .github/workflows/pipeline_tests/test-handlebars-tags.sh && bash .github/workflows/pipeline_tests/test-handlebars-compare.sh && node .github/workflows/pipeline_tests/test-chat-roll-data.mjs && node .github/workflows/pipeline_tests/test-dice-roll-mode.mjs && node .github/workflows/pipeline_tests/test-chat-message-user.mjs && node .github/workflows/pipeline_tests/test-chat-message-author.mjs && node .github/workflows/pipeline_tests/test-jb2a-sequencer-ready-compat.mjs && node .github/workflows/pipeline_tests/test-get-event-datum.mjs"
+    "test:regression": "bash .github/workflows/pipeline_tests/test-handlebars-subexpression-syntax.sh && bash .github/workflows/pipeline_tests/test-handlebars-tags.sh && bash .github/workflows/pipeline_tests/test-handlebars-compare.sh && node .github/workflows/pipeline_tests/test-chat-roll-data.mjs && node .github/workflows/pipeline_tests/test-dice-roll-mode.mjs && node .github/workflows/pipeline_tests/test-chat-message-user.mjs && node .github/workflows/pipeline_tests/test-chat-message-author.mjs && node .github/workflows/pipeline_tests/test-jb2a-sequencer-ready-compat.mjs && node .github/workflows/pipeline_tests/test-get-event-datum.mjs && node .github/workflows/pipeline_tests/test-roll-dialog-form-data.mjs"
   },
   "engines": {
     "node": ">=15.0",
