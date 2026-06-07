@@ -1,9 +1,11 @@
 import { ADDITIONS_SETTINGS } from "./constants.js";
+import { isChatMessageAuthor } from "../hooks/foundry/chat-message-author.js";
+import AdditionsUtils from "./utils.js";
 
 export default function registerPoorWeaponCheck() {
   Hooks.on("createChatMessage", async (message) => {
     if (
-      message.author?.id !== game.user.id ||
+      !isChatMessageAuthor(message, game.user.id) ||
       !game.settings.get(game.system.id, ADDITIONS_SETTINGS.poorWeaponCheck)
     ) {
       return;
@@ -24,11 +26,12 @@ export default function registerPoorWeaponCheck() {
       ?.includes("d10_1_fail.svg");
     if (!isFail) return;
 
-    const token =
-      message.speaker?.token ??
-      canvas.scene.tokens.get(data.tokenId) ??
-      canvas.scene.tokens.getName(message.speaker?.alias);
-    const actor = token?.actor ?? game.actors.get(data.actorId);
+    const actor = game.actors.get(data.actorId);
+    const token = AdditionsUtils.resolveAttackRollToken({
+      tokenId: data.tokenId,
+      speaker: message.speaker,
+      actor,
+    });
     const item = actor?.items?.get(data.itemId);
     if (!token || !actor || !item) return;
 

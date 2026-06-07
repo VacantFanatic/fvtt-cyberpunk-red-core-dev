@@ -15,6 +15,7 @@
         <div class="demon-stats-title-{{s}}">
           {{#unless (cprListContains "rez,actions" s)}}
             <a class="rollable"
+               data-roll-type="stat"
                data-roll-title="{{s}}"
                data-tooltip="{{localize "CPR.actorSheets.rolling.clickToRollThisStat"}}">
           {{/unless}}

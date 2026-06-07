@@ -1,10 +1,15 @@
 /* global Sequence */
 import AdditionsUtils from "./utils.js";
 import { ADDITIONS_SETTINGS } from "./constants.js";
+import {
+  isChatMessageAuthor,
+  isWhisperedChatMessage,
+} from "../hooks/foundry/chat-message-author.js";
+import SystemUtils from "../utils/cpr-systemUtils.js";
 
 export default function registerDoesItHit() {
   Hooks.on("createChatMessage", async (message) => {
-    if (message.author?.id !== game.user.id) return;
+    if (!isChatMessageAuthor(message, game.user.id)) return;
 
     const div = document.createElement("div");
     div.innerHTML = message.content;
@@ -21,16 +26,15 @@ export default function registerDoesItHit() {
       ?.innerHTML?.trim();
     if (attackType === game.i18n.localize("CPR.rolls.suppressiveFire")) return;
 
-    const target = message.author?.targets?.first();
+    const target = SystemUtils.getUserTargetedOrSelected("targeted")[0];
     if (!target) return;
 
-    let token =
-      message.speaker?.token ??
-      canvas.scene.tokens.get(data.tokenId) ??
-      canvas.scene.tokens.getName(message.speaker?.alias);
-    const actor = token?.actor ?? game.actors.get(data.actorId);
-    if (actor && !token)
-      token = canvas.scene.tokens.getName(actor.prototypeToken.name);
+    const actor = game.actors.get(data.actorId);
+    const token = AdditionsUtils.resolveAttackRollToken({
+      tokenId: data.tokenId,
+      speaker: message.speaker,
+      actor,
+    });
     const item = actor?.items?.get(data.itemId);
     if (!token || !actor || !item) return;
 
@@ -92,7 +96,7 @@ export default function registerDoesItHit() {
             .delay(1000)
             .file(sounds[Math.floor(Math.random() * sounds.length)])
             .volume(0.35)
-            .locally(message.whisper.length !== 0);
+            .locally(isWhisperedChatMessage(message));
         }
       }
       if (game.settings.get(game.system.id, ADDITIONS_SETTINGS.hitAnimations)) {
@@ -115,7 +119,7 @@ export default function registerDoesItHit() {
             .snapToGrid()
             .atLocation(token, { gridUnits: true, offset: { x: 0, y: -0.55 } })
             .scaleToObject(1.35)
-            .locally(message.whisper.length !== 0);
+            .locally(isWhisperedChatMessage(message));
         } else {
           const angle =
             (360 +
@@ -134,7 +138,7 @@ export default function registerDoesItHit() {
               gridUnits: true,
             })
             .rotate(angle * -1)
-            .locally(message.whisper.length !== 0);
+            .locally(isWhisperedChatMessage(message));
         }
       }
       sequence.play();

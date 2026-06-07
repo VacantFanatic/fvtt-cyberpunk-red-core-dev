@@ -44,6 +44,29 @@ export default class AdditionsUtils {
     return cachedData.dvs.get(distance);
   }
 
+  /**
+   * Resolve the attacking token for attack-roll chat cards.
+   *
+   * @param {object} params
+   * @param {string} [params.tokenId]
+   * @param {object} [params.speaker]
+   * @param {object} [params.actor]
+   * @returns {object|undefined}
+   */
+  static resolveAttackRollToken({ tokenId, speaker, actor } = {}) {
+    const speakerTokenId =
+      typeof speaker?.token === "string" ? speaker.token : speaker?.token?.id;
+    const id = speakerTokenId ?? tokenId;
+
+    return (
+      (id && canvas.tokens?.get?.(id)) ??
+      (id && canvas.scene?.tokens?.get?.(id)) ??
+      (speaker?.alias && canvas.scene?.tokens?.getName?.(speaker.alias)) ??
+      (actor?.prototypeToken?.name &&
+        canvas.scene?.tokens?.getName?.(actor.prototypeToken.name))
+    );
+  }
+
   static isResponsibleGM() {
     if (!game.user.isGM) return false;
     const activeGMs = game.users.filter((user) => user.active && user.isGM);

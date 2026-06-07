@@ -22,6 +22,7 @@ This currently includes:
 | `test-chat-roll-data.mjs` | Chat message `author`/speaker/whisper shape for roll cards |
 | `test-dice-roll-mode.mjs` | Dice So Nice whisper mapping for roll modes |
 | `test-chat-message-user.mjs` | ChatMessage `#user` fallback for legacy modules |
+| `test-get-event-datum.mjs` | `GetEventDatum` ancestor lookup for `data-*` attrs |
 
 Extended handlebars jobs (gitlab-ci-local / `make lint`) cover helpers, tooltips, attributes, and more.
 

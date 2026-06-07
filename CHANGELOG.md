@@ -1,5 +1,29 @@
 # Changelog
 
+## Version 1.4.7
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed character sheet rolls crashing with `Cannot read properties of undefined (reading 'handleRollDialog')` when cyberdeck program attack/defense/damage buttons were clicked.
+- `GetEventDatum` now walks up to the nearest ancestor carrying the requested `data-*` attribute (for example `data-roll-type`), which improves delegated sheet clicks on nested icons.
+- Added missing `data-roll-type="stat"` on demon sheet stat roll links.
+- Fixed "Does it hit?" hit/miss animations and follow-up chat messages on Foundry v14 by resolving chat message authors from string ids, reading targeted tokens from `game.user.targets`, and guarding whisper-only playback when `message.whisper` is undefined.
+- Fixed poor-weapon follow-up chat messages using the same Foundry v14 chat author compatibility.
+- Added JB2A `sequencer.ready` compatibility so Sequencer database merges wait for JB2A module APIs (or fall back to empty objects) instead of throwing `One of original or other are not Objects!` when both JB2A free and Patreon modules are active.
+- JB2A Patreon settings stubs are now registered only when the `jb2a_patreon` module folder is present, avoiding unnecessary fake settings when only the free JB2A module is installed.
+
 ## Version 1.4.6
 
 ### Action Needed
