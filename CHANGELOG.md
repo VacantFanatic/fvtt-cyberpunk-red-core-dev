@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.10
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed core situational modifier toggles in attack and damage roll dialogs not expanding after the Application V2 dialog migration (#58). Roll dialogs now re-bind native DOM click listeners on each render.
+
 ## Version 1.4.9
 
 ### Action Needed
