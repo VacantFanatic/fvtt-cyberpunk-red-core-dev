@@ -10,6 +10,17 @@ import * as CPRRolls from "../../rolls/cpr-rolls.js";
  * @extends {CPRActorSheet}
  */
 export default class CPRCharacterActorSheet extends CPRActorSheet {
+  static DEFAULT_OPTIONS = foundry.utils.mergeObject(
+    CPRActorSheet.DEFAULT_OPTIONS,
+    {
+      position: {
+        width: 1050,
+        height: "auto",
+      },
+      scrollY: [".right-content-section", ".top-pane-gear"],
+    }
+  );
+
   static PARTS = {
     sheet: {
       template:
@@ -44,6 +55,25 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
       ],
     },
   };
+
+  /**
+   * Apply `resizeCPRSheets` before `super()` so V2's frozen options see the merged
+   * height (never read settings from a dead V1 `static get defaultOptions`, which V2 ignores).
+   *
+   * @param {object} [options]
+   */
+  constructor(options = {}) {
+    const merged = foundry.utils.mergeObject({}, options ?? {});
+    if (game?.settings?.get) {
+      const resize = game.settings.get(game.system.id, "resizeCPRSheets");
+      if (resize) {
+        merged.position = foundry.utils.mergeObject(merged.position ?? {}, {
+          height: 850,
+        });
+      }
+    }
+    super(merged);
+  }
 
   /**
    * Set default options for character sheets, which include making sure vertical scrollbars do not
