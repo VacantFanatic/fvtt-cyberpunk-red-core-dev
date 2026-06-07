@@ -24,6 +24,65 @@ export default class AdditionsTemplate {
     return 0;
   }
 
+  /**
+   * Resolve the active scene level ids for a placed template region.
+   * Foundry v14 regions without `levels` apply to every level (#65).
+   *
+   * @static
+   * @returns {string[]|null}
+   */
+  static resolveTemplateLevels() {
+    const levelId = canvas?.level?.id;
+    return levelId ? [levelId] : null;
+  }
+
+  /**
+   * Embedded document type used for placed blast templates on the active Foundry generation.
+   *
+   * @static
+   * @returns {"MeasuredTemplate"|"Region"}
+   */
+  static getTemplateEmbeddedName() {
+    return game.release?.generation >= 14 ? "Region" : "MeasuredTemplate";
+  }
+
+  /**
+   * @static
+   * @param {Object} placementData Measured-template style placement fields.
+   * @param {Object} [position] Portal pick result.
+   * @returns {Object}
+   */
+  static buildTemplateDocumentData(placementData, position) {
+    const data = {
+      ...placementData,
+      elevation: AdditionsTemplate.resolveTemplateElevation(position),
+    };
+
+    if (game.release?.generation >= 14) {
+      const levels = AdditionsTemplate.resolveTemplateLevels();
+      if (levels) data.levels = levels;
+    }
+
+    return data;
+  }
+
+  /**
+   * Create a placed blast template on the active scene.
+   *
+   * @static
+   * @async
+   * @param {Object} placementData Measured-template style placement fields.
+   * @param {Object} [position] Portal pick result.
+   * @returns {Promise<Document>}
+   */
+  static async createPlacedTemplate(placementData, position) {
+    const [template] = await canvas.scene.createEmbeddedDocuments(
+      "MeasuredTemplate",
+      [AdditionsTemplate.buildTemplateDocumentData(placementData, position)]
+    );
+    return template;
+  }
+
   static async createTemplate(args) {
     const [, , inputData] = args;
     let position;
@@ -46,19 +105,19 @@ export default class AdditionsTemplate {
     const trueWidth = tempSize / canvasDist;
     const gridSize = canvas.grid.size;
 
-    await canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [
+    await AdditionsTemplate.createPlacedTemplate(
       {
         angle: 0,
         direction: 45,
         distance: hypDist,
-        elevation: AdditionsTemplate.resolveTemplateElevation(position),
         fillColor: game.user.color,
         x: position.x - (trueWidth / 2) * gridSize,
         y: position.y - (trueWidth / 2) * gridSize,
         borderColor: "#000000",
         t: "rect",
       },
-    ]);
+      position
+    );
   }
 
   /**
@@ -94,21 +153,18 @@ export default class AdditionsTemplate {
       return null;
     }
 
-    const [template] = await canvas.scene.createEmbeddedDocuments(
-      "MeasuredTemplate",
-      [
-        {
-          angle: 0,
-          direction: 45,
-          distance: hypDist,
-          elevation: AdditionsTemplate.resolveTemplateElevation(position),
-          fillColor: game.user.color,
-          x: position.x - (trueWidth / 2) * gridSize,
-          y: position.y - (trueWidth / 2) * gridSize,
-          borderColor: "#ff6600",
-          t: "rect",
-        },
-      ]
+    const template = await AdditionsTemplate.createPlacedTemplate(
+      {
+        angle: 0,
+        direction: 45,
+        distance: hypDist,
+        fillColor: game.user.color,
+        x: position.x - (trueWidth / 2) * gridSize,
+        y: position.y - (trueWidth / 2) * gridSize,
+        borderColor: "#ff6600",
+        t: "rect",
+      },
+      position
     );
 
     return {
@@ -176,13 +232,16 @@ export default class AdditionsTemplate {
       Math.min(centerY + maxPixelOffset, centerY + rawOffsetY)
     );
 
-    await canvas.scene.updateEmbeddedDocuments("MeasuredTemplate", [
-      {
-        _id: templateId,
-        x: newCenterX - (trueWidth / 2) * gridSize,
-        y: newCenterY - (trueWidth / 2) * gridSize,
-      },
-    ]);
+    await canvas.scene.updateEmbeddedDocuments(
+      AdditionsTemplate.getTemplateEmbeddedName(),
+      [
+        {
+          _id: templateId,
+          x: newCenterX - (trueWidth / 2) * gridSize,
+          y: newCenterY - (trueWidth / 2) * gridSize,
+        },
+      ]
+    );
 
     return { directionName: dir.name, distSquares };
   }

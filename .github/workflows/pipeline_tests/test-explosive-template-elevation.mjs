@@ -1,5 +1,5 @@
 /**
- * Regression tests for explosive measured template elevation (issue #63).
+ * Regression tests for explosive measured template / region level placement.
  * Run: node .github/workflows/pipeline_tests/test-explosive-template-elevation.mjs
  */
 import assert from "node:assert/strict";
@@ -22,8 +22,26 @@ assert.match(
 
 assert.match(
   templateSource,
-  /elevation:\s*AdditionsTemplate\.resolveTemplateElevation|elevation:\s*this\.resolveTemplateElevation/,
-  "MeasuredTemplate creation must set elevation from resolveTemplateElevation"
+  /resolveTemplateLevels\s*\(/,
+  "AdditionsTemplate must expose resolveTemplateLevels for Foundry v14 scene levels"
+);
+
+assert.match(
+  templateSource,
+  /createPlacedTemplate\s*\(/,
+  "AdditionsTemplate must centralize template/region creation"
+);
+
+assert.match(
+  templateSource,
+  /data\.levels\s*=\s*levels/,
+  "Foundry v14 regions must receive the active scene level id"
+);
+
+assert.match(
+  templateSource,
+  /getTemplateEmbeddedName\s*\(/,
+  "Bounce updates must target Region on v14 and MeasuredTemplate on v13"
 );
 
 const { default: AdditionsTemplate } = await import(
@@ -40,6 +58,16 @@ function withCanvas(mockCanvas, fn) {
   }
 }
 
+function withGame(mockGame, fn) {
+  const previous = global.game;
+  global.game = mockGame;
+  try {
+    return fn();
+  } finally {
+    global.game = previous;
+  }
+}
+
 assert.equal(
   withCanvas(undefined, () =>
     AdditionsTemplate.resolveTemplateElevation({ elevation: 12 })
@@ -52,7 +80,7 @@ assert.equal(
   withCanvas(
     {
       tokens: { controlled: [{ document: { elevation: 7 } }] },
-      level: { elevation: { bottom: 0, top: 10 } },
+      level: { id: "level-1", elevation: { bottom: 0, top: 10 } },
     },
     () => AdditionsTemplate.resolveTemplateElevation({})
   ),
@@ -64,7 +92,7 @@ assert.equal(
   withCanvas(
     {
       tokens: { controlled: [] },
-      level: { elevation: { bottom: 10, top: 20 } },
+      level: { id: "level-2", elevation: { bottom: 10, top: 20 } },
     },
     () => AdditionsTemplate.resolveTemplateElevation(null)
   ),
@@ -78,6 +106,36 @@ assert.equal(
   ),
   0,
   "Elevation should default to 0 when no level context exists"
+);
+
+assert.deepEqual(
+  withCanvas({ level: { id: "level-ground" } }, () =>
+    AdditionsTemplate.resolveTemplateLevels()
+  ),
+  ["level-ground"],
+  "Active canvas level id should be returned for region confinement"
+);
+
+assert.equal(
+  withCanvas({ level: null }, () => AdditionsTemplate.resolveTemplateLevels()),
+  null,
+  "Levels should be omitted when no active canvas level exists"
+);
+
+assert.equal(
+  withGame({ release: { generation: 13 } }, () =>
+    AdditionsTemplate.getTemplateEmbeddedName()
+  ),
+  "MeasuredTemplate",
+  "v13 should continue using MeasuredTemplate documents"
+);
+
+assert.equal(
+  withGame({ release: { generation: 14 } }, () =>
+    AdditionsTemplate.getTemplateEmbeddedName()
+  ),
+  "Region",
+  "v14 should use Region documents for placed templates"
 );
 
 console.log("✅ explosive template elevation regression tests passed");

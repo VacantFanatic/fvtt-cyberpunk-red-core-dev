@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.14
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed explosive blast templates still appearing on every scene level in Foundry v14 (#65). Template regions now set the active scene `levels` id in addition to elevation, and bounce updates target `Region` documents on v14.
+
 ## Version 1.4.13
 
 ### Action Needed
