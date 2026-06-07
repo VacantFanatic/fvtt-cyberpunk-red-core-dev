@@ -21,7 +21,11 @@
             {{localize "CPR.global.itemType.skill.autofire"}}?
           </div>
           <div class="dialog-item-input text-nowrap">
-            <input type="checkbox" id="isAutofire" name="isAutofire" {{#if rollData.isAutofire }} checked{{/if }}/>
+            <input type="checkbox"
+                   id="isAutofire"
+                   name="isAutofire"
+                   data-dtype="Checkbox"
+                   {{#if rollData.isAutofire }}checked{{/if }}/>
           </div>
         </li>
         {{#if rollData.isAutofire }}

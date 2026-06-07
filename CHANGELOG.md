@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.9
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed damage roll dialog autofire checkbox not applying because it was missing `data-dtype="Checkbox"`. Extended roll dialog form normalization to coerce damage-specific fields (`isAutofire`, `isAimed`, `autofireMultiplier`) and avoid overwriting luck on dialogs that do not include a luck field.
+
 ## Version 1.4.8
 
 ### Action Needed
