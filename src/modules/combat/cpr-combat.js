@@ -90,12 +90,10 @@ export default class CPRCombat extends Combat {
         "criticalInitiative"
       );
 
-      const roll = DiceHandler.handle3dDice(cprRoll._roll);
-      let critRoll;
+      await DiceHandler.handle3dDice(cprRoll._roll);
       if (rollCriticals && cprRoll.wasCritical()) {
-        critRoll = DiceHandler.handle3dDice(cprRoll._critRoll);
+        await DiceHandler.handle3dDice(cprRoll._critRoll);
       }
-      await Promise.all([roll, critRoll]);
 
       CPRChat.RenderRollCard(cprRoll);
 
