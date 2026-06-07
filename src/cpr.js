@@ -54,12 +54,22 @@ import SkillDataModel from "./modules/datamodels/item/skill-datamodel.js";
 import VehicleDataModel from "./modules/datamodels/item/vehicle-datamodel.js";
 import WeaponDataModel from "./modules/datamodels/item/weapon-datamodel.js";
 import MigrationError from "./modules/system/migrate/migration-error.js";
+import { installChatMessageUserCompat } from "./modules/hooks/foundry/chat-message-user.js";
+import { registerJb2aPatreonSettingsCompat } from "./modules/hooks/foundry/jb2a-patreon-settings-compat.js";
 
 const { ActorSheet, ItemSheet } = foundry.appv1.sheets;
 const { DocumentSheetConfig } = foundry.applications.apps;
 const { Actors, Items } = foundry.documents.collections;
 
 Hooks.once("init", async () => {
+  if (foundry.utils.isNewerVersion(game.version, "13.9")) {
+    installChatMessageUserCompat(
+      foundry.documents.ChatMessage.prototype,
+      (id) => game.users.get(id)
+    );
+  }
+  registerJb2aPatreonSettingsCompat();
+
   LOGGER.log("THANK YOU TO EVERYONE WHO HELPED!!!!");
   LOGGER.credits();
   // Removes "Default Actor Sheet" option from sheet style selection and prevents users from breaking blackICE, containers, and demons

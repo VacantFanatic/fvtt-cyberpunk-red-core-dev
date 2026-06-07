@@ -96,10 +96,11 @@ export default function registerDoesItHit() {
         }
       }
       if (game.settings.get(game.system.id, ADDITIONS_SETTINGS.hitAnimations)) {
-        const usePatreon = game.settings.get(
-          game.system.id,
-          ADDITIONS_SETTINGS.useJb2aPatreon
-        );
+        const usePatreon =
+          game.settings.get(
+            game.system.id,
+            ADDITIONS_SETTINGS.useJb2aPatreon
+          ) && game.modules.get("jb2a_patreon")?.active;
         const missPath = usePatreon
           ? "modules/jb2a_patreon/Library/Generic/UI/Miss_01_Red_200x200.webm"
           : "modules/JB2A_DnD5e/Library/Generic/UI/Miss_02_White_200x200.webm";
