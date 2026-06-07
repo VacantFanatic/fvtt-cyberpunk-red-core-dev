@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 1.4.5
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed roll chat messages using Foundry v14 `author` instead of removed `user` field, which broke modules such as Automated Animations (`Cannot read properties of undefined (reading 'id')`).
+- Fixed chat `speaker` data to use actor/token IDs via `ChatMessage.getSpeaker()` instead of embedding Actor documents (improves module compatibility).
+- Fixed self-roll whispers passing a User object instead of a user id string.
+- Fixed Dice So Nice integration: public rolls no longer pass a whisper list of every user, dice animations are queued sequentially, and initiative critical dice no longer run in parallel.
+
 ## Version 1.4.4
 
 ### Action Needed

@@ -19,6 +19,8 @@ This currently includes:
 | `test-handlebars-subexpression-syntax.sh` | Invalid Handlebars like `(helper arg).length` inside `{{...}}` |
 | `test-handlebars-tags.sh` | Unbalanced HTML tags in `.hbs` templates |
 | `test-handlebars-compare.sh` | `cprCompare` used for boolean tests |
+| `test-chat-roll-data.mjs` | Chat message `author`/speaker/whisper shape for roll cards |
+| `test-dice-roll-mode.mjs` | Dice So Nice whisper mapping for roll modes |
 
 Extended handlebars jobs (gitlab-ci-local / `make lint`) cover helpers, tooltips, attributes, and more.
 

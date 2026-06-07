@@ -24,6 +24,7 @@ const hooksImports = [
   "external/babele.js",
   "external/dice-so-nice-preset.js",
   "external/popout.js",
+  "foundry/chat-message-v14-compat.js",
   "foundry/delete-folder.js",
   "foundry/ui/item-folder-upgraded-display.js",
   "foundry/ui/pause-animation.js",

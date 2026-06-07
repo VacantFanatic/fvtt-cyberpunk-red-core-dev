@@ -1,3 +1,5 @@
+import { resolveDiceRollVisibility } from "./cpr-dice-roll-mode.js";
+
 /**
  * We use custom chat cards for dice rolls, so we have to override the dice card behaviours
  * provided by 3rd party dice rollers. We currently support Dice So Nice! and DDDice.
@@ -5,14 +7,20 @@
  * See https://github.com/JDWarner/dice-so-nice/wiki/Roll
  */
 export default class DiceHandler {
+  static #diceQueue = Promise.resolve();
+
   static async handle3dDice(roll, rollModeOverride) {
-    if (
-      (game.modules.get("dice-so-nice") &&
-        game.modules.get("dice-so-nice").active) ||
-      (game.modules.get("dddice") && game.modules.get("dddice").active)
-    ) {
-      await DiceHandler._passRoll(roll, rollModeOverride);
-    }
+    if (!roll) return;
+
+    const dsnActive = game.modules.get("dice-so-nice")?.active;
+    const dddiceActive = game.modules.get("dddice")?.active;
+    if (!dsnActive && !dddiceActive) return;
+    if (!game.dice3d) return;
+
+    DiceHandler.#diceQueue = DiceHandler.#diceQueue.then(() =>
+      DiceHandler._passRoll(roll, rollModeOverride)
+    );
+    await DiceHandler.#diceQueue;
   }
 
   /**
@@ -22,38 +30,9 @@ export default class DiceHandler {
    * @param {Object} rollModeOverride - an object with overriding parameters
    */
   static async _passRoll(roll, rollModeOverride) {
-    let whisper = null;
-    let blind = false;
     const rollMode =
       rollModeOverride || game.settings.get("core", "messageMode");
-    switch (rollMode) {
-      case "blindroll": {
-        // GM only
-        blind = true;
-        break;
-      }
-      case "gmroll": {
-        // GM + rolling player
-        const gmList = game.users.filter((user) => user.isGM);
-        const gmIDList = [];
-        gmList.forEach((gm) => gmIDList.push(gm._id));
-        whisper = gmIDList;
-        break;
-      }
-      case "selfroll": {
-        whisper = [game.user.id];
-        break;
-      }
-      case "roll": {
-        // everybody
-        const userList = game.users.filter((user) => user.active);
-        const userIDList = [];
-        userList.forEach((user) => userIDList.push(user._id));
-        whisper = userIDList;
-        break;
-      }
-      default:
-    }
-    await game.dice3d.showForRoll(roll, game.user, true, whisper, blind);
+    const { whisper, blind } = resolveDiceRollVisibility(rollMode);
+    return game.dice3d.showForRoll(roll, game.user, true, whisper, blind);
   }
 }

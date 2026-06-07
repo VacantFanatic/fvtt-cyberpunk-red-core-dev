@@ -3,6 +3,10 @@ import { CPRRoll, CPRDamageRoll, CPRInitiative } from "../rolls/cpr-rolls.js";
 import SystemUtils from "../utils/cpr-systemUtils.js";
 import CPRDialog from "../dialog/cpr-dialog-application.js";
 import AdditionsTemplate from "../additions/template.js";
+import {
+  buildChatMessageData,
+  resolveSpeaker as resolveChatSpeaker,
+} from "./cpr-chat-message-data.js";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -21,35 +25,31 @@ export default class CPRChat {
    * @param {*} isRoll - a flag indicating whether the chat message is from a dice roll
    * @returns {*} - object encapsulating chat message data
    */
-  static ChatDataSetup(content, modeOverride, forceWhisper, isRoll = false) {
-    const chatData = {
-      user: game.user.id,
-      messageMode: modeOverride || game.settings.get("core", "messageMode"),
-      content,
+  static #chatMessageDeps() {
+    return {
+      getSpeaker: (options) => ChatMessage.getSpeaker(options),
+      getWhisperRecipients: (type) => ChatMessage.getWhisperRecipients(type),
+      getActor: (id) => game.actors.get(id),
+      getToken: (id) => canvas.tokens?.get(id),
+      diceSound: CONFIG.sounds.dice,
     };
+  }
 
-    if (isRoll) {
-      chatData.sound = CONFIG.sounds.dice;
-    }
+  static ChatDataSetup(content, modeOverride, forceWhisper, isRoll = false) {
+    return buildChatMessageData(
+      {
+        content,
+        userId: game.user.id,
+        rollMode: modeOverride || game.settings.get("core", "messageMode"),
+        forceWhisper,
+        isRoll,
+      },
+      this.#chatMessageDeps()
+    );
+  }
 
-    if (["gmroll", "blindroll"].includes(chatData.messageMode)) {
-      chatData.whisper = ChatMessage.getWhisperRecipients("GM").map(
-        (u) => u.id
-      );
-    }
-
-    if (chatData.messageMode === "blindroll") {
-      chatData.blind = true;
-    } else if (chatData.messageMode === "selfroll") {
-      chatData.whisper = [game.user];
-    }
-
-    if (forceWhisper) {
-      chatData.speaker = ChatMessage.getSpeaker();
-      chatData.whisper = ChatMessage.getWhisperRecipients(forceWhisper);
-    }
-
-    return chatData;
+  static resolveSpeaker(entityData) {
+    return resolveChatSpeaker(entityData, this.#chatMessageDeps());
   }
 
   /**
@@ -73,20 +73,7 @@ export default class CPRChat {
     return renderTemplate(cprRoll.rollCard, cprRoll).then((html) => {
       const chatOptions = this.ChatDataSetup(html);
 
-      if (cprRoll.entityData !== undefined && cprRoll.entityData !== null) {
-        let actor;
-        const actorId = cprRoll.entityData.actor;
-        const tokenId = cprRoll.entityData.token;
-        if (tokenId) {
-          actor = Object.keys(game.actors.tokens).includes(tokenId)
-            ? game.actors.tokens[tokenId]
-            : game.actors.find((a) => a.id === actorId);
-        } else {
-          [actor] = game.actors.filter((a) => a.id === actorId);
-        }
-        const alias = actor.name;
-        chatOptions.speaker = { actor, alias };
-      }
+      chatOptions.speaker = this.resolveSpeaker(cprRoll.entityData);
       return ChatMessage.create(chatOptions);
     });
   }
@@ -135,19 +122,7 @@ export default class CPRChat {
 
     return renderTemplate(itemTemplate, trimmedItem).then((html) => {
       const chatOptions = this.ChatDataSetup(html);
-      if (item.entityData !== undefined && item.entityData !== null) {
-        const actor = game.actors.filter(
-          (a) => a.id === item.entityData.actor
-        )[0];
-        let alias = actor.name;
-        if (item.entityData.token !== null) {
-          const token = game.actors.tokens[item.entityData.token];
-          if (token !== undefined) {
-            alias = token.name;
-          }
-        }
-        chatOptions.speaker = { actor, alias };
-      }
+      chatOptions.speaker = this.resolveSpeaker(item.entityData);
       return ChatMessage.create(chatOptions);
     });
   }
@@ -166,23 +141,7 @@ export default class CPRChat {
       (html) => {
         const chatOptions = this.ChatDataSetup(html);
 
-        if (
-          damageData.entityData !== undefined &&
-          damageData.entityData !== null
-        ) {
-          let actor;
-          const actorId = damageData.entityData.actor;
-          const tokenId = damageData.entityData.token;
-          if (tokenId) {
-            actor = Object.keys(game.actors.tokens).includes(tokenId)
-              ? game.actors.tokens[tokenId]
-              : game.actors.find((a) => a.id === actorId);
-          } else {
-            [actor] = game.actors.filter((a) => a.id === actorId);
-          }
-          const alias = actor.name;
-          chatOptions.speaker = { actor, alias };
-        }
+        chatOptions.speaker = this.resolveSpeaker(damageData.entityData);
         return ChatMessage.create(chatOptions);
       }
     );
