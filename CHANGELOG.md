@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 1.4.6
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- "Does it hit?" additions default to JB2A free assets unless the JB2A Patreon module is active and the Patreon setting is enabled.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Strengthened Foundry v14 `ChatMessage#user` compatibility for Automated Animations: the shim now installs synchronously at system init and returns a fallback `{ id }` object when the author user document is unavailable, preventing `msg.user.id` errors on roll chat messages.
+- Added JB2A Patreon settings compatibility so worlds with a broken or partially loaded `jb2a_patreon` module no longer throw `runonlyonce` / `jb2aLocation` errors during game setup.
+
 ## Version 1.4.5
 
 ### Action Needed

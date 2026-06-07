@@ -17,7 +17,7 @@ export default function registerAdditionsSettings() {
     scope: "world",
     config: true,
     type: Boolean,
-    default: true,
+    default: false,
   });
 
   game.settings.register(game.system.id, ADDITIONS_SETTINGS.hitSounds, {

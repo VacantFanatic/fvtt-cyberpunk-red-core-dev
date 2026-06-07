@@ -21,6 +21,7 @@ This currently includes:
 | `test-handlebars-compare.sh` | `cprCompare` used for boolean tests |
 | `test-chat-roll-data.mjs` | Chat message `author`/speaker/whisper shape for roll cards |
 | `test-dice-roll-mode.mjs` | Dice So Nice whisper mapping for roll modes |
+| `test-chat-message-user.mjs` | ChatMessage `#user` fallback for legacy modules |
 
 Extended handlebars jobs (gitlab-ci-local / `make lint`) cover helpers, tooltips, attributes, and more.
 
