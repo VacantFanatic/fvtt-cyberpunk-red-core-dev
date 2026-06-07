@@ -1,5 +1,29 @@
 /* global Portal */
 export default class AdditionsTemplate {
+  /**
+   * Resolve elevation for a measured template so it stays on the active scene
+   * level instead of spanning all elevations (Foundry scene levels / issue #63).
+   *
+   * @static
+   * @param {Object} [position] Portal pick result; may include elevation.
+   * @returns {number}
+   */
+  static resolveTemplateElevation(position) {
+    const pickElevation = Number(position?.elevation);
+    if (Number.isFinite(pickElevation)) return pickElevation;
+
+    const controlled = canvas?.tokens?.controlled ?? [];
+    for (const token of controlled) {
+      const tokenElevation = Number(token.document?.elevation);
+      if (Number.isFinite(tokenElevation)) return tokenElevation;
+    }
+
+    const levelBottom = Number(canvas?.level?.elevation?.bottom);
+    if (Number.isFinite(levelBottom)) return levelBottom;
+
+    return 0;
+  }
+
   static async createTemplate(args) {
     const [, , inputData] = args;
     let position;
@@ -27,6 +51,7 @@ export default class AdditionsTemplate {
         angle: 0,
         direction: 45,
         distance: hypDist,
+        elevation: AdditionsTemplate.resolveTemplateElevation(position),
         fillColor: game.user.color,
         x: position.x - (trueWidth / 2) * gridSize,
         y: position.y - (trueWidth / 2) * gridSize,
@@ -76,6 +101,7 @@ export default class AdditionsTemplate {
           angle: 0,
           direction: 45,
           distance: hypDist,
+          elevation: AdditionsTemplate.resolveTemplateElevation(position),
           fillColor: game.user.color,
           x: position.x - (trueWidth / 2) * gridSize,
           y: position.y - (trueWidth / 2) * gridSize,
