@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.11
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed PC character sheets opening too narrow (800px) after the Application V2 migration (#59). Character sheets now declare `DEFAULT_OPTIONS.position.width` of 1050px and apply the `resizeCPRSheets` height in the constructor before options are frozen.
+
 ## Version 1.4.10
 
 ### Action Needed
