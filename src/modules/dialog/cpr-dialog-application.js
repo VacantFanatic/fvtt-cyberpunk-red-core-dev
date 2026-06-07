@@ -306,15 +306,16 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
   }
 
   /**
-   * Application V2 does not call `activateListeners` automatically. Re-bind
-   * after each render so child dialogs keep their click handlers.
+   * Application V2 does not call `activateListeners` automatically. Bind
+   * listeners when each template part is attached (the V2-native hook).
    *
-   * @param {object} context - prepared render context (unused)
-   * @param {object} options - render options (unused)
+   * @param {string} partId
+   * @param {HTMLElement} htmlElement
+   * @param {object} options
    */
-  _onRender(context, options) {
-    super._onRender(context, options);
-    this.activateListeners(this.element);
+  _attachPartListeners(partId, htmlElement, options) {
+    super._attachPartListeners?.(partId, htmlElement, options);
+    this.activateListeners(htmlElement);
   }
 
   activateListeners(html) {

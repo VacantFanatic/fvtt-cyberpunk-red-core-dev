@@ -26,10 +26,10 @@ const situationalTemplate = fs.readFileSync(
   "utf8",
 );
 
-assert.match(
+assert.doesNotMatch(
   dialogAppSource,
   /_onRender\s*\([^)]*\)\s*\{[\s\S]*this\.activateListeners\(this\.element\)/,
-  "CPRDialog must re-bind listeners from _onRender under Application V2",
+  "CPRDialog should bind listeners via _attachPartListeners, not _onRender",
 );
 
 assert.match(
@@ -61,6 +61,18 @@ assert.match(
   activateListenersBlock,
   /onClick\("\.toggle-situational-mod"/,
   "CPRRollDialog must bind native click listeners for situational modifiers",
+);
+
+assert.doesNotMatch(
+  activateListenersBlock,
+  /!this\.options\.editable/,
+  "CPRRollDialog must not gate listeners on options.editable (undefined under Application V2)",
+);
+
+assert.match(
+  dialogAppSource,
+  /_attachPartListeners\s*\([^)]*\)\s*\{[\s\S]*this\.activateListeners\(htmlElement\)/,
+  "CPRDialog must bind listeners from _attachPartListeners for V2 part rendering",
 );
 
 assert.match(
