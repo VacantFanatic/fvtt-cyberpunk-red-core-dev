@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import CPRMod from "../rolls/cpr-modifiers.js";
 import SystemUtils from "../utils/cpr-systemUtils.js";
-import CPRDialog from "./cpr-dialog-application.js";
+import CPRDialog, { resolveDialogRoot } from "./cpr-dialog-application.js";
 import normalizeRollDialogFormData from "./cpr-roll-dialog-form-data.js";
 
 export class CPRRollDialog extends CPRDialog {
@@ -133,13 +133,31 @@ export class CPRRollDialog extends CPRDialog {
     super.activateListeners(html);
     if (!this.options.editable) return;
 
-    html
-      .find(".toggle-situational-mod")
-      .click((event) => this._toggleSituationalMod(event));
-    html.find(".aimed-checkbox").click(() => this._aimedToggle());
-    html
-      .find(".toggle-show-mods")
-      .click((event) => this._toggleModsVisibility(event));
+    const root = resolveDialogRoot(html) ?? this.element;
+    if (!(root instanceof HTMLElement)) return;
+
+    this._rollDialogListenersAbort?.abort();
+    this._rollDialogListenersAbort = new AbortController();
+    const { signal } = this._rollDialogListenersAbort;
+
+    const onClick = (selector, listener) => {
+      for (const el of root.querySelectorAll(selector)) {
+        el.addEventListener(
+          "click",
+          (event) => {
+            event.preventDefault();
+            listener(event);
+          },
+          { signal }
+        );
+      }
+    };
+
+    onClick(".toggle-situational-mod", (event) =>
+      this._toggleSituationalMod(event)
+    );
+    onClick(".aimed-checkbox", () => this._aimedToggle());
+    onClick(".toggle-show-mods", (event) => this._toggleModsVisibility(event));
   }
 
   /**
@@ -247,9 +265,20 @@ export class CPRRoleRollDialog extends CPRRollDialog {
    */
   activateListeners(html) {
     super.activateListeners(html);
-    html
-      .find(".skill-list-select")
-      .change((event) => this._updateSkillValue(event));
+
+    const root = resolveDialogRoot(html) ?? this.element;
+    if (!(root instanceof HTMLElement)) return;
+
+    const { signal } = this._rollDialogListenersAbort ?? {};
+    if (!signal) return;
+
+    for (const select of root.querySelectorAll(".skill-list-select")) {
+      select.addEventListener(
+        "change",
+        (event) => this._updateSkillValue(event),
+        { signal }
+      );
+    }
   }
 
   /**

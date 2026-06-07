@@ -4,6 +4,20 @@ import SystemUtils from "../utils/cpr-systemUtils.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
+ * Normalize a dialog root reference (HTMLElement or jQuery-like) to an
+ * HTMLElement. Application V2 always passes `this.element` as a real element;
+ * legacy call sites may still hand in a jQuery wrapper.
+ *
+ * @param {unknown} html
+ * @returns {HTMLElement|null}
+ */
+export function resolveDialogRoot(html) {
+  if (html instanceof HTMLElement) return html;
+  const el = html?.[0];
+  return el instanceof HTMLElement ? el : null;
+}
+
+/**
  * Base dialog application used by most CPR prompt windows.
  */
 export default class CPRDialog extends HandlebarsApplicationMixin(
@@ -291,8 +305,20 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
     return this._prepareContext({});
   }
 
+  /**
+   * Application V2 does not call `activateListeners` automatically. Re-bind
+   * after each render so child dialogs keep their click handlers.
+   *
+   * @param {object} context - prepared render context (unused)
+   * @param {object} options - render options (unused)
+   */
+  _onRender(context, options) {
+    super._onRender(context, options);
+    this.activateListeners(this.element);
+  }
+
   activateListeners(html) {
-    super.activateListeners?.(html);
+    super.activateListeners?.(resolveDialogRoot(html) ?? html);
   }
 
   async confirmDialog(_event, options) {
