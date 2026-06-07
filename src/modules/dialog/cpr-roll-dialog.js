@@ -157,9 +157,7 @@ export class CPRRollDialog extends CPRDialog {
       this._toggleSituationalMod(event)
     );
     onClick(".aimed-checkbox", () => this._aimedToggle());
-    onClick(".toggle-show-mods", (event) =>
-      this._toggleModsVisibility(event)
-    );
+    onClick(".toggle-show-mods", (event) => this._toggleModsVisibility(event));
   }
 
   /**
