@@ -734,7 +734,7 @@ export default class CPRSystemUtils {
    */
   static GetEventDatum(event, datum) {
     const target = event?.currentTarget;
-    if (!(target instanceof HTMLElement)) {
+    if (typeof target?.getAttribute !== "function") {
       return undefined;
     }
     let id = target.getAttribute(datum);
@@ -749,6 +749,7 @@ export default class CPRSystemUtils {
       id =
         target.closest("[data-item-id]")?.getAttribute(datum) ??
         target.closest(".item")?.getAttribute(datum) ??
+        target.closest(`[${datum}]`)?.getAttribute(datum) ??
         undefined;
     }
     if (id == null) {

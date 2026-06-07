@@ -1,5 +1,25 @@
 # Changelog
 
+## Version 1.4.7
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed character sheet rolls crashing with `Cannot read properties of undefined (reading 'handleRollDialog')` when cyberdeck program attack/defense/damage buttons were clicked.
+- `GetEventDatum` now walks up to the nearest ancestor carrying the requested `data-*` attribute (for example `data-roll-type`), which improves delegated sheet clicks on nested icons.
+- Added missing `data-roll-type="stat"` on demon sheet stat roll links.
+
 ## Version 1.4.6
 
 ### Action Needed

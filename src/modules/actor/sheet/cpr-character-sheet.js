@@ -3,6 +3,7 @@ import LOGGER from "../../utils/cpr-logger.js";
 import Rules from "../../utils/cpr-rules.js";
 import SystemUtils from "../../utils/cpr-systemUtils.js";
 import CPRDialog from "../../dialog/cpr-dialog-application.js";
+import * as CPRRolls from "../../rolls/cpr-rolls.js";
 
 /**
  * Extend the basic CPRActorSheet with Character specific functionality.
@@ -675,7 +676,7 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
       case "atk":
       case "def":
       case "damage": {
-        await this._onRoll(event);
+        await this._onRoll(event, CPRRolls.rollTypes.CYBERDECKPROGRAM);
         break;
       }
       default:

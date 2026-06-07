@@ -640,8 +640,9 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
    * @callback
    * @param {Object} event - object with details of the event
    */
-  async _onRoll(event) {
-    let rollType = SystemUtils.GetEventDatum(event, "data-roll-type");
+  async _onRoll(event, rollTypeOverride = null) {
+    let rollType =
+      rollTypeOverride ?? SystemUtils.GetEventDatum(event, "data-roll-type");
     let cprRoll;
     let item = null;
     switch (rollType) {
@@ -782,6 +783,15 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
         break;
       }
       default:
+    }
+
+    if (!cprRoll) {
+      LOGGER.warn(
+        `Unable to create roll for type "${rollType ?? "unknown"}" on ${
+          this.actor.name
+        }`
+      );
+      return;
     }
 
     // note: for aimed shots this is where location is set
