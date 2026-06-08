@@ -119,6 +119,162 @@ export default class AdditionsTemplate {
   }
 
   /**
+   * Compute CPR explosive blast dimensions for a square template.
+   * Foundry rectangle templates use the diagonal length in grid units.
+   *
+   * @static
+   * @param {number} sizeMeters Blast width/height in scene distance units (meters).
+   * @param {number} canvasDist Scene grid distance per square.
+   * @returns {{ sizeMeters: number, trueWidth: number, rectDiagonal: number }}
+   */
+  static computeExplosiveBlastDimensions(sizeMeters, canvasDist) {
+    const trueWidth = sizeMeters / canvasDist;
+    const rectDiagonal = Math.sqrt(trueWidth * trueWidth * 2);
+    return { sizeMeters, trueWidth, rectDiagonal };
+  }
+
+  /**
+   * Build measured-template placement data for a square explosive blast.
+   *
+   * @static
+   * @param {Object} options
+   * @param {number} options.sizeMeters
+   * @param {number} options.canvasDist
+   * @param {number} options.gridSize
+   * @param {number} [options.centerX=0]
+   * @param {number} [options.centerY=0]
+   * @param {string} options.fillColor
+   * @param {string} options.borderColor
+   * @returns {{ trueWidth: number, documentData: Object }}
+   */
+  static buildExplosiveRectPlacementData({
+    sizeMeters,
+    canvasDist,
+    gridSize,
+    centerX = 0,
+    centerY = 0,
+    fillColor,
+    borderColor,
+  }) {
+    const { trueWidth, rectDiagonal } =
+      AdditionsTemplate.computeExplosiveBlastDimensions(sizeMeters, canvasDist);
+
+    return {
+      trueWidth,
+      documentData: {
+        angle: 0,
+        direction: 45,
+        distance: rectDiagonal,
+        fillColor,
+        x: centerX - (trueWidth / 2) * gridSize,
+        y: centerY - (trueWidth / 2) * gridSize,
+        borderColor,
+        t: "rect",
+      },
+    };
+  }
+
+  /**
+   * Pick the center of a rectangular blast template using a Foundry preview.
+   *
+   * @static
+   * @async
+   * @param {Object} documentData Measured-template document fields.
+   * @param {number} trueWidth Blast width in grid squares.
+   * @returns {Promise<Object|null>} { x, y, elevation } or null if cancelled/unavailable
+   */
+  static async pickRectBlastCenter(documentData, trueWidth) {
+    if (
+      !canvas?.scene ||
+      !canvas?.templates ||
+      !foundry?.canvas?.placeables?.MeasuredTemplate ||
+      !foundry?.documents?.MeasuredTemplateDocument
+    ) {
+      return null;
+    }
+
+    const { MeasuredTemplate } = foundry.canvas.placeables;
+    const document = new foundry.documents.MeasuredTemplateDocument(
+      { ...documentData, hidden: false },
+      { parent: canvas.scene }
+    );
+    const template = new MeasuredTemplate(document);
+    await template.draw();
+
+    const layer = canvas.templates;
+    const previousLayer = canvas.activeLayer;
+    layer.activate();
+    layer.preview.addChild(template);
+
+    const gridSize = canvas.grid.size;
+
+    return new Promise((resolve) => {
+      let finished = false;
+
+      const centerFromDocument = () => ({
+        x: document.x + (trueWidth / 2) * gridSize,
+        y: document.y + (trueWidth / 2) * gridSize,
+      });
+
+      const listener = {
+        finish(result) {
+          if (finished) return;
+          finished = true;
+          canvas.stage.off("mousemove", listener.onMove);
+          canvas.app.view.removeEventListener(
+            "mousedown",
+            listener.onMouseDown
+          );
+          canvas.app.view.removeEventListener("contextmenu", listener.onCancel);
+          if (layer.preview?.children?.includes(template)) {
+            layer.preview.removeChild(template);
+          }
+          template.destroy({ children: true });
+          previousLayer?.activate?.();
+          resolve(result);
+        },
+        onMove(event) {
+          let coords;
+          if (event.data?.getLocalPosition) {
+            coords = event.data.getLocalPosition(layer);
+          } else {
+            coords = canvas.canvasCoordinatesFromClient({
+              x: event.clientX,
+              y: event.clientY,
+            });
+          }
+          const center = canvas.grid.getSnappedPoint(coords, {
+            mode: CONST.GRID_SNAPPING_MODES.CENTER,
+          });
+          document.updateSource({
+            x: center.x - (trueWidth / 2) * gridSize,
+            y: center.y - (trueWidth / 2) * gridSize,
+          });
+        },
+        onMouseDown(event) {
+          if (event.button !== 0) return;
+          event.preventDefault();
+          event.stopPropagation();
+          const center = centerFromDocument();
+          listener.finish({
+            x: center.x,
+            y: center.y,
+            elevation: AdditionsTemplate.resolveTemplateElevation(center),
+          });
+        },
+        onCancel(event) {
+          event.preventDefault();
+          listener.finish(null);
+        },
+      };
+
+      canvas.stage.on("mousemove", listener.onMove);
+      canvas.app.view.addEventListener("mousedown", listener.onMouseDown);
+      canvas.app.view.addEventListener("contextmenu", listener.onCancel);
+    });
+  }
+
+  /**
    * Build a Foundry v14 Region document from measured-template placement data.
    *
    * @static
@@ -221,24 +377,19 @@ export default class AdditionsTemplate {
     }
 
     const tempSize = inputData.size * 2;
-    const hypDist = Math.sqrt(tempSize * tempSize * 2);
     const canvasDist = canvas.dimensions.distance;
-    const trueWidth = tempSize / canvasDist;
     const gridSize = canvas.grid.size;
+    const { documentData } = AdditionsTemplate.buildExplosiveRectPlacementData({
+      sizeMeters: tempSize,
+      canvasDist,
+      gridSize,
+      centerX: position.x,
+      centerY: position.y,
+      fillColor: game.user.color,
+      borderColor: "#000000",
+    });
 
-    await AdditionsTemplate.createPlacedTemplate(
-      {
-        angle: 0,
-        direction: 45,
-        distance: hypDist,
-        fillColor: game.user.color,
-        x: position.x - (trueWidth / 2) * gridSize,
-        y: position.y - (trueWidth / 2) * gridSize,
-        borderColor: "#000000",
-        t: "rect",
-      },
-      position
-    );
+    await AdditionsTemplate.createPlacedTemplate(documentData, position);
   }
 
   /**
@@ -256,35 +407,49 @@ export default class AdditionsTemplate {
     // Explosive blast area per CPR rules: 10m x 10m (5x5 squares at 2m/square)
     const sizeMeters = 10;
     const canvasDist = canvas.dimensions.distance;
-    const trueWidth = sizeMeters / canvasDist; // squares
     const gridSize = canvas.grid.size; // pixels per square
-    const hypDist = Math.sqrt(sizeMeters * sizeMeters * 2);
+    const previewPlacement = AdditionsTemplate.buildExplosiveRectPlacementData({
+      sizeMeters,
+      canvasDist,
+      gridSize,
+      fillColor: game.user.color,
+      borderColor: "#ff6600",
+    });
 
-    let position;
-    if (window.Portal) {
+    let position = await AdditionsTemplate.pickRectBlastCenter(
+      previewPlacement.documentData,
+      previewPlacement.trueWidth
+    );
+
+    if (!position && window.Portal) {
       position = await new Portal()
         .texture("icons/svg/explosion.svg")
         .size(sizeMeters)
         .pick();
-      if (!position) return null;
-    } else {
-      ui.notifications.error(
-        game.i18n.localize("CPR.additions.template.portalMissing")
-      );
+    }
+
+    if (!position) {
+      if (!window.Portal) {
+        ui.notifications.error(
+          game.i18n.localize("CPR.additions.template.portalMissing")
+        );
+      }
       return null;
     }
 
-    const template = await AdditionsTemplate.createPlacedTemplate(
-      {
-        angle: 0,
-        direction: 45,
-        distance: hypDist,
+    const { trueWidth, documentData } =
+      AdditionsTemplate.buildExplosiveRectPlacementData({
+        sizeMeters,
+        canvasDist,
+        gridSize,
+        centerX: position.x,
+        centerY: position.y,
         fillColor: game.user.color,
-        x: position.x - (trueWidth / 2) * gridSize,
-        y: position.y - (trueWidth / 2) * gridSize,
         borderColor: "#ff6600",
-        t: "rect",
-      },
+      });
+
+    const template = await AdditionsTemplate.createPlacedTemplate(
+      documentData,
       position
     );
 

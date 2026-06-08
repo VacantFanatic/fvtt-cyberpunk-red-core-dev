@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.16
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed explosive blast template placement showing a circular Portal preview and placing a ~14m blast instead of the CPR 10m x 10m square (#68). Placement now previews and creates a rectangular template using the correct grid-unit diagonal, with Portal kept only as a fallback picker.
+
 ## Version 1.4.15
 
 ### Action Needed
