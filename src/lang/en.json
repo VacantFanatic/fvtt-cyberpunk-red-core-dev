@@ -1369,6 +1369,7 @@
   "CPR.additions.template.explosive.bounceButton": "Bounce explosive template (attack missed DV)",
   "CPR.additions.template.explosive.bounceResult": "Explosive bounced {distance} square(s) to the {direction}!",
   "CPR.additions.template.explosive.noScene": "No active scene — cannot move explosive template.",
+  "CPR.additions.template.explosive.regionName": "Explosive Blast",
   "TYPES.Actor.blackIce": "Black ICE",
   "TYPES.Actor.character": "Character",
   "TYPES.Actor.container": "Container",
