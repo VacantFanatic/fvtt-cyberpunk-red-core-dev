@@ -28,20 +28,38 @@ assert.match(
 
 assert.match(
   templateSource,
-  /createPlacedTemplate\s*\(/,
-  "AdditionsTemplate must centralize template/region creation"
+  /resolveTemplateElevationRange\s*\(/,
+  "AdditionsTemplate must constrain v14 region elevation ranges to the active level"
 );
 
 assert.match(
   templateSource,
-  /data\.levels\s*=\s*levels/,
+  /buildRegionDocumentData\s*\(/,
+  "Foundry v14 must build Region documents directly instead of relying on MeasuredTemplate shim"
+);
+
+assert.match(
+  templateSource,
+  /createEmbeddedDocuments\("Region"/,
+  "Foundry v14 must create Region embedded documents"
+);
+
+assert.match(
+  templateSource,
+  /levels\s*\?\s*\{\s*levels\s*\}/,
   "Foundry v14 regions must receive the active scene level id"
 );
 
 assert.match(
   templateSource,
-  /getTemplateEmbeddedName\s*\(/,
-  "Bounce updates must target Region on v14 and MeasuredTemplate on v13"
+  /elevationRange\s*\?\s*\{\s*elevation:\s*elevationRange\s*\}/,
+  "Foundry v14 regions must receive the active scene elevation range"
+);
+
+assert.match(
+  templateSource,
+  /buildTemplateMoveUpdate\s*\(/,
+  "Bounce updates must move region shapes on v14"
 );
 
 const { default: AdditionsTemplate } = await import(
@@ -116,10 +134,31 @@ assert.deepEqual(
   "Active canvas level id should be returned for region confinement"
 );
 
+assert.deepEqual(
+  withCanvas(
+    {
+      level: null,
+      inferLevelFromElevation: () => ({ id: "level-inferred" }),
+    },
+    () => AdditionsTemplate.resolveTemplateLevels({ elevation: 15 })
+  ),
+  ["level-inferred"],
+  "Levels should fall back to inferLevelFromElevation when canvas.level is unset"
+);
+
 assert.equal(
   withCanvas({ level: null }, () => AdditionsTemplate.resolveTemplateLevels()),
   null,
   "Levels should be omitted when no active canvas level exists"
+);
+
+assert.deepEqual(
+  withCanvas(
+    { level: { id: "level-2", elevation: { bottom: 10, top: 20 } } },
+    () => AdditionsTemplate.resolveTemplateElevationRange()
+  ),
+  { bottom: 10, top: 20 },
+  "Region elevation range should match the active scene level"
 );
 
 assert.equal(
@@ -136,6 +175,38 @@ assert.equal(
   ),
   "Region",
   "v14 should use Region documents for placed templates"
+);
+
+global.foundry = {
+  utils: {
+    deepClone: (value) => structuredClone(value),
+  },
+};
+
+assert.deepEqual(
+  withGame(
+    { release: { generation: 14 } },
+    () =>
+      withCanvas(
+        {
+          scene: {
+            regions: {
+              get: () => ({
+                shapes: [
+                  { type: "rectangle", x: 0, y: 0, width: 100, height: 100 },
+                ],
+              }),
+            },
+          },
+        },
+        () => AdditionsTemplate.buildTemplateMoveUpdate("region-1", 50, 75)
+      )
+  ),
+  {
+    _id: "region-1",
+    shapes: [{ type: "rectangle", x: 50, y: 75, width: 100, height: 100 }],
+  },
+  "v14 bounce updates should move the region shape coordinates"
 );
 
 console.log("✅ explosive template elevation regression tests passed");

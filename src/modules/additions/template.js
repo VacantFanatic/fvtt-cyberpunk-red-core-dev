@@ -25,15 +25,55 @@ export default class AdditionsTemplate {
   }
 
   /**
+   * Resolve the active scene level document for placement.
+   *
+   * @static
+   * @param {Object} [position] Portal pick result.
+   * @returns {documents.Level|null}
+   */
+  static resolveActiveLevel(position) {
+    if (canvas?.level) return canvas.level;
+
+    const infer = canvas?.inferLevelFromElevation;
+    if (typeof infer !== "function") return null;
+
+    const elevation = AdditionsTemplate.resolveTemplateElevation(position);
+    return infer.call(canvas, elevation) ?? null;
+  }
+
+  /**
    * Resolve the active scene level ids for a placed template region.
    * Foundry v14 regions without `levels` apply to every level (#65).
    *
    * @static
+   * @param {Object} [position] Portal pick result.
    * @returns {string[]|null}
    */
-  static resolveTemplateLevels() {
-    const levelId = canvas?.level?.id;
-    return levelId ? [levelId] : null;
+  static resolveTemplateLevels(position) {
+    const level = AdditionsTemplate.resolveActiveLevel(position);
+    return level?.id ? [level.id] : null;
+  }
+
+  /**
+   * Resolve the elevation range for a placed region on the active scene level.
+   *
+   * @static
+   * @param {Object} [position] Portal pick result.
+   * @returns {{bottom: number, top: number}|null}
+   */
+  static resolveTemplateElevationRange(position) {
+    const levelElevation =
+      AdditionsTemplate.resolveActiveLevel(position)?.elevation;
+    if (!levelElevation) return null;
+
+    const bottom = Number(levelElevation.bottom);
+    const top = Number(levelElevation.top);
+    if (!Number.isFinite(bottom)) return null;
+
+    return {
+      bottom,
+      top: Number.isFinite(top) ? top : bottom,
+    };
   }
 
   /**
@@ -47,23 +87,68 @@ export default class AdditionsTemplate {
   }
 
   /**
+   * Apply scene-level placement constraints to a Foundry v14 region.
+   *
+   * @static
+   * @param {Object} regionData
+   * @param {Object} [position] Portal pick result.
+   */
+  static applyRegionLevelPlacement(regionData, position) {
+    const levels = AdditionsTemplate.resolveTemplateLevels(position);
+    const elevationRange =
+      AdditionsTemplate.resolveTemplateElevationRange(position);
+
+    return {
+      ...regionData,
+      ...(levels ? { levels } : {}),
+      ...(elevationRange ? { elevation: elevationRange } : {}),
+    };
+  }
+
+  /**
    * @static
    * @param {Object} placementData Measured-template style placement fields.
    * @param {Object} [position] Portal pick result.
    * @returns {Object}
    */
   static buildTemplateDocumentData(placementData, position) {
-    const data = {
+    return {
       ...placementData,
       elevation: AdditionsTemplate.resolveTemplateElevation(position),
     };
+  }
 
-    if (game.release?.generation >= 14) {
-      const levels = AdditionsTemplate.resolveTemplateLevels();
-      if (levels) data.levels = levels;
-    }
+  /**
+   * Build a Foundry v14 Region document from measured-template placement data.
+   *
+   * @static
+   * @param {Object} placementData Measured-template style placement fields.
+   * @param {Object} [position] Portal pick result.
+   * @returns {Object}
+   */
+  static buildRegionDocumentData(placementData, position) {
+    const measuredData = AdditionsTemplate.buildTemplateDocumentData(
+      placementData,
+      position
+    );
+    const migratedRegionData =
+      foundry.documents.RegionDocument._migrateMeasuredTemplateData(
+        measuredData,
+        {
+          grid: canvas.grid,
+          gridTemplates: true,
+        }
+      );
 
-    return data;
+    const regionData = AdditionsTemplate.applyRegionLevelPlacement(
+      migratedRegionData,
+      position
+    );
+    regionData.name ??= game.i18n.localize(
+      "CPR.additions.template.explosive.regionName"
+    );
+
+    return regionData;
   }
 
   /**
@@ -76,11 +161,47 @@ export default class AdditionsTemplate {
    * @returns {Promise<Document>}
    */
   static async createPlacedTemplate(placementData, position) {
+    if (
+      game.release?.generation >= 14 &&
+      foundry.documents.RegionDocument?._migrateMeasuredTemplateData
+    ) {
+      const [region] = await canvas.scene.createEmbeddedDocuments("Region", [
+        AdditionsTemplate.buildRegionDocumentData(placementData, position),
+      ]);
+      return region;
+    }
+
     const [template] = await canvas.scene.createEmbeddedDocuments(
       "MeasuredTemplate",
       [AdditionsTemplate.buildTemplateDocumentData(placementData, position)]
     );
     return template;
+  }
+
+  /**
+   * Build an update payload for moving a placed blast template/region.
+   *
+   * @static
+   * @param {String} templateId
+   * @param {Number} newX
+   * @param {Number} newY
+   * @returns {Object}
+   */
+  static buildTemplateMoveUpdate(templateId, newX, newY) {
+    if (game.release?.generation >= 14) {
+      const region = canvas.scene.regions?.get(templateId);
+      if (region?.shapes?.length) {
+        const shapes = foundry.utils.deepClone(region.shapes);
+        const [shape] = shapes;
+        if (shape) {
+          shape.x = newX;
+          shape.y = newY;
+        }
+        return { _id: templateId, shapes };
+      }
+    }
+
+    return { _id: templateId, x: newX, y: newY };
   }
 
   static async createTemplate(args) {
@@ -232,15 +353,12 @@ export default class AdditionsTemplate {
       Math.min(centerY + maxPixelOffset, centerY + rawOffsetY)
     );
 
+    const newX = newCenterX - (trueWidth / 2) * gridSize;
+    const newY = newCenterY - (trueWidth / 2) * gridSize;
+
     await canvas.scene.updateEmbeddedDocuments(
       AdditionsTemplate.getTemplateEmbeddedName(),
-      [
-        {
-          _id: templateId,
-          x: newCenterX - (trueWidth / 2) * gridSize,
-          y: newCenterY - (trueWidth / 2) * gridSize,
-        },
-      ]
+      [AdditionsTemplate.buildTemplateMoveUpdate(templateId, newX, newY)]
     );
 
     return { directionName: dir.name, distSquares };

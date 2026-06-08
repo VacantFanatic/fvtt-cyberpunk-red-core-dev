@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.15
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed explosive blast templates still appearing on every scene level in Foundry v14 after v1.4.14 (#65). The MeasuredTemplate compatibility shim dropped `levels` during migration; blast placement now creates `Region` documents directly with the active scene level id and elevation range, and bounce updates move region shapes on v14.
+
 ## Version 1.4.14
 
 ### Action Needed
