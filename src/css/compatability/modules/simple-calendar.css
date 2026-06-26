@@ -1,15 +1,35 @@
 /*
- * Simple Calendar's compact/collapsed mode renders control buttons (including
- * close) inside .window-content. The broad button reset in main.css would
- * override Simple Calendar's own button styles and make those controls
- * invisible. Revert button colour and background so Simple Calendar can apply
- * its own styling unimpeded.
+ * Simple Calendar Reborn uses class `.simple-calendar` on its window-app.
+ *
+ * Two issues caused by our global CSS:
+ *
+ * 1. `.window-app .window-content button { color; background-color }` in main.css
+ *    overrides SC's transparent/custom button styles for the compact-view control
+ *    buttons (.fsc-control). Revert those so SC can apply its own styling.
+ *
+ * 2. `html[data-cpr-theme="default"] .application a { color: red }` in
+ *    foundry-overrides.css can bleed into the SC window if it carries the
+ *    `.application` class (Foundry v13+). SC styles its close-button icon
+ *    colour without !important, so our inherited red can make the icon
+ *    invisible against the dark compact header. Revert `a` colour here.
  */
-#simple-calendar {
+.simple-calendar.window-app {
   .window-content {
     button {
       color: revert;
       background-color: revert;
+    }
+  }
+
+  header.window-header {
+    a,
+    a.header-button,
+    a.header-button.close {
+      color: revert;
+
+      i {
+        color: revert;
+      }
     }
   }
 }
