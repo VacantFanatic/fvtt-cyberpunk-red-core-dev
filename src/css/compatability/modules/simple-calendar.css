@@ -1,0 +1,15 @@
+/*
+ * Simple Calendar's compact/collapsed mode renders control buttons (including
+ * close) inside .window-content. The broad button reset in main.css would
+ * override Simple Calendar's own button styles and make those controls
+ * invisible. Revert button colour and background so Simple Calendar can apply
+ * its own styling unimpeded.
+ */
+#simple-calendar {
+  .window-content {
+    button {
+      color: revert;
+      background-color: revert;
+    }
+  }
+}
