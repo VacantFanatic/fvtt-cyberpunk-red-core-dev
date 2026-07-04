@@ -1855,8 +1855,12 @@ export default class CPRActor extends Actor {
       return item;
     }
 
-    // auto-install this cyberware
-    const allInstalled = item.recursiveGetAllInstalledItems();
+    // auto-install this cyberware. `recursiveGetAllInstalledItems` is only
+    // defined on items with the "container" mixin (weapon, armor, cyberware,
+    // gear, etc.) — skills and other simple item types don't have it.
+    const allInstalled = SystemUtils.hasMixin(item.type, "container")
+      ? item.recursiveGetAllInstalledItems()
+      : [];
 
     if (item.type === "cyberware") {
       const installResult = await this.installCyberware(item._id);
