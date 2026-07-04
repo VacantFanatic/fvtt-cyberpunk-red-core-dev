@@ -251,9 +251,7 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
     // the raw DOM value is always correct and the element itself is
     // unremarkable (single, well-formed <select>, no duplicates). Read it
     // directly as a fallback so the user's selection is actually respected.
-    const humanityLossSelect = form.querySelector(
-      '[name="humanityLossType"]'
-    );
+    const humanityLossSelect = form.querySelector('[name="humanityLossType"]');
     if (humanityLossSelect && this.object) {
       this.object.humanityLossType = humanityLossSelect.value;
     }
