@@ -249,15 +249,15 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
     // dialog that doesn't have this field.
     const rawSelectEl = form.querySelector('[name="humanityLossType"]');
     if (rawSelectEl) {
-      const allNamed = Array.from(
-        form.querySelectorAll("[name]")
-      ).map((el) => ({
-        name: el.name,
-        tag: el.tagName,
-        type: el.type,
-        value: el.value,
-        disabled: el.disabled,
-      }));
+      const allNamed = Array.from(form.querySelectorAll("[name]")).map(
+        (el) => ({
+          name: el.name,
+          tag: el.tagName,
+          type: el.type,
+          value: el.value,
+          disabled: el.disabled,
+        })
+      );
       LOGGER.warn(
         `_flushFormData: FormDataExtended.object.humanityLossType=${JSON.stringify(
           formData.object.humanityLossType
