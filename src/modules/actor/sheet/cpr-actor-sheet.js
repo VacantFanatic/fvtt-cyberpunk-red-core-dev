@@ -1749,15 +1749,29 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
       ? containerTypes
       : [];
 
+    const itemCountBefore = this.actor.items.size;
     const dropResult = await super._onDrop(event);
     const newItem = Array.isArray(dropResult)
       ? dropResult[0]
       : dropResult ?? null;
+    const itemCountAfter = this.actor.items.size;
     LOGGER.warn(
       `_cprOnItemDrop: super._onDrop returned ${
         newItem ? `item "${newItem.name}" [${newItem.type}]` : "nothing"
-      } for actor "${this.actor.name}" (type=${this.actor.type})`
+      } for actor "${this.actor.name}" (type=${
+        this.actor.type
+      }); item count before=${itemCountBefore}, after=${itemCountAfter}`
     );
+    // If nothing was returned but an item count didn't change even after a
+    // short delay, creation genuinely never happened (vs. a fire-and-forget
+    // creation that finishes slightly after this promise resolves).
+    if (!newItem) {
+      setTimeout(() => {
+        LOGGER.warn(
+          `_cprOnItemDrop: (delayed check) actor "${this.actor.name}" item count is now ${this.actor.items.size} (was ${itemCountBefore} before drop)`
+        );
+      }, 1000);
+    }
 
     // If we created a new item and the sourceItem is a container type the createItem hook ensures all of the
     // installed items are also created on the target actor. We need to ensure that those items are
