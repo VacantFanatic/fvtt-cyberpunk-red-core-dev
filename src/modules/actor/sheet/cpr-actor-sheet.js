@@ -1749,29 +1749,18 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
       ? containerTypes
       : [];
 
-    const itemCountBefore = this.actor.items.size;
+    // Foundry's own drop-to-create handling does not reliably return the
+    // created item for every item type (some item types are created via a
+    // lower-level path that bypasses both the return value and
+    // CPRActor#createEmbeddedDocuments entirely). Fall back to diffing this
+    // actor's items before/after the drop so mook auto-equip and the
+    // cleanup logic below still run correctly regardless.
+    const itemIdsBefore = new Set(this.actor.items.map((i) => i.id));
     const dropResult = await super._onDrop(event);
-    const newItem = Array.isArray(dropResult)
-      ? dropResult[0]
-      : dropResult ?? null;
-    const itemCountAfter = this.actor.items.size;
-    LOGGER.warn(
-      `_cprOnItemDrop: super._onDrop returned ${
-        newItem ? `item "${newItem.name}" [${newItem.type}]` : "nothing"
-      } for actor "${this.actor.name}" (type=${
-        this.actor.type
-      }); item count before=${itemCountBefore}, after=${itemCountAfter}`
-    );
-    // If nothing was returned but an item count didn't change even after a
-    // short delay, creation genuinely never happened (vs. a fire-and-forget
-    // creation that finishes slightly after this promise resolves).
-    if (!newItem) {
-      setTimeout(() => {
-        LOGGER.warn(
-          `_cprOnItemDrop: (delayed check) actor "${this.actor.name}" item count is now ${this.actor.items.size} (was ${itemCountBefore} before drop)`
-        );
-      }, 1000);
-    }
+    const newItem =
+      (Array.isArray(dropResult) ? dropResult[0] : dropResult) ??
+      this.actor.items.find((i) => !itemIdsBefore.has(i.id)) ??
+      null;
 
     // If we created a new item and the sourceItem is a container type the createItem hook ensures all of the
     // installed items are also created on the target actor. We need to ensure that those items are
@@ -1802,6 +1791,14 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
         // Delete nested installed items.
         deleteInstalled: true,
       });
+    }
+
+    // Auto-equip/install this item if it was dropped on a mook sheet.
+    // Normally this happens inside CPRActor#createEmbeddedDocuments, but
+    // Foundry's own drop handling doesn't call that method for every item
+    // type, so it needs to be triggered explicitly here too.
+    if (newItem && this.actor.hasMookSheetRendered) {
+      await this.actor.handleMookDraggedItem(newItem);
     }
 
     return newItem;

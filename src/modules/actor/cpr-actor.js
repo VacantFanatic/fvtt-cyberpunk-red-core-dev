@@ -209,6 +209,19 @@ export default class CPRActor extends Actor {
   }
 
   /**
+   * Whether this actor currently has a rendered mook sheet. Exposed as a
+   * getter (rather than requiring callers to import CPRMookActorSheet
+   * themselves) so sheet code that can't safely import cpr-mook-sheet.js
+   * (it imports CPRActorSheet, so importing it back would be circular)
+   * can still check this.
+   *
+   * @returns {Boolean}
+   */
+  get hasMookSheetRendered() {
+    return this._hasRenderedSheet(CPRMookActorSheet);
+  }
+
+  /**
    * The three reasons we extend this code are:
    *  - handle an edge case for migrations.
    *  - prevent addition of core items
@@ -286,13 +299,6 @@ export default class CPRActor extends Actor {
     }
 
     const isMookSheet = this._hasRenderedSheet(CPRMookActorSheet);
-    LOGGER.warn(
-      `createEmbeddedDocuments: isMookSheet=${isMookSheet} for actor "${
-        this.name
-      }" (type=${this.type}), items=${createdItems
-        .map((i) => `${i.name} [${i.type}]`)
-        .join(", ")}`
-    );
 
     for (const item of createdItems) {
       if (isMookSheet) await this.handleMookDraggedItem(item);
@@ -589,11 +595,6 @@ export default class CPRActor extends Actor {
 
     const installationSuccess = await target.installItems([item]);
     if (installationSuccess) {
-      LOGGER.warn(
-        `installCyberware: dialog resolved humanityLossType = ${JSON.stringify(
-          formData.humanityLossType
-        )} (expected "roll", "static", or "none")`
-      );
       await this.loseHumanityValue(
         [item].concat(installedCyberware),
         formData.humanityLossType
@@ -1901,15 +1902,6 @@ export default class CPRActor extends Actor {
         updateData.push({ _id: i._id, "system.equipped": "equipped" });
       }
     });
-
-    LOGGER.warn(
-      `handleMookDraggedItem: item "${item.name}" [${
-        item.type
-      }] hasMixin(equippable)=${SystemUtils.hasMixin(
-        item.type,
-        "equippable"
-      )}, updateData=${JSON.stringify(updateData)}`
-    );
 
     return this.updateEmbeddedDocuments("Item", updateData);
   }

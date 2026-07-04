@@ -243,40 +243,17 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
     if (!form || form.tagName !== "FORM") return;
     const handler = this.options.form?.handler ?? CPRDialog.#onSubmitForm;
     const formData = new FormDataExtended(form);
-    // TEMPORARY DIAGNOSTIC: comparing FormDataExtended's parsed value against
-    // the raw DOM value for the humanityLossType field specifically, to
-    // pin down why its selection isn't sticking. Silent no-op for any
-    // dialog that doesn't have this field.
-    const rawSelectEl = form.querySelector('[name="humanityLossType"]');
-    if (rawSelectEl) {
-      const allNamed = Array.from(form.querySelectorAll("[name]")).map(
-        (el) => ({
-          name: el.name,
-          tag: el.tagName,
-          type: el.type,
-          value: el.value,
-          disabled: el.disabled,
-        })
-      );
-      LOGGER.warn(
-        `_flushFormData: FormDataExtended.object.humanityLossType=${JSON.stringify(
-          formData.object.humanityLossType
-        )}, raw DOM element.value=${JSON.stringify(
-          rawSelectEl.value
-        )}, this.object.humanityLossType (before merge)=${JSON.stringify(
-          this.object?.humanityLossType
-        )}, rawSelectEl.outerHTML=${JSON.stringify(
-          rawSelectEl.outerHTML
-        )}, all named form elements=${JSON.stringify(allNamed)}`
-      );
-    }
     await handler.call(this, null, form, formData);
-    if (rawSelectEl) {
-      LOGGER.warn(
-        `_flushFormData: this.object.humanityLossType (after merge)=${JSON.stringify(
-          this.object?.humanityLossType
-        )}`
-      );
+
+    // WORKAROUND: FormDataExtended does not reliably capture the
+    // "humanityLossType" <select> used by the Install Cyberware dialog —
+    // it resolves to undefined regardless of what's selected, even though
+    // the raw DOM value is always correct and the element itself is
+    // unremarkable (single, well-formed <select>, no duplicates). Read it
+    // directly as a fallback so the user's selection is actually respected.
+    const humanityLossSelect = form.querySelector('[name="humanityLossType"]');
+    if (humanityLossSelect && this.object) {
+      this.object.humanityLossType = humanityLossSelect.value;
     }
   }
 
