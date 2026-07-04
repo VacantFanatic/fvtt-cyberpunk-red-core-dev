@@ -581,11 +581,17 @@ export default class CPRActor extends Actor {
       : this.getOwnedItem(formData.foundationalId);
 
     const installationSuccess = await target.installItems([item]);
-    if (installationSuccess)
+    if (installationSuccess) {
+      LOGGER.warn(
+        `installCyberware: dialog resolved humanityLossType = ${JSON.stringify(
+          formData.humanityLossType
+        )} (expected "roll", "static", or "none")`
+      );
       await this.loseHumanityValue(
         [item].concat(installedCyberware),
         formData.humanityLossType
       );
+    }
     return installationSuccess;
   }
 
