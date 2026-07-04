@@ -286,6 +286,13 @@ export default class CPRActor extends Actor {
     }
 
     const isMookSheet = this._hasRenderedSheet(CPRMookActorSheet);
+    LOGGER.warn(
+      `createEmbeddedDocuments: isMookSheet=${isMookSheet} for actor "${
+        this.name
+      }" (type=${this.type}), items=${createdItems
+        .map((i) => `${i.name} [${i.type}]`)
+        .join(", ")}`
+    );
 
     for (const item of createdItems) {
       if (isMookSheet) await this.handleMookDraggedItem(item);
@@ -1894,6 +1901,15 @@ export default class CPRActor extends Actor {
         updateData.push({ _id: i._id, "system.equipped": "equipped" });
       }
     });
+
+    LOGGER.warn(
+      `handleMookDraggedItem: item "${item.name}" [${
+        item.type
+      }] hasMixin(equippable)=${SystemUtils.hasMixin(
+        item.type,
+        "equippable"
+      )}, updateData=${JSON.stringify(updateData)}`
+    );
 
     return this.updateEmbeddedDocuments("Item", updateData);
   }
