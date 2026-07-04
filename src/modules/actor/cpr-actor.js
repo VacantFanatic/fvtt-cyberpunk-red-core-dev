@@ -189,6 +189,27 @@ export default class CPRActor extends Actor {
   }
 
   /**
+   * Checks whether this actor currently has a rendered sheet that is an
+   * instance of one of the given sheet classes.
+   *
+   * `Document.apps` is only populated by legacy (Application V1) sheets.
+   * Our actor sheets are now ActorSheetV2 (Application V2), which register
+   * themselves in `foundry.applications.instances` instead. We check both
+   * registries so this keeps working regardless of sheet framework.
+   *
+   * @param {...Function} sheetClasses - sheet classes to check for
+   * @returns {Boolean}
+   */
+  _hasRenderedSheet(...sheetClasses) {
+    const isMatch = (app) => sheetClasses.some((cls) => app instanceof cls);
+    const legacySheets = Object.values(this.apps ?? {});
+    const v2Sheets = Array.from(
+      foundry.applications?.instances?.values() ?? []
+    ).filter((app) => app.document === this || app.actor === this);
+    return [...legacySheets, ...v2Sheets].some(isMatch);
+  }
+
+  /**
    * The three reasons we extend this code are:
    *  - handle an edge case for migrations.
    *  - prevent addition of core items
@@ -223,10 +244,9 @@ export default class CPRActor extends Actor {
     }
 
     // Stack items.
-    const canStack = Object.values(this.apps).some(
-      (app) =>
-        app instanceof CPRCharacterActorSheet ||
-        app instanceof CPRMookActorSheet
+    const canStack = this._hasRenderedSheet(
+      CPRCharacterActorSheet,
+      CPRMookActorSheet
     );
     const stackedItemReferences = [];
     if (canStack && !context.CPRsplitStack) {
@@ -266,9 +286,7 @@ export default class CPRActor extends Actor {
       }
     }
 
-    const isMookSheet = Object.values(this.apps).some(
-      (app) => app instanceof CPRMookActorSheet
-    );
+    const isMookSheet = this._hasRenderedSheet(CPRMookActorSheet);
 
     for (const item of createdItems) {
       if (isMookSheet) await this.handleMookDraggedItem(item);
