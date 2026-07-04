@@ -228,9 +228,30 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
     return dialog?.closeDialog();
   }
 
-  static async #onSubmitForm(_event, _form, formData) {
+  /**
+   * WORKAROUND: FormDataExtended does not reliably capture the
+   * "humanityLossType" <select> used by the Install Cyberware dialog — it
+   * resolves to undefined regardless of what's selected, even though the
+   * raw DOM value is always correct and the element itself is unremarkable
+   * (single, well-formed <select>, no duplicates). Read it directly as a
+   * fallback so the user's selection is actually respected. Silent no-op
+   * for any dialog that doesn't have this field.
+   *
+   * @param {object} object - the dialog data object to patch in place
+   * @param {HTMLElement} form - the dialog's form element
+   */
+  static #applyHumanityLossWorkaround(object, form) {
+    const humanityLossSelect = form?.querySelector('[name="humanityLossType"]');
+    if (humanityLossSelect && object) {
+      // eslint-disable-next-line no-param-reassign
+      object.humanityLossType = humanityLossSelect.value;
+    }
+  }
+
+  static async #onSubmitForm(_event, form, formData) {
     const fd = foundry.utils.duplicate(formData.object);
     foundry.utils.mergeObject(this.object, fd);
+    CPRDialog.#applyHumanityLossWorkaround(this.object, form);
     this.render(true);
   }
 
@@ -244,17 +265,7 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
     const handler = this.options.form?.handler ?? CPRDialog.#onSubmitForm;
     const formData = new FormDataExtended(form);
     await handler.call(this, null, form, formData);
-
-    // WORKAROUND: FormDataExtended does not reliably capture the
-    // "humanityLossType" <select> used by the Install Cyberware dialog —
-    // it resolves to undefined regardless of what's selected, even though
-    // the raw DOM value is always correct and the element itself is
-    // unremarkable (single, well-formed <select>, no duplicates). Read it
-    // directly as a fallback so the user's selection is actually respected.
-    const humanityLossSelect = form.querySelector('[name="humanityLossType"]');
-    if (humanityLossSelect && this.object) {
-      this.object.humanityLossType = humanityLossSelect.value;
-    }
+    CPRDialog.#applyHumanityLossWorkaround(this.object, form);
   }
 
   async _prepareContext(options) {
