@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.19
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed items dropped or created on mook sheets never being auto-equipped (and stackable items never merging into existing stacks on any actor sheet). The check that detects an open mook/character sheet relied on `Document.apps`, which is only populated by legacy Application V1 sheets; our sheets are now Application V2 and register in `foundry.applications.instances` instead, so the check always failed silently (#73).
+
 ## Version 1.4.16
 
 ### Action Needed
