@@ -192,21 +192,20 @@ export default class CPRActor extends Actor {
    * Checks whether this actor currently has a rendered sheet that is an
    * instance of one of the given sheet classes.
    *
-   * `Document.apps` is only populated by legacy (Application V1) sheets.
-   * Our actor sheets are now ActorSheetV2 (Application V2), which register
-   * themselves in `foundry.applications.instances` instead. We check both
-   * registries so this keeps working regardless of sheet framework.
+   * `Document.apps` is only populated by legacy (Application V1) sheets, and
+   * our actor sheets are now ActorSheetV2 (Application V2), so that registry
+   * is always empty for them. `Document#sheet` is Foundry's canonical,
+   * version-agnostic accessor for a document's currently configured sheet
+   * instance (see the same `actor.sheet?.rendered` pattern already used in
+   * src/modules/hud/interface.js), so we check that instead/in addition.
    *
    * @param {...Function} sheetClasses - sheet classes to check for
    * @returns {Boolean}
    */
   _hasRenderedSheet(...sheetClasses) {
     const isMatch = (app) => sheetClasses.some((cls) => app instanceof cls);
-    const legacySheets = Object.values(this.apps ?? {});
-    const v2Sheets = Array.from(
-      foundry.applications?.instances?.values() ?? []
-    ).filter((app) => app.document === this || app.actor === this);
-    return [...legacySheets, ...v2Sheets].some(isMatch);
+    const candidates = [...Object.values(this.apps ?? {}), this.sheet];
+    return candidates.some((app) => app?.rendered && isMatch(app));
   }
 
   /**

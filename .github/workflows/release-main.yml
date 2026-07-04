@@ -1,6 +1,13 @@
 # Build and create a draft GitHub Release on every push to main/master.
 # Tag format: v{package.json version}. Publish the draft in GitHub when ready.
 # Drafts are not the "latest" release until published.
+#
+# When the version is a prerelease (contains a "-", e.g. 1.4.20-rc.1), this
+# workflow additionally publishes (not draft) a second, moving-tag release
+# under the fixed tag "prerelease". That release is overwritten on every
+# prerelease build, giving testers one static, always-current manifest URL:
+#   https://github.com/<owner>/<repo>/releases/download/prerelease/system.json
+# Stable (non-prerelease) versions only get the versioned draft, unchanged.
 
 name: Release (main / master)
 
@@ -35,6 +42,16 @@ jobs:
         id: pkg
         run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
 
+      - name: Determine prerelease status
+        id: prerelease
+        run: |
+          VERSION="${{ steps.pkg.outputs.version }}"
+          if [[ "$VERSION" == *-* ]]; then
+            echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Install dependencies
         run: npm ci
 
@@ -64,6 +81,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           draft: true
+          prerelease: ${{ steps.prerelease.outputs.is_prerelease == 'true' }}
           tag_name: v${{ steps.pkg.outputs.version }}
           name: v${{ steps.pkg.outputs.version }}
           body: |
@@ -77,6 +95,47 @@ jobs:
 
             After you **publish** this release, the manifest URL for Foundry can use:
             `https://github.com/${{ github.repository }}/releases/latest/download/system.json`
+
+            ${{ steps.prerelease.outputs.is_prerelease == 'true' && format('**This is a prerelease build.** A static, always-current manifest URL for prerelease/RC builds is published automatically (no need to publish this draft for testers to get it):\n`https://github.com/{0}/releases/download/prerelease/system.json`', github.repository) || '' }}
+          files: |
+            system.json
+            fvtt-cyberpunk-red-core-v${{ steps.pkg.outputs.version }}.zip
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rewrite manifest download URL for the static prerelease alias
+        if: steps.prerelease.outputs.is_prerelease == 'true'
+        run: |
+          ZIP_NAME="fvtt-cyberpunk-red-core-v${{ steps.pkg.outputs.version }}.zip"
+          jq --arg url "https://github.com/${{ github.repository }}/releases/download/prerelease/${ZIP_NAME}" \
+             '.download = $url' system.json > system.json.tmp
+          mv system.json.tmp system.json
+
+      - name: Remove previous static "prerelease" alias release
+        if: steps.prerelease.outputs.is_prerelease == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release delete prerelease --cleanup-tag --yes || true
+
+      - name: Publish static "prerelease" alias release
+        if: steps.prerelease.outputs.is_prerelease == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          prerelease: true
+          tag_name: prerelease
+          name: "Prerelease (always the latest RC/beta build)"
+          target_commitish: ${{ github.event.workflow_run.head_sha }}
+          body: |
+            **Always-current pre-release build.** This tag/release is overwritten by every prerelease version pushed to `main` (versions containing a `-`, e.g. `-rc.1`, `-beta.1`). It is not a fixed version.
+
+            Currently: `v${{ steps.pkg.outputs.version }}`, built from commit [`${{ github.event.workflow_run.head_sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.workflow_run.head_sha }}) on branch `${{ github.event.workflow_run.head_branch }}`.
+
+            **Static manifest URL** for Foundry's "Install System" → Manifest URL field:
+            `https://github.com/${{ github.repository }}/releases/download/prerelease/system.json`
+
+            For a fixed, stable release instead, install a specific tagged version or use the `releases/latest` manifest URL.
           files: |
             system.json
             fvtt-cyberpunk-red-core-v${{ steps.pkg.outputs.version }}.zip
