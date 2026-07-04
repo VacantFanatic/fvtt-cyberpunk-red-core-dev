@@ -243,7 +243,30 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
     if (!form || form.tagName !== "FORM") return;
     const handler = this.options.form?.handler ?? CPRDialog.#onSubmitForm;
     const formData = new FormDataExtended(form);
+    // TEMPORARY DIAGNOSTIC: comparing FormDataExtended's parsed value against
+    // the raw DOM value for the humanityLossType field specifically, to
+    // pin down why its selection isn't sticking. Silent no-op for any
+    // dialog that doesn't have this field.
+    const rawSelectEl = form.querySelector('[name="humanityLossType"]');
+    if (rawSelectEl) {
+      LOGGER.warn(
+        `_flushFormData: FormDataExtended.object.humanityLossType=${JSON.stringify(
+          formData.object.humanityLossType
+        )}, raw DOM element.value=${JSON.stringify(
+          rawSelectEl.value
+        )}, this.object.humanityLossType (before merge)=${JSON.stringify(
+          this.object?.humanityLossType
+        )}`
+      );
+    }
     await handler.call(this, null, form, formData);
+    if (rawSelectEl) {
+      LOGGER.warn(
+        `_flushFormData: this.object.humanityLossType (after merge)=${JSON.stringify(
+          this.object?.humanityLossType
+        )}`
+      );
+    }
   }
 
   async _prepareContext(options) {
