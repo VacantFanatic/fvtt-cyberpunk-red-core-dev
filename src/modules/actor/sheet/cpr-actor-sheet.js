@@ -1753,6 +1753,11 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     const newItem = Array.isArray(dropResult)
       ? dropResult[0]
       : dropResult ?? null;
+    LOGGER.warn(
+      `_cprOnItemDrop: super._onDrop returned ${
+        newItem ? `item "${newItem.name}" [${newItem.type}]` : "nothing"
+      } for actor "${this.actor.name}" (type=${this.actor.type})`
+    );
 
     // If we created a new item and the sourceItem is a container type the createItem hook ensures all of the
     // installed items are also created on the target actor. We need to ensure that those items are
