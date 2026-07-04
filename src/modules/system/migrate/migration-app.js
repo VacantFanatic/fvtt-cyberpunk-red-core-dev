@@ -5,6 +5,7 @@ import DEV_MODE from "../devMode.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
+const { FormDataExtended } = foundry.applications.ux;
 
 export default class MigrationApp extends HandlebarsApplicationMixin(
   ApplicationV2

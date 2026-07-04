@@ -2,6 +2,7 @@ import LOGGER from "../utils/cpr-logger.js";
 import SystemUtils from "../utils/cpr-systemUtils.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+const { FormDataExtended } = foundry.applications.ux;
 
 /**
  * Normalize a dialog root reference (HTMLElement or jQuery-like) to an
