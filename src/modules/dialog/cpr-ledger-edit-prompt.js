@@ -1,6 +1,7 @@
 import SystemUtils from "../utils/cpr-systemUtils.js";
 
 const { renderTemplate } = foundry.applications.handlebars;
+const { FormDataExtended } = foundry.applications.ux;
 
 export default class LedgerEditPrompt {
   static async RenderPrompt(title) {

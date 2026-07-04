@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 1.4.20
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed items dropped on mook sheets still not displaying or auto-equipping after the 1.4.19 fix turned out incomplete. Foundry's own item-drop-to-create handling doesn't call `CPRActor#createEmbeddedDocuments` for every item type, so the actor sheet now finds the newly created item by diffing the actor's items before/after the drop and triggers mook auto-equip directly instead of depending on that method being called (#82).
+- Fixed the Humanity Loss dropdown in the Install Cyberware dialog always applying a roll regardless of the selected option (Roll/Static/None) — `FormDataExtended` was not capturing that field's value, so the dialog now reads it directly from the DOM, both live as you change the selection and at confirm time (#82, #84).
+
 ## Version 1.4.19
 
 ### Action Needed
