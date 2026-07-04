@@ -555,7 +555,7 @@ export default class CPRActor extends Actor {
         foundationalCyberware: compatibleTargetCyberware,
         // If the cyberware being installed is foundational, the array will be empty, thus the optional chaining.
         foundationalId: compatibleTargetCyberware[0]?._id,
-        humanityLossType: "rolled",
+        humanityLossType: "roll",
         humanityLossSelectOptions,
       },
       // Set the options for the dialog.
