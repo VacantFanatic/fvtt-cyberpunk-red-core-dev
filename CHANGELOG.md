@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 1.4.21
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed the Eurobucks/Reputation/Improvement Points ledger dialog overflowing its window with no scrollbar once the transaction history grew past the dialog's height (#87).
+- Fixed the radio buttons in the "select install target" upgrade dialog being invisible, and the checkboxes in the sibling "select install items" dialog rendering as unstyled blobs with no checkmark (#86).
+- Fixed the item sheet's Settings/Description/Effects tab content being clipped with no scrollbar on a fixed-height sheet instead of scrolling (#88).
+- Fixed the "manage installable types" checkbox dialog throwing and silently failing to save when zero or exactly one type was checked (#89).
+
 ## Version 1.4.20
 
 ### Action Needed
