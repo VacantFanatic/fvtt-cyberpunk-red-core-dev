@@ -2,11 +2,12 @@
   font-family: var(--cpr-font-primary);
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: 4.5rem auto;
+  grid-template-rows: 4.5rem minmax(0, 1fr);
   grid-template-areas:
     "item-top-pane"
     "item-bottom-pane";
   gap: 0.313rem;
+  height: 100%;
 
   .item-top-pane {
     grid-area: item-top-pane;
@@ -125,7 +126,7 @@
     display: grid;
     grid-area: item-bottom-pane;
     grid-template-columns: auto;
-    grid-template-rows: 2rem auto;
+    grid-template-rows: 2rem minmax(0, 1fr);
     grid-template-areas:
       "item-bottom-tabs"
       "item-bottom-content";
@@ -169,7 +170,8 @@
       grid-area: item-bottom-content;
       border-style: solid;
       border-width: 0.313rem;
-      overflow-y: hidden;
+      overflow-y: auto;
+      scrollbar-width: thin;
       border-color: var(--cpr-background-border);
     }
   }
