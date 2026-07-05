@@ -116,6 +116,14 @@
     text-align: end;
 
     input[type="checkbox"],
+    input[type="radio"] {
+      appearance: auto;
+      width: 1.2rem;
+      height: 1.2rem;
+      max-width: fit-content;
+      vertical-align: middle;
+    }
+
     select {
       height: unset;
       max-width: fit-content;
