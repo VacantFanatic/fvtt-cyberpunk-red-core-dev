@@ -58,7 +58,7 @@ assert.equal(damageForm.data.luck, undefined);
 const testDir = path.dirname(fileURLToPath(import.meta.url));
 const rollTemplatesDir = path.resolve(
   testDir,
-  "../../../src/templates/dialog/rolls",
+  "../../../src/templates/dialog/rolls"
 );
 const rollTemplates = fs
   .readdirSync(rollTemplatesDir)
@@ -67,33 +67,66 @@ const rollTemplates = fs
 for (const template of rollTemplates) {
   const contents = fs.readFileSync(
     path.join(rollTemplatesDir, template),
-    "utf8",
+    "utf8"
   );
   assert.match(
     contents,
     /<section class="dialog-sheet">/,
-    `${template} should use <section> instead of nested <form>`,
+    `${template} should use <section> instead of nested <form>`
   );
   assert.doesNotMatch(
     contents,
     /<form class="dialog-sheet">/,
-    `${template} must not nest a <form> inside Application V2 dialog form`,
+    `${template} must not nest a <form> inside Application V2 dialog form`
+  );
+}
+
+// Every CPRDialog subclass renders its part template inside an Application V2
+// root element that is *already* a <form> (see CPRDialog.DEFAULT_OPTIONS.tag).
+// A part template that wraps its own content in another <form> creates a
+// nested form; FormDataExtended then never captures fields inside it (this
+// is exactly what broke roll dialog luck/additionalMods above, and later
+// broke ledger scrolling and install-target radio selection the same way).
+// Recursively check every dialog template, not just the rolls ones, so this
+// class of bug can't reappear unnoticed in a new or edited prompt.
+const dialogTemplatesDir = path.resolve(
+  testDir,
+  "../../../src/templates/dialog"
+);
+
+function collectHbsFiles(dir) {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) return collectHbsFiles(fullPath);
+    return entry.name.endsWith(".hbs") ? [fullPath] : [];
+  });
+}
+
+for (const templatePath of collectHbsFiles(dialogTemplatesDir)) {
+  const contents = fs.readFileSync(templatePath, "utf8");
+  assert.doesNotMatch(
+    contents,
+    /<form class="/,
+    `${path.relative(
+      dialogTemplatesDir,
+      templatePath
+    )} must not nest a <form> inside the Application V2 dialog form`
   );
 }
 
 const damagePrompt = fs.readFileSync(
   path.join(rollTemplatesDir, "cpr-verify-roll-damage-prompt.hbs"),
-  "utf8",
+  "utf8"
 );
 assert.match(
   damagePrompt,
   /name="isAutofire"[\s\S]*data-dtype="Checkbox"/,
-  "damage roll isAutofire checkbox must declare data-dtype Checkbox",
+  "damage roll isAutofire checkbox must declare data-dtype Checkbox"
 );
 assert.match(
   damagePrompt,
   /cpr-additional-modifiers\.hbs/,
-  "damage roll prompt must include additional modifiers partial",
+  "damage roll prompt must include additional modifiers partial"
 );
 
 console.log("✅ roll dialog form data regression tests passed");

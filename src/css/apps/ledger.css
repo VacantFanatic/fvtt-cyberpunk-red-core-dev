@@ -1,3 +1,7 @@
+.ledger {
+  height: 100%;
+}
+
 .ledger-grid {
   font-family: var(--cpr-font-primary);
   display: grid;
