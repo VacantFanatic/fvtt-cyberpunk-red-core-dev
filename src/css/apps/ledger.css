@@ -2,7 +2,7 @@
   font-family: var(--cpr-font-primary);
   display: grid;
   grid-template-columns: auto 20.7rem;
-  grid-template-rows: 5rem auto;
+  grid-template-rows: 5rem minmax(0, 1fr);
   grid-auto-columns: 1fr;
   grid-auto-rows: 1fr;
   gap: 0.313rem;
@@ -82,8 +82,9 @@
 
 .ledger-history {
   grid-area: ledger-history;
-  display: grid;
-  align-content: flex-start;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   background-color: var(--cpr-background-box);
 
   li:nth-child(even) {
@@ -93,6 +94,16 @@
   li:nth-child(odd) {
     background-color: var(--cpr-background-row-odd);
   }
+}
+
+.ledger-history-list.items-header {
+  flex: none;
+}
+
+.ledger-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .ledger-history-list {
@@ -139,10 +150,5 @@
     justify-content: center;
     width: 1rem;
     padding: 0 0.2rem;
-  }
-
-  .ledger-content-scroll {
-    height: 15.625rem;
-    overflow-y: scroll;
   }
 }

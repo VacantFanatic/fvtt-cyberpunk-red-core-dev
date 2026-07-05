@@ -1552,7 +1552,16 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
     if (formData === undefined) {
       return;
     }
-    const allowedTypes = formData.selectedTypes.filter((t) => t);
+    // formData.selectedTypes is null when no checkboxes are checked, a
+    // string when exactly one is checked, and an array when multiple are
+    // checked (same Foundry form-serialization quirk handled in
+    // _selectInstallableItems above).
+    let allowedTypes = [];
+    if (typeof formData.selectedTypes === "string") {
+      allowedTypes = [formData.selectedTypes];
+    } else if (formData.selectedTypes) {
+      allowedTypes = formData.selectedTypes.filter((t) => t);
+    }
 
     if (allowedTypes.length === 0 && this.item.system.hasInstalled) {
       SystemUtils.DisplayMessage(
