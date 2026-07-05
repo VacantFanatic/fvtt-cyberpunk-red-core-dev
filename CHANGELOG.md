@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 1.4.22
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed the Eurobucks/Reputation/Improvement Points ledger, and roughly two dozen other prompt dialogs (including the item upgrade install-target/install-items dialogs and the install cyberware Humanity Loss dropdown), silently failing to capture form input. Each of these dialogs wrapped its own content in a second, nested `<form>` inside the dialog's own form element, so Foundry's `FormDataExtended` — which only reads the outer form's fields — never saw anything typed, checked, or selected inside the nested one (#92).
+- Fixed the ledger dialog's Confirm/Cancel buttons being cut off at the bottom of the window after the transaction list was made scrollable (#93).
+
 ## Version 1.4.21
 
 ### Action Needed
