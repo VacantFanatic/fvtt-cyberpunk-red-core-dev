@@ -1,4 +1,6 @@
 .ledger {
+  display: flex;
+  flex-direction: column;
   height: 100%;
 }
 
@@ -15,7 +17,8 @@
     "ledger-info    ledger-edit"
     "ledger-history ledger-history";
   width: 100%;
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   padding: 0.313rem;
   background-color: var(--cpr-background-border);
 }
