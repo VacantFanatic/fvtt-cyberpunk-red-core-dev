@@ -32,7 +32,7 @@ export default class CPRCombat extends Combat {
       combatant.actor.type === "demon"
     ) {
       const bestInit = CombatUtils.GetBestInit();
-      if (!bestInit) return "30";
+      if (bestInit === null) return "30";
       if (bestInit !== combatant.initiative) {
         return String(bestInit + 1);
       }
@@ -62,7 +62,8 @@ export default class CPRCombat extends Combat {
     for (const id of combatantIds) {
       // Get Combatant data (non-strictly)
       const combatant = this.combatants.get(id);
-      if (!combatant?.isOwner) return;
+      // eslint-disable-next-line no-continue
+      if (!combatant?.isOwner) continue;
       const { actor } = combatant.token;
       let cprRoll;
       // Produce an initiative roll for the Combatant

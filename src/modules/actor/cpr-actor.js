@@ -244,7 +244,7 @@ export default class CPRActor extends Actor {
     const isMigration = !!(
       typeof context !== "undefined" && context.cprIsMigrating
     );
-    if (isMigration || !embeddedName === "Item")
+    if (isMigration || embeddedName !== "Item")
       return super.createEmbeddedDocuments(embeddedName, items, context);
 
     // Don't add core items.
@@ -1278,7 +1278,7 @@ export default class CPRActor extends Actor {
     const equipped = cyberdecks.filter(
       (item) => item.system.equipped === "equipped"
     );
-    if (equipped) {
+    if (equipped.length > 0) {
       return equipped[0];
     }
     return null;
