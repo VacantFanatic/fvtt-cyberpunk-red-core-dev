@@ -39,35 +39,45 @@ export default class SelectRoleBonuses extends CPRDialog {
   }
 
   /**
-   * Processes the form's data in a way that is useful to us.
+   * The base CPRDialog submit handler (run on every form change and flushed again on
+   * Confirm) merges raw form fields onto the top level of the dialog object. This
+   * dialog needs those fields (bonusRatio, universalBonuses, selectedSkills) folded
+   * into `roleData` instead, in the shape `_selectRoleBonuses` (item-sheet.js) expects.
    *
-   * @param {*} event - currently not used.
-   * @param {Object} formData - Data from the submitted form.
    * @override
    */
-  async _updateObject(event, formData) {
+  async _flushFormData() {
+    await super._flushFormData();
+
+    // Fields may be a single value or an array, depending on how many inputs share
+    // the name (checkbox groups) and how many are checked.
+    const asArray = (value) =>
+      Array.isArray(value) ? value : [value].filter((v) => v);
+
     // Convert selected skills into a neat list.
-    const bonuses = [];
-    formData.selectedSkills.forEach((s) => {
-      if (s) bonuses.push(this.skillList.find((a) => a.name === s));
-    });
+    const bonuses = asArray(this.object.selectedSkills)
+      .map((s) => this.skillList.find((a) => a.name === s))
+      .filter((b) => b);
 
     // Make sure that we are not dividing by 0 or null/undefined.
+    const rawBonusRatio = this.object.bonusRatio;
     const bonusRatio =
-      !formData.bonusRatio || formData.bonusRatio === 0
-        ? 1
-        : formData.bonusRatio;
+      !rawBonusRatio || Number(rawBonusRatio) === 0 ? 1 : rawBonusRatio;
 
     // Collect relevant data into one object.
     const updatedData = {
       bonusRatio,
       bonuses,
-      universalBonuses: formData.universalBonuses.filter((b) => b),
+      universalBonuses: asArray(this.object.universalBonuses),
     };
 
     // Merge above object with our original data.
     // This is then used to update the role item in item-sheet.js (_selectRoleBonuses)
     foundry.utils.mergeObject(this.object.roleData, updatedData);
-    this.render(true); // rerenders the FormApp with the new data.
+
+    // Clean up the raw, flat form fields now that they've been folded into roleData.
+    delete this.object.bonusRatio;
+    delete this.object.universalBonuses;
+    delete this.object.selectedSkills;
   }
 }

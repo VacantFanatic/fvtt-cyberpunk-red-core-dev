@@ -582,7 +582,7 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
     } else {
       foundry.utils.mergeObject(
         cprRoleData.abilities.find((a) => a.name === subRole.name),
-        dialogData.subRole
+        dialogData.roleData
       );
       this.item.update({ "system.abilities": cprRoleData.abilities });
     }
