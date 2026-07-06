@@ -917,26 +917,28 @@ export default class SplitPacks extends BaseMigrationScript {
     });
   }
 
-  _updatePageContent(doc) {
-    for (const page of doc.pages) {
+  async _updatePageContent(doc) {
+    for await (const page of doc.pages) {
       const newText = this._processString(page.text.content);
-      page.update({ "text.content": newText });
+      await page.update({ "text.content": newText });
     }
   }
 
-  _updateTableResult(doc) {
+  async _updateTableResult(doc) {
     const { results } = doc;
-    for (const result of results) {
+    for await (const result of results) {
       const id = result.documentId;
       const { img } = result;
       const newComp = PACK_MAP[id];
 
       if (newComp) {
-        result.update({ documentCollection: `cyberpunk-red-dlc.${newComp}` });
+        await result.update({
+          documentCollection: `cyberpunk-red-dlc.${newComp}`,
+        });
       }
 
       if (IMG_MAP[img]) {
-        result.update({ img: IMG_MAP[id] });
+        await result.update({ img: IMG_MAP[id] });
       }
     }
   }
@@ -1001,7 +1003,7 @@ export default class SplitPacks extends BaseMigrationScript {
     const journalComps = [...journalsWorldComp, ...journalsModuleComp];
 
     for await (const journal of journalsWorld) {
-      this._updatePageContent(journal);
+      await this._updatePageContent(journal);
     }
 
     for await (const comp of journalComps) {
@@ -1013,8 +1015,8 @@ export default class SplitPacks extends BaseMigrationScript {
         await pack.configure({ locked: false });
       }
 
-      for (const doc of docs) {
-        this._updatePageContent(doc);
+      for await (const doc of docs) {
+        await this._updatePageContent(doc);
       }
 
       if (wasLocked) {
@@ -1038,7 +1040,7 @@ export default class SplitPacks extends BaseMigrationScript {
     const tablesComps = [...tablesWorldComp, ...tablesModuleComp];
 
     for await (const table of tablesWorld) {
-      this._updateTableResult(table);
+      await this._updateTableResult(table);
     }
 
     for await (const table of tablesComps) {
@@ -1050,8 +1052,8 @@ export default class SplitPacks extends BaseMigrationScript {
         await pack.configure({ locked: false });
       }
 
-      for (const doc of docs) {
-        this._updateTableResult(doc);
+      for await (const doc of docs) {
+        await this._updateTableResult(doc);
       }
 
       if (wasLocked) {
@@ -1077,31 +1079,31 @@ export default class SplitPacks extends BaseMigrationScript {
       for await (const tile of tiles) {
         const img = tile.texture.src;
         if (IMG_MAP[img]) {
-          tile.update({ "texture.src": IMG_MAP[img] });
+          await tile.update({ "texture.src": IMG_MAP[img] });
+        }
+      }
+    }
+
+    for await (const s of scenesComps) {
+      const pack = await game.packs.get(s.metadata.id);
+      const docs = await pack.getDocuments();
+      const wasLocked = await pack.locked;
+
+      if (wasLocked) {
+        await pack.configure({ locked: false });
+      }
+
+      for await (const doc of docs) {
+        for await (const tile of doc.tiles) {
+          const img = tile.texture.src;
+          if (IMG_MAP[img]) {
+            await tile.update({ "texture.src": IMG_MAP[img] });
+          }
         }
       }
 
-      for await (const s of scenesComps) {
-        const pack = await game.packs.get(s.metadata.id);
-        const docs = await pack.getDocuments();
-        const wasLocked = await pack.locked;
-
-        if (wasLocked) {
-          await pack.configure({ locked: false });
-        }
-
-        for (const doc of docs) {
-          for (const tile of doc.tiles) {
-            const img = tile.texture.src;
-            if (IMG_MAP[img]) {
-              tile.update({ "texture.src": IMG_MAP[img] });
-            }
-          }
-        }
-
-        if (wasLocked) {
-          await pack.configure({ locked: true });
-        }
+      if (wasLocked) {
+        await pack.configure({ locked: true });
       }
     }
   }

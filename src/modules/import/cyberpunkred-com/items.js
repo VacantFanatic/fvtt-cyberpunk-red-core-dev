@@ -430,9 +430,14 @@ async function importItemData(data, actor, databaseName, getItemName) {
         return;
       }
 
-      if (itemName.includes("Cyberchair")) {
-        databaseName = "cyberchairs";
-      }
+      // Use a per-item local instead of reassigning the shared `databaseName` param,
+      // which would otherwise race across the concurrently-running map callbacks below.
+      // Cyberchairs is an optional DLC pack (see loadItemDatabases); fall back to the
+      // original database when it hasn't been loaded, per the documented fallback.
+      const itemDatabaseName =
+        itemName.includes("Cyberchair") && databases.cyberchairs
+          ? "cyberchairs"
+          : databaseName;
 
       const existing = await updateExistingItem(
         itemName,
@@ -443,11 +448,11 @@ async function importItemData(data, actor, databaseName, getItemName) {
         return;
       }
 
-      const indexEntry = databases[databaseName].getName(itemName);
+      const indexEntry = databases[itemDatabaseName].getName(itemName);
       if (indexEntry) {
         const item = await Item.implementation.fromDropData({
           type: "Item",
-          uuid: getItemUuid(getDatabaseIds()[databaseName], indexEntry._id),
+          uuid: getItemUuid(getDatabaseIds()[itemDatabaseName], indexEntry._id),
         });
         console.debug(`Importing ${itemName} x${piece.quantity}`, item);
         const itemData = item.toObject();

@@ -30,13 +30,11 @@ export default class CPRActorUtils {
         ? upgradeData.value
         : currentSP + upgradeData.value;
 
-    const armorSPWithAblation =
-      currentAblation < 0
-        ? Math.min(
-            currentSpWithUpgrades - currentAblation,
-            currentSpWithUpgrades
-          )
-        : Math.max(currentSpWithUpgrades - currentAblation, 0);
+    // Ablation is schema-enforced to be >= 0, so it can only ever reduce SP.
+    const armorSPWithAblation = Math.max(
+      currentSpWithUpgrades - currentAblation,
+      0
+    );
 
     return withAblation ? armorSPWithAblation : currentSpWithUpgrades;
   }

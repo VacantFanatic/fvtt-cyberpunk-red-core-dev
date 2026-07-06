@@ -67,7 +67,7 @@ export default function registerDoesItHit() {
 
     let key = "";
     let success = false;
-    if (dv >= attackRoll) {
+    if (dv > attackRoll) {
       key =
         targetActor?.system?.stats?.ref?.value >= 8
           ? "CPR.additions.message.missed.evade"
