@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.24
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed the "Show/Hide Unpinned" category-header toggle and the skills tab's "Show/Hide All" eye-icon toggle silently doing nothing. Both the category wrapper and its header row shared a `collapsible` CSS class, so the click handlers' `closest(".collapsible")` lookup resolved to the header row instead of the wrapper, and the item list it was supposed to hide/show could never be found (#104).
+
 ## Version 1.4.23
 
 ### Action Needed
