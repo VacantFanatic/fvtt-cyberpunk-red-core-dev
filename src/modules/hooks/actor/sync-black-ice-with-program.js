@@ -10,7 +10,12 @@ const SyncBlackIceWithProgram = () => {
    * @param {object} updatedData      - The changed data object provided to the document creation request
    */
   Hooks.on("preUpdateActor", async (doc, updatedData) => {
-    if (doc.type === "blackIce" && doc.isToken && updatedData.system?.stats) {
+    if (
+      doc.type === "blackIce" &&
+      doc.isToken &&
+      updatedData.system?.stats &&
+      "rez" in updatedData.system.stats
+    ) {
       const biToken = doc.token;
 
       const netrunnerTokenId = biToken.getFlag(
@@ -27,9 +32,11 @@ const SyncBlackIceWithProgram = () => {
           const netrunnerToken = tokenList[0];
           const netrunner = netrunnerToken.actor;
           const program = netrunner.getOwnedItem(programUUID);
-          await program.update({
-            "system.rez": updatedData.system.stats.rez,
-          });
+          if (program) {
+            await program.update({
+              "system.rez": updatedData.system.stats.rez,
+            });
+          }
         }
       }
     }
