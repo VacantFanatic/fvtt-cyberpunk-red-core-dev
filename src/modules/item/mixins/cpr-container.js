@@ -435,11 +435,17 @@ const Container = function Container() {
     const loadableTypes = SystemUtils.getDocTypesFromMixin("loadable");
     // When uninstalling an upgrade that increases magazine size, make sure any extra ammo
     // that would be in the upgrade is returned to the ammo item. Do this before unloading ammo.
-    const uninstalledMagUpgrade = uninstallList.find(
+    const uninstalledMagUpgrades = uninstallList.filter(
       (i) => i.type === "itemUpgrade" && i.system.modifiers.magazine.value
     );
-    if (loadableTypes.includes(this.type) && uninstalledMagUpgrade) {
-      await this.syncMagazine();
+    if (
+      loadableTypes.includes(this.type) &&
+      uninstalledMagUpgrades.length > 0
+    ) {
+      // `installedIds`/the document itself haven't been updated yet at this point, so the
+      // upgrade(s) being uninstalled are still present in `system.installedItems.list` and
+      // must be explicitly excluded from the magazine size calculation.
+      await this.syncMagazine(uninstalledMagUpgrades.map((i) => i.id));
     }
 
     // Ammo also requires some special actions when uninstalling, namely restoring the ammo

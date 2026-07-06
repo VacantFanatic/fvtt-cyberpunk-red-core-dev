@@ -28,7 +28,7 @@ export default class CPRProgramItem extends CPRItem {
    *
    * @public
    */
-  unsetRezzed() {
-    this.system.isRezzed = false;
+  async unsetRezzed() {
+    await this.update({ "system.isRezzed": false });
   }
 }

@@ -39,13 +39,13 @@ export default class CPRAmmoItem extends CPRItem {
   async _ammoDecrement(changeAmount) {
     const currentValue = this.system.amount;
     const newValue = Math.max(0, Number(currentValue) - Number(changeAmount));
-    this.system.amount = newValue;
     if (this.actor) {
+      this.system.amount = newValue;
       return this.actor.updateEmbeddedDocuments("Item", [
         { _id: this.id, system: this.system },
       ]);
     }
-    return null;
+    return this.update({ "system.amount": newValue });
   }
 
   /**
@@ -57,12 +57,12 @@ export default class CPRAmmoItem extends CPRItem {
   async _ammoIncrement(changeAmount) {
     const currentValue = this.system.amount;
     const newValue = Number(currentValue) + Number(changeAmount);
-    this.system.amount = newValue;
     if (this.actor) {
+      this.system.amount = newValue;
       return this.actor.updateEmbeddedDocuments("Item", [
         { _id: this.id, system: this.system },
       ]);
     }
-    return null;
+    return this.update({ "system.amount": newValue });
   }
 }
