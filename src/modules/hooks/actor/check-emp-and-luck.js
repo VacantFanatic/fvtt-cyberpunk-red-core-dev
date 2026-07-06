@@ -12,26 +12,24 @@ const CheckEmpAndLuck = () => {
    * @param {object} updatedData      - The changed data object provided to the document creation request
    */
   Hooks.on("preUpdateActor", async (_, updatedData) => {
-    if (updatedData.system?.stats?.emp || updatedData.system?.stats?.luck) {
-      const updatedValue = updatedData.system.stats.emp
-        ? updatedData.system.stats.emp.value
-        : updatedData.system.stats.luck.value;
-      const updatedMax = updatedData.system.stats.emp
-        ? updatedData.system.stats.emp.max
-        : updatedData.system.stats.luck.max;
-      if (updatedValue && Number(updatedValue) > 99) {
+    const statsUpdate = updatedData.system?.stats;
+    if (!statsUpdate) return;
+    ["emp", "luck"].forEach((statName) => {
+      const stat = statsUpdate[statName];
+      if (!stat) return;
+      if (stat.value && Number(stat.value) > 99) {
         SystemUtils.DisplayMessage(
           "warn",
           SystemUtils.Localize("CPR.messages.tripleDigitStatValueWarn")
         );
       }
-      if (updatedMax && Number(updatedMax) > 99) {
+      if (stat.max && Number(stat.max) > 99) {
         SystemUtils.DisplayMessage(
           "warn",
           SystemUtils.Localize("CPR.messages.tripleDigitStatMaxWarn")
         );
       }
-    }
+    });
   });
 };
 

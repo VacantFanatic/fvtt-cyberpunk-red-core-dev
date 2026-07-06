@@ -24,7 +24,9 @@ const PreDeleteFolder = () => {
       folder.contents.length > 0
     ) {
       for (const item of folder.contents) {
-        deleteFolder = Hooks.call("preDeleteItem", item);
+        if (!Hooks.call("preDeleteItem", item)) {
+          deleteFolder = false;
+        }
       }
       return deleteFolder;
     }
