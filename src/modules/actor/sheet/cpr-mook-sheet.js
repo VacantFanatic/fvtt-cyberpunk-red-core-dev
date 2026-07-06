@@ -254,9 +254,7 @@ export default class CPRMookActorSheet extends CPRActorSheet {
     }
     mookImageArea.classList.toggle("mook-image-small-toggle");
     mookImageImg?.classList.toggle("hide");
-    const cprActorData = foundry.utils.duplicate(this.actor.system);
-    cprActorData.flags.collapsedImage = collapsedImage;
-    this.actor.update(cprActorData);
+    this.actor.setFlag(game.system.id, "collapsedImage", collapsedImage);
   }
 
   /**

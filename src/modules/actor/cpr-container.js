@@ -24,7 +24,8 @@ export default class CPRContainerActor extends Actor {
       createData.ownership = { default: 3 };
     }
     const newContainerActor = await super.create(createData, options);
-    newContainerActor.setContainerType("shop");
+    await newContainerActor.setContainerType("shop");
+    return newContainerActor;
   }
 
   /**
@@ -44,7 +45,7 @@ export default class CPRContainerActor extends Actor {
     items,
     context = { createInstalled: true }
   ) {
-    if (!embeddedName === "Item")
+    if (embeddedName !== "Item")
       return super.createEmbeddedDocuments(embeddedName, items, context);
 
     // Don't add core items.

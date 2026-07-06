@@ -267,7 +267,7 @@ export default class CPRBlackIceActorSheet extends HandlebarsApplicationMixin(
       await this.actor.update({
         name: program.name,
         img: program.img,
-        "system.class": program.system.stats,
+        "system.class": program.system.blackIceType,
         "system.stats": {
           per: program.system.per,
           spd: program.system.spd,
