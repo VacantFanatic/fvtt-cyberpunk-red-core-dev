@@ -2,7 +2,7 @@
   <ol class="items-list">
     {{#each (cprFindConfigObj "inventoryCategories") as |category c| }}
       <div class="collapsible">
-        <li class="items-header flexrow collapsible">
+        <li class="items-header flexrow">
           <span class="item-name gear-name gear-section-header text-nowrap expand-button"
                 id="gearTab-{{c}}"
                 data-tooltip="{{localize "CPR.actorSheets.commonActions.toggleCategoryPinned"}}">
