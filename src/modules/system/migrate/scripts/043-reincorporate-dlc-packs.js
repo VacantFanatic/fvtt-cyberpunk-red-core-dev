@@ -32,23 +32,23 @@ export default class ReincorporateDlcPacks extends BaseMigrationScript {
     return path.replace(OLD_ICON_PREFIX, NEW_ICON_PREFIX);
   }
 
-  _updatePageContent(doc) {
-    for (const page of doc.pages) {
-      page.update({
+  async _updatePageContent(doc) {
+    for await (const page of doc.pages) {
+      await page.update({
         "text.content": this._rewriteCompendiumUUIDs(page.text.content),
       });
     }
   }
 
-  _updateTableResult(doc) {
+  async _updateTableResult(doc) {
     const { results } = doc;
-    for (const result of results) {
+    for await (const result of results) {
       const collection = result.documentCollection;
       if (
         typeof collection === "string" &&
         collection.startsWith("cyberpunk-red-dlc.")
       ) {
-        result.update({
+        await result.update({
           documentCollection: collection.replace(
             "cyberpunk-red-dlc.",
             "cyberpunk-red-core."
@@ -57,7 +57,7 @@ export default class ReincorporateDlcPacks extends BaseMigrationScript {
       }
 
       const newImg = this._rewriteImagePath(result.img);
-      if (newImg !== result.img) result.update({ img: newImg });
+      if (newImg !== result.img) await result.update({ img: newImg });
     }
   }
 
@@ -108,14 +108,15 @@ export default class ReincorporateDlcPacks extends BaseMigrationScript {
     );
     const journalComps = [...journalsWorldComp, ...journalsModuleComp];
 
-    for await (const journal of journalsWorld) this._updatePageContent(journal);
+    for await (const journal of journalsWorld)
+      await this._updatePageContent(journal);
 
     for await (const comp of journalComps) {
       const pack = await game.packs.get(comp.metadata.id);
       const docs = await pack.getDocuments();
       const wasLocked = await pack.locked;
       if (wasLocked) await pack.configure({ locked: false });
-      for (const doc of docs) this._updatePageContent(doc);
+      for await (const doc of docs) await this._updatePageContent(doc);
       if (wasLocked) await pack.configure({ locked: true });
     }
 
@@ -130,14 +131,14 @@ export default class ReincorporateDlcPacks extends BaseMigrationScript {
     );
     const tablesComps = [...tablesWorldComp, ...tablesModuleComp];
 
-    for await (const table of tablesWorld) this._updateTableResult(table);
+    for await (const table of tablesWorld) await this._updateTableResult(table);
 
     for await (const table of tablesComps) {
       const pack = await game.packs.get(table.metadata.id);
       const docs = await pack.getDocuments();
       const wasLocked = await pack.locked;
       if (wasLocked) await pack.configure({ locked: false });
-      for (const doc of docs) this._updateTableResult(doc);
+      for await (const doc of docs) await this._updateTableResult(doc);
       if (wasLocked) await pack.configure({ locked: true });
     }
 
@@ -152,7 +153,8 @@ export default class ReincorporateDlcPacks extends BaseMigrationScript {
     for await (const scene of scenesWorld) {
       for await (const tile of scene.tiles) {
         const newImg = this._rewriteImagePath(tile.texture.src);
-        if (newImg !== tile.texture.src) tile.update({ "texture.src": newImg });
+        if (newImg !== tile.texture.src)
+          await tile.update({ "texture.src": newImg });
       }
     }
 
@@ -161,11 +163,11 @@ export default class ReincorporateDlcPacks extends BaseMigrationScript {
       const docs = await pack.getDocuments();
       const wasLocked = await pack.locked;
       if (wasLocked) await pack.configure({ locked: false });
-      for (const doc of docs) {
-        for (const tile of doc.tiles) {
+      for await (const doc of docs) {
+        for await (const tile of doc.tiles) {
           const newImg = this._rewriteImagePath(tile.texture.src);
           if (newImg !== tile.texture.src)
-            tile.update({ "texture.src": newImg });
+            await tile.update({ "texture.src": newImg });
         }
       }
       if (wasLocked) await pack.configure({ locked: true });
