@@ -11,10 +11,15 @@ const Upgradable = function Upgradable() {
    * this with the upgradeType property either, which controls what item types this upgrade is applicable for.
    *
    * @param {String} dataPoint - a stat/property/value that this upgrade modifies on the parent item
+   * @param {Array<String>} excludeIds - ids of installed upgrades to leave out of the total,
+   *                                     e.g. upgrades that are in the process of being uninstalled
    * @returns {Object} upgradeData - an object with a key for "type" and "value" of the upgrade
    *
    */
-  this.getTotalUpgradeValues = function getTotalUpgradeValues(dataPoint) {
+  this.getTotalUpgradeValues = function getTotalUpgradeValues(
+    dataPoint,
+    excludeIds = []
+  ) {
     let upgradeNumber = 0;
     let baseOverride = -100000;
     const upgradeData = {
@@ -26,7 +31,9 @@ const Upgradable = function Upgradable() {
       typeof this.system.isUpgraded === "boolean" &&
       this.system.isUpgraded
     ) {
-      const { installedUpgrades } = this.system;
+      const installedUpgrades = this.system.installedUpgrades.filter(
+        (upgrade) => !excludeIds.includes(upgrade.id)
+      );
       installedUpgrades.forEach((upgrade) => {
         if (typeof upgrade.system.modifiers[dataPoint] !== "undefined") {
           const modType = upgrade.system.modifiers[dataPoint].type;

@@ -33,7 +33,7 @@ export default class CPRItem extends Item {
   static async create(data, options) {
     const item = await super.create(data, options);
     // Early return if has no installed, or its in a compendium.
-    if (!item.system.hasInstalled || item.pack) return;
+    if (!item.system.hasInstalled || item.pack) return item;
     // If this item is being imported into the world,
     // and it has embedded installed item data in its flags.
     if (!item.parent && ContainerUtils.getInstallTreeFlag(item)) {
@@ -60,7 +60,6 @@ export default class CPRItem extends Item {
       item.installItems(installedItemList);
     }
 
-    // eslint-disable-next-line consistent-return
     return item;
   }
 
@@ -71,7 +70,7 @@ export default class CPRItem extends Item {
    * @param {Item} data - details/changes for the Item itself
    * @param {Object} options options (from Foundry) to the Item update process
    */
-  update(data, options = {}) {
+  async update(data, options = {}) {
     const cprData = data;
     if (
       data["system.type"] === "cyberwareInternal" ||
@@ -80,7 +79,7 @@ export default class CPRItem extends Item {
     ) {
       cprData["system.isFoundational"] = false;
     }
-    if (this.type === "weapon") {
+    if (["weapon", "cyberware", "itemUpgrade"].includes(this.type)) {
       cprData["system.dvTable"] =
         data["system.dvTable"] === null ? "" : data["system.dvTable"];
     }
@@ -91,11 +90,11 @@ export default class CPRItem extends Item {
     const usage = data["system.usage"];
     if (usage && usage !== this.system.usage) {
       if (usage !== "toggled" && usage !== "snorted") {
-        this.effects.forEach((e) => {
-          if (e.disabled) {
-            this.toggleEffect(e._id);
-          }
-        });
+        await Promise.all(
+          this.effects
+            .filter((e) => e.disabled)
+            .map((e) => this.toggleEffect(e._id))
+        );
       }
     }
     return super.update(cprData, options);

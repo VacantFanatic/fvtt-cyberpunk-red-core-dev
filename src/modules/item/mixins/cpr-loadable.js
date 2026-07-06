@@ -283,13 +283,20 @@ const Loadable = function Loadable() {
    * When a loadable item has an upgrade removed we need to sync the magazine data
    * in case the magazine size decreased, we need to remove the extra bullets.
    *
+   * @param {Array<String>} excludeUpgradeIds - ids of magazine upgrades being uninstalled, which
+   *                                             are still present in `system.installedItems.list`
+   *                                             at the time this is called and so must be excluded
+   *                                             from the magazine size calculation explicitly.
    * @returns {Array} - updated embedded documents
    */
-  this.syncMagazine = async function syncMagazine() {
+  this.syncMagazine = async function syncMagazine(excludeUpgradeIds = []) {
     const updateData = [];
     const { actor } = this;
     const magazineData = this.system.magazine;
-    const upgradeInfo = this.getTotalUpgradeValues("magazine");
+    const upgradeInfo = this.getTotalUpgradeValues(
+      "magazine",
+      excludeUpgradeIds
+    );
     const upgradedMagazineSize =
       upgradeInfo.type === "override"
         ? upgradeInfo.value
