@@ -1,5 +1,27 @@
 # Changelog
 
+## Version 1.4.23
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed `CPRBlackIceActor`/`CPRDemonActor`/`CPRContainerActor.create()` not returning the created actor, which crashed rezzing a Black ICE program the first time no matching Black ICE actor already existed; fixed an operator-precedence bug that defeated the non-Item embedded-document fast path; fixed "Configure from Program" on the Black ICE sheet writing the wrong field; fixed the mook sheet's image collapse/expand toggle throwing instead of persisting; fixed `getEquippedCyberdeck()`'s array truthiness check; fixed batch initiative rolls aborting entirely on one unowned combatant instead of skipping it; fixed Black ICE/Demon initiative treating a best roll of 0 the same as "nobody has rolled" (#96).
+- Fixed `CPRProgramItem.unsetRezzed()` not persisting, so de-rezzing a program reverted on reload; fixed `syncMagazine()` computing upgrade totals before the removed upgrade was excluded, over-resetting magazine capacity; fixed the `dvTable` null-to-empty-string fix only applying to weapons and not cyberware/itemUpgrade; fixed `CPRItem.create()` returning `undefined` for most items; fixed unawaited effect toggles racing with item updates; fixed unowned ammo increment/decrement not persisting (#97).
+- Fixed folder deletion overwriting the per-item delete veto instead of combining results, so a protected item not last in the folder no longer blocks the whole folder's deletion; fixed the Black ICE/Program sync hook unconditionally writing `rez` on any stat change (and not null-checking the linked program), which could silently wipe REZ or crash; fixed the EMP/Luck triple-digit warning only checking one of the two stats when both update in the same call (#98).
+- Fixed the "Select Role Bonuses" dialog silently discarding every selection on Confirm due to a dead V1-style `_updateObject` override that never runs under the V2 dialog framework, plus a related bug reading the wrong key for sub-ability edits (#99).
+- Fixed situational Active Effect attack/damage bonuses being dropped entirely for non-upgradable attackable items (e.g. weapon-type itemUpgrades); fixed a race condition in the cyberpunkred.com item importer that could redirect unrelated item lookups to the wrong compendium or abort a whole import batch; fixed missing `await`s on database writes in the v39/v43 migration scripts; fixed a migration loop-nesting bug that skipped or redundantly reran compendium scene-tile migration; fixed an attack roll exactly equal to DV being reported as a miss instead of a hit; removed a dead, unreachable negative-ablation code path (#100).
+
 ## Version 1.4.22
 
 ### Action Needed
