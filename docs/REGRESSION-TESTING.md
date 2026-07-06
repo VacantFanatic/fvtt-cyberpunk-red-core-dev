@@ -23,6 +23,13 @@ This currently includes:
 | `test-dice-roll-mode.mjs` | Dice So Nice whisper mapping for roll modes |
 | `test-chat-message-user.mjs` | ChatMessage `#user` fallback for legacy modules |
 | `test-get-event-datum.mjs` | `GetEventDatum` ancestor lookup for `data-*` attrs |
+| `test-actor-create-return-value.mjs` | `CPRBlackIceActor`/`CPRDemonActor`/`CPRContainerActor.create()` returning the created actor (#95) |
+| `test-black-ice-program-sync.mjs` | Black ICE ↔ Program sync hook only firing on `rez` changes and null-checking the linked program (#95) |
+| `test-delete-folder-veto.mjs` | Folder deletion combining every item's `preDeleteItem` veto, not just the last one (#95) |
+| `test-combat-initiative.mjs` | `CPRCombat._getInitiativeFormula()` falsy-zero bug and batch initiative rolls skipping (not aborting on) an unowned combatant (#95) |
+| `test-emp-luck-warning.mjs` | EMP/Luck triple-digit warning checking both stats independently (#95) |
+| `test-item-update-dvtable-normalization.mjs` | `dvTable` null-to-empty-string remap covering weapon/cyberware/itemUpgrade (#95) |
+| `test-container-actor-embedded-doc-guard.mjs` | `CPRContainerActor#createEmbeddedDocuments` fast path for non-Item embedded documents (#95) |
 
 Extended handlebars jobs (gitlab-ci-local / `make lint`) cover helpers, tooltips, attributes, and more.
 
