@@ -8,14 +8,21 @@
 # prerelease build, giving testers one static, always-current manifest URL:
 #   https://github.com/<owner>/<repo>/releases/download/prerelease/system.json
 # Stable (non-prerelease) versions only get the versioned draft, unchanged.
+#
+# `dev` is also a trigger branch so an RC build can be cut straight from
+# development without merging to main/master first (e.g. bump package.json/
+# src/system.json to a `-rc.N` version and push to `dev`). To keep `dev` from
+# ever cutting a *stable* release out from under main, the "Restrict stable
+# releases to main/master" step below fails the job if a non-main/master
+# branch tries to release a version that isn't a prerelease.
 
-name: Release (main / master)
+name: Release (main / master / dev)
 
 on:
   workflow_run:
     workflows: ["CI"]
     types: [completed]
-    branches: [main, master]
+    branches: [main, master, dev]
 
 permissions:
   contents: write
@@ -50,6 +57,16 @@ jobs:
             echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
           else
             echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Restrict stable releases to main/master
+        run: |
+          BRANCH="${{ github.event.workflow_run.head_branch }}"
+          IS_PRERELEASE="${{ steps.prerelease.outputs.is_prerelease }}"
+          if [[ "$BRANCH" != "main" && "$BRANCH" != "master" && "$IS_PRERELEASE" != "true" ]]; then
+            echo "Refusing to release stable version ${{ steps.pkg.outputs.version }} from branch '$BRANCH'."
+            echo "Only prerelease/RC versions (e.g. 1.4.24-rc.1) may be released from a non-main/master branch."
+            exit 1
           fi
 
       - name: Install dependencies
@@ -128,7 +145,7 @@ jobs:
           name: "Prerelease (always the latest RC/beta build)"
           target_commitish: ${{ github.event.workflow_run.head_sha }}
           body: |
-            **Always-current pre-release build.** This tag/release is overwritten by every prerelease version pushed to `main` (versions containing a `-`, e.g. `-rc.1`, `-beta.1`). It is not a fixed version.
+            **Always-current pre-release build.** This tag/release is overwritten by every prerelease version pushed to `main`, `master`, or `dev` (versions containing a `-`, e.g. `-rc.1`, `-beta.1`). It is not a fixed version.
 
             Currently: `v${{ steps.pkg.outputs.version }}`, built from commit [`${{ github.event.workflow_run.head_sha }}`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.workflow_run.head_sha }}) on branch `${{ github.event.workflow_run.head_branch }}`.
 
