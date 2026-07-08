@@ -27,7 +27,7 @@
     ],
     "no-nested-ternary": "off",
     "no-restricted-syntax": [
-      "warn",
+      "error",
       {
         "selector": "ForInStatement",
         "message": "for..in loops iterate over the entire prototype chain, which is virtually never what you want. Use Object.{keys,values,entries}, and iterate over the resulting array."
@@ -39,6 +39,14 @@
       {
         "selector": "WithStatement",
         "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
+      },
+      {
+        "selector": "CallExpression[callee.property.name='replace'][arguments.0.type='Literal'][arguments.0.value=/\\n/]",
+        "message": "String#replace() with a plain string argument only replaces the first match; a literal containing a newline is almost always meant to replace every occurrence (code-scanning alert #2, js/incomplete-sanitization). Use replaceAll(), or a RegExp with the /g flag, instead."
+      },
+      {
+        "selector": "NewExpression[callee.object.name='Handlebars'][callee.property.name='SafeString'] CallExpression[callee.property.name='text']",
+        "message": "Wrapping text extracted from a DOM node's .text() in Handlebars.SafeString marks it safe to insert as raw, unescaped HTML wherever it's rendered, even though .text() can smuggle HTML-decoded markup back in (code-scanning alert #3, js/xss-through-dom). Return the plain string and let Handlebars escape it normally."
       }
     ],
     "import/extensions": ["warn", "always"]
