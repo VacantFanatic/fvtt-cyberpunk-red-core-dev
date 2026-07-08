@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.25
+
+### Action Needed
+
+- Run **world migration** once after updating so data model version reaches **45**; migration **Active Effect changes: re-check legacy mode to string type** re-runs the same conversion as migration 44 to catch any items dragged from a compendium after that migration already ran (the compendia themselves shipped the legacy shape until this release).
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed compendium items (drugs, armor, cyberware, gear, critical injuries) shipping Active Effect changes with the legacy Foundry V13 numeric `mode` field instead of the V14 string `type` field. `system.*`-keyed changes (e.g. `system.stats.int.value`) are applied directly by Foundry core and bypass `CPRMod`'s legacy-mode fallback, so a type-less `mode` made stat increments behave like string concatenation instead of numeric addition (e.g. a drug bumping a stat from 6 landed on 16 instead of 7). Converted the ~90 affected compendium entries to the string `type`, fixed the `activeEffects.json` schema's `priority` field to accept `null` (matching real data), and added a regression guard so pack YAML can't reintroduce the legacy shape (#108).
+
 ## Version 1.4.24
 
 ### Action Needed
