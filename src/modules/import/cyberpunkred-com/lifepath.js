@@ -116,7 +116,7 @@ export async function updateLifepath(data, actor) {
       Background: data.background,
     })
       .map(([k, v]) =>
-        v ? `<p><b>${k}:</b><br>${v.replace("\n", "<br>")}</p>` : ""
+        v ? `<p><b>${k}:</b><br>${v.replaceAll("\n", "<br>")}</p>` : ""
       )
       .join("");
     system.information = {
