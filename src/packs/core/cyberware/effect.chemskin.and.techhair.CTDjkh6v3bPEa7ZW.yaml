@@ -2,8 +2,8 @@ _id: CTDjkh6v3bPEa7ZW
 _key: "!items.effects!6jicmuwJKrB98O1R.CTDjkh6v3bPEa7ZW"
 changes:
   - key: bonuses.personalGrooming
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

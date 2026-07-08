@@ -23,12 +23,12 @@ effects:
       systemVersion: v0.0.0dev
     changes:
       - key: system.stats.body.value
-        mode: 5
         priority: null
+        type: override
         value: "16"
       - key: system.derivedStats.humanity.max
-        mode: 2
         priority: null
+        type: add
         value: "-4"
     description: ""
     disabled: false
@@ -69,7 +69,8 @@ flags:
   scene-packer:
     hash: 5b867ff767d1e73ca87f69317d61cf69919e73a7
 folder: null
-img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/implanted_linearframe_omega.svg
+img: >-
+  systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/implanted_linearframe_omega.svg
 name: Implanted Linear Frame Ω (Omega)
 ownership:
   IMREvhAZtigyN7Gy: 3

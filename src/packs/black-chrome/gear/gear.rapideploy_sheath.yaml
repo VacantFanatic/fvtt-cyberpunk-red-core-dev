@@ -23,8 +23,8 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: bonuses.concealOrRevealObject
-        mode: 2
         priority: null
+        type: add
         value: "2"
     description: ""
     disabled: false
@@ -61,7 +61,8 @@ flags:
       current: 38
       previous: "37"
 folder: null
-img: systems/cyberpunk-red-core/icons/compendium/black-chrome/gear/rapideploy-sheath.svg
+img: >-
+  systems/cyberpunk-red-core/icons/compendium/black-chrome/gear/rapideploy-sheath.svg
 name: RapiDeploy Sheath
 ownership:
   default: 0

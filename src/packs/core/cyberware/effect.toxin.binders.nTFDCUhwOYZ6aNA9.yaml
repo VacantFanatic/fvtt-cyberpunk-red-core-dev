@@ -2,8 +2,8 @@ _id: nTFDCUhwOYZ6aNA9
 _key: "!items.effects!OhW1h2rwb7lvJPs3.nTFDCUhwOYZ6aNA9"
 changes:
   - key: bonuses.resistTortureOrDrugs
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

@@ -2,32 +2,32 @@ _id: tvqakDnmQ3P9ncWm
 _key: "!items.effects!347vBbRcotzYQBbW.tvqakDnmQ3P9ncWm"
 changes:
   - key: bonuses.airVehicleTech
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.basicTech
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.cybertech
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.electronicsAndSecurityTech
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.landVehicleTech
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.seaVehicleTech
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.weaponstech
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

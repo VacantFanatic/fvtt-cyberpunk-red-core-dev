@@ -23,8 +23,8 @@ effects:
       systemVersion: v0.89.2
     changes:
       - key: bonuses.acting
-        mode: 2
         priority: null
+        type: add
         value: "4"
     description: ""
     disabled: false
@@ -45,7 +45,8 @@ effects:
             "0":
               isSituational: true
               onByDefault: false
-    img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/animal_behaviour_chip.svg
+    img: >-
+      systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/animal_behaviour_chip.svg
     name: Animal Behavior Chip
     origin: >-
       Compendium.cyberpunk-red-dlc.dlc_mixing-drinks-changing-lives.Item.TVgFdyPTl0aVAQz5
@@ -61,7 +62,8 @@ flags:
       current: 38
       previous: "37"
 folder: null
-img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/animal_behaviour_chip.svg
+img: >-
+  systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/animal_behaviour_chip.svg
 name: Animal Behavior Chip
 ownership:
   default: 0

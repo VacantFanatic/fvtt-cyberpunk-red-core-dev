@@ -23,12 +23,12 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: system.stats.cool.value
-        mode: 2
         priority: null
+        type: add
         value: "2"
       - key: system.stats.will.value
-        mode: 2
         priority: null
+        type: add
         value: "2"
     description: ""
     disabled: true
@@ -75,8 +75,8 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: system.stats.cool.value
-        mode: 2
         priority: null
+        type: add
         value: "-2"
     description: ""
     disabled: true

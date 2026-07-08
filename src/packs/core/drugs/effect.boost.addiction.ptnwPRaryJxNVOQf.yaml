@@ -2,8 +2,8 @@ _id: ptnwPRaryJxNVOQf
 _key: "!items.effects!ut8jpew6V3q58ivX.ptnwPRaryJxNVOQf"
 changes:
   - key: system.stats.int.value
-    mode: 2
     priority: null
+    type: add
     value: "-2"
 description: ""
 disabled: true

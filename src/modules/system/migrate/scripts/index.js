@@ -20,3 +20,4 @@ export { default as RemoveUnusedInstallFlag } from "./041-remove-unused-install-
 export { default as NormalizeStatusEffectIds } from "./042-normalize-status-effect-ids.js";
 export { default as ReincorporateDlcPacks } from "./043-reincorporate-dlc-packs.js";
 export { default as ActiveEffectChangeTypeMigration } from "./044-active-effect-change-type.js";
+export { default as RecheckActiveEffectChangeTypeMigration } from "./045-recheck-active-effect-change-type.js";

@@ -2,8 +2,8 @@ _id: sate0Jnbsdj9xuX7
 _key: "!items.effects!2XhNJ80rCSvxAenP.sate0Jnbsdj9xuX7"
 changes:
   - key: system.stats.body.value
-    mode: 5
     priority: null
+    type: override
     value: "12"
 description: ""
 disabled: false

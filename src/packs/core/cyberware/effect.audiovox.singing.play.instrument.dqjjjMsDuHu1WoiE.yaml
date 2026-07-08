@@ -2,8 +2,8 @@ _id: dqjjjMsDuHu1WoiE
 _key: "!items.effects!oSCkXo6VZXIwjWhL.dqjjjMsDuHu1WoiE"
 changes:
   - key: bonuses.playInstrument
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

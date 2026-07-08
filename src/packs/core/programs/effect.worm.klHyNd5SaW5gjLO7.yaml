@@ -2,8 +2,8 @@ _id: klHyNd5SaW5gjLO7
 _key: "!items.effects!SmwW6B3Qi6svIClB.klHyNd5SaW5gjLO7"
 changes:
   - key: bonuses.backdoor
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

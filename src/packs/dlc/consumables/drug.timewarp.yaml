@@ -23,8 +23,8 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: bonuses.initiative
-        mode: 2
         priority: null
+        type: add
         value: "3"
     description: ""
     disabled: true
@@ -67,8 +67,8 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: bonuses.initiative
-        mode: 2
         priority: null
+        type: add
         value: "-2"
     description: ""
     disabled: true
@@ -111,8 +111,8 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: bonuses.initiative
-        mode: 2
         priority: null
+        type: add
         value: "5"
     description: ""
     disabled: true

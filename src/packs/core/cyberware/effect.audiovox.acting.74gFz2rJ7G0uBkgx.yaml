@@ -2,8 +2,8 @@ _id: 74gFz2rJ7G0uBkgx
 _key: "!items.effects!oSCkXo6VZXIwjWhL.74gFz2rJ7G0uBkgx"
 changes:
   - key: bonuses.acting
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

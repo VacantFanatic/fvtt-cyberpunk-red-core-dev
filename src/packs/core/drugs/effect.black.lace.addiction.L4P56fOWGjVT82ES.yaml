@@ -2,8 +2,8 @@ _id: L4P56fOWGjVT82ES
 _key: "!items.effects!6BM5WFyCyIM8lZib.L4P56fOWGjVT82ES"
 changes:
   - key: system.stats.ref.value
-    mode: 2
     priority: null
+    type: add
     value: "-2"
 description: ""
 disabled: true

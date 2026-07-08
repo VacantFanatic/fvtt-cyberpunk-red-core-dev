@@ -23,8 +23,8 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: bonuses.allActions
-        mode: 2
         priority: null
+        type: add
         value: "-4"
     description: ""
     disabled: true

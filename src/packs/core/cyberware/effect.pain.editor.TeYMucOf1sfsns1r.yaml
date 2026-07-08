@@ -2,8 +2,8 @@ _id: TeYMucOf1sfsns1r
 _key: "!items.effects!umX2i9wlVcBG1lgv.TeYMucOf1sfsns1r"
 changes:
   - key: bonuses.hasPainSuppression
-    mode: 5
     priority: null
+    type: override
     value: "1"
 description: ""
 disabled: false

@@ -2,12 +2,12 @@ _id: CMDlHoVTmNq5MRwZ
 _key: "!items.effects!uApwuxpuIJMe47Vn.CMDlHoVTmNq5MRwZ"
 changes:
   - key: bonuses.aimedShot
-    mode: 2
     priority: null
+    type: add
     value: "1"
   - key: bonuses.singleShot
-    mode: 2
     priority: null
+    type: add
     value: "1"
 description: ""
 disabled: false

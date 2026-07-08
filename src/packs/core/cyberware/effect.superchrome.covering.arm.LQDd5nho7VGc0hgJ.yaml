@@ -2,8 +2,8 @@ _id: LQDd5nho7VGc0hgJ
 _key: "!items.effects!CHQVWD2VlDiWJSzf.LQDd5nho7VGc0hgJ"
 changes:
   - key: bonuses.wardrobeAndStyle
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

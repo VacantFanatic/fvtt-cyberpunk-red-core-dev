@@ -20,6 +20,7 @@ This currently includes:
 | `test-handlebars-tags.sh` | Unbalanced HTML tags in `.hbs` templates |
 | `test-handlebars-compare.sh` | `cprCompare` used for boolean tests |
 | `test-workflow-permissions.sh` | Every `.github/workflows/*.yml` declares an explicit top-level `permissions:` block (#106) |
+| `test-active-effect-legacy-mode.sh` | No compendium pack YAML uses the legacy numeric ActiveEffect `mode:` field instead of a string `type:` |
 | `test-chat-roll-data.mjs` | Chat message `author`/speaker/whisper shape for roll cards |
 | `test-dice-roll-mode.mjs` | Dice So Nice whisper mapping for roll modes |
 | `test-chat-message-user.mjs` | ChatMessage `#user` fallback for legacy modules |

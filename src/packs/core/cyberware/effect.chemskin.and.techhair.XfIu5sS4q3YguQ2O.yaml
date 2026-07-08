@@ -2,8 +2,8 @@ _id: XfIu5sS4q3YguQ2O
 _key: "!items.effects!opzHe5mz24EwqNCM.XfIu5sS4q3YguQ2O"
 changes:
   - key: bonuses.personalGrooming
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

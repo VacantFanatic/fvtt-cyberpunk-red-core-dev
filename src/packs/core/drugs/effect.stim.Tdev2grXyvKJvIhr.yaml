@@ -2,8 +2,8 @@ _id: Tdev2grXyvKJvIhr
 _key: "!items.effects!r21n9rFplUOtnjHM.Tdev2grXyvKJvIhr"
 changes:
   - key: bonuses.hasPainSuppression
-    mode: 5
     priority: null
+    type: override
     value: "1"
 description: ""
 disabled: true

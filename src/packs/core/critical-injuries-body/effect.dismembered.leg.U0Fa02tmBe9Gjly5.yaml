@@ -2,8 +2,8 @@ _id: U0Fa02tmBe9Gjly5
 _key: "!items.effects!vRhxMWgOHYROHeHm.U0Fa02tmBe9Gjly5"
 changes:
   - key: system.stats.move.value
-    mode: 2
     priority: null
+    type: add
     value: "-6"
 description: ""
 disabled: false

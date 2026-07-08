@@ -23,16 +23,16 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: system.stats.move.value
-        mode: 2
         priority: null
+        type: add
         value: "-2"
       - key: system.stats.ref.value
-        mode: 2
         priority: null
+        type: add
         value: "-2"
       - key: bonuses.speed
-        mode: 2
         priority: null
+        type: add
         value: "2"
     description: ""
     disabled: true
@@ -83,8 +83,8 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: bonuses.speed
-        mode: 2
         priority: null
+        type: add
         value: "-2"
     description: ""
     disabled: true
@@ -127,16 +127,16 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: system.stats.move.value
-        mode: 2
         priority: null
+        type: add
         value: "2"
       - key: system.stats.ref.value
-        mode: 2
         priority: null
+        type: add
         value: "2"
       - key: bonuses.speed
-        mode: 2
         priority: null
+        type: add
         value: "4"
     description: ""
     disabled: true

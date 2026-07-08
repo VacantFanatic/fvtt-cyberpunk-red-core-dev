@@ -51,3 +51,33 @@ automatically, but keep these in mind when writing similar code:
   extraction was supposed to strip (`js/xss-through-dom`). Return the plain
   string and let Handlebars escape it. An ESLint rule now errors on
   `new Handlebars.SafeString(...)` wrapping a `.text()` call.
+
+## ActiveEffect `changes[]` must use `type`, never legacy `mode`
+
+Foundry V13 used a numeric `change.mode` (`CONST.ACTIVE_EFFECT_MODES`,
+0-5); Foundry V14 replaced it with a string `change.type` and dropped the
+old constant entirely. See `docs/ACTIVE-EFFECTS.md` for the full migration
+story.
+
+**This matters most for compendium pack YAML** (`src/packs/**`). Around 90
+shipped `effect.*.yaml` / embedded-item `changes[]` entries were still using
+the bare legacy `mode: N` shape with no `type` — the pack build pipeline
+(`gulp/packs.mjs`) does not migrate data, it packs the YAML verbatim, so
+these shipped straight into every install. For `bonuses.*` keys this was
+merely latent (CPRMod's `normalizeChangeType()` provides a legacy-mode
+fallback), but **`system.*` keys (e.g. `system.stats.int.value`) are applied
+directly by Foundry core and bypass CPRMod entirely** — a type-less `mode`
+there made stat increments behave like string concatenation instead of
+numeric addition (e.g. a drug bumping a stat from 6 landed on 16 instead of
+7).
+
+- When adding/editing any compendium item or effect with `changes[]`, always
+  write `type: "add"` (or `"override"`, `"multiply"`, etc.) — never `mode`.
+- `.github/workflows/pipeline_tests/test-active-effect-legacy-mode.sh`
+  (wired into `npm run test:regression`) fails if any pack YAML reintroduces
+  a bare `mode:` field.
+- If you need to fix already-existing world data, add a new migration
+  script following `docs/CONTRIBUTING.md`'s "Adding a migration script"
+  steps rather than relying on the pack fix alone — migrations only touch
+  documents already in a world at the time they run, not future compendium
+  drags from a not-yet-fixed pack.

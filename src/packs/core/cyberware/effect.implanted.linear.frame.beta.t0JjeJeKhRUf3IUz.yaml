@@ -2,8 +2,8 @@ _id: t0JjeJeKhRUf3IUz
 _key: "!items.effects!6JMYrnxIsTgSmbFi.t0JjeJeKhRUf3IUz"
 changes:
   - key: system.stats.body.value
-    mode: 5
     priority: null
+    type: override
     value: "14"
 description: ""
 disabled: false

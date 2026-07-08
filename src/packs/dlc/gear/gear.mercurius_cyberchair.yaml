@@ -23,8 +23,8 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: system.stats.move.value
-        mode: 5
         priority: null
+        type: override
         value: "5"
     description: ""
     disabled: false

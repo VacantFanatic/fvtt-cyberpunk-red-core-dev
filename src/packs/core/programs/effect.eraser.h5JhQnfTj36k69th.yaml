@@ -2,8 +2,8 @@ _id: h5JhQnfTj36k69th
 _key: "!items.effects!h6lsYlaAZLd6eoo2.h5JhQnfTj36k69th"
 changes:
   - key: bonuses.cloak
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false
