@@ -23,16 +23,16 @@ effects:
       systemVersion: v0.0.0dev
     changes:
       - key: system.stats.ref.value
-        mode: 2
         priority: null
+        type: add
         value: "-2"
       - key: system.stats.dex.value
-        mode: 2
         priority: null
+        type: add
         value: "-2"
       - key: system.stats.move.value
-        mode: 2
         priority: null
+        type: add
         value: "-2"
     description: ""
     disabled: false
@@ -76,7 +76,8 @@ flags:
   scene-packer:
     hash: fa0c28167fc7f58a6636bfc4ec4515e3573924af
 folder: null
-img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/heavy-subdermal-armor.svg
+img: >-
+  systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/heavy-subdermal-armor.svg
 name: Heavy Subdermal Plating
 ownership:
   IMREvhAZtigyN7Gy: 3

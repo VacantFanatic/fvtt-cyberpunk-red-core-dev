@@ -2,12 +2,12 @@ _id: OnONUXyMY8mOquf7
 _key: "!items.effects!GqYz689ddSKQHMen.OnONUXyMY8mOquf7"
 changes:
   - key: bonuses.librarySearch
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.wardrobeAndStyle
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

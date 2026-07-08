@@ -23,8 +23,8 @@ effects:
       systemVersion: v0.0.0dev
     changes:
       - key: system.stats.move.value
-        mode: 2
         priority: null
+        type: add
         value: "-4"
     description: ""
     disabled: true
@@ -49,7 +49,8 @@ effects:
             "1":
               isSituational: false
               onByDefault: false
-    img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/prehensile-cyberfoot.svg
+    img: >-
+      systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/prehensile-cyberfoot.svg
     name: Prehensile Feet
     origin: Item.6aOF9KaUCHusFxsM
     sort: 0
@@ -64,7 +65,8 @@ flags:
   scene-packer:
     hash: 486043fce142d484977e02e1d874038a9774bc8a
 folder: null
-img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/prehensile-cyberfoot.svg
+img: >-
+  systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/prehensile-cyberfoot.svg
 name: Prehensile Cyberfoot
 ownership:
   IMREvhAZtigyN7Gy: 3

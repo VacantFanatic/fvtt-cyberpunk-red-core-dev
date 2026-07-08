@@ -2,8 +2,8 @@ _id: KkhtjtxpPv03U2Km
 _key: "!items.effects!Z3iVuSFtma3Bx7SX.KkhtjtxpPv03U2Km"
 changes:
   - key: bonuses.melee
-    mode: 2
     priority: null
+    type: add
     value: "-2"
 description: ""
 disabled: false

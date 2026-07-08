@@ -231,7 +231,7 @@
           "type": "string"
         },
         "priority": {
-          "type": "number"
+          "type": ["number", "null"]
         },
         "value": {
           "type": "string",

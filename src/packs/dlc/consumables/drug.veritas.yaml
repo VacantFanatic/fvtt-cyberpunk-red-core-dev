@@ -23,28 +23,28 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: bonuses.acting
-        mode: 2
         priority: null
+        type: add
         value: "-5"
       - key: bonuses.concentration
-        mode: 2
         priority: null
+        type: add
         value: "-5"
       - key: bonuses.conversation
-        mode: 2
         priority: null
+        type: add
         value: "-5"
       - key: bonuses.deduction
-        mode: 2
         priority: null
+        type: add
         value: "-5"
       - key: bonuses.humanPerception
-        mode: 2
         priority: null
+        type: add
         value: "-5"
       - key: bonuses.persuasion
-        mode: 2
         priority: null
+        type: add
         value: "-5"
     description: ""
     disabled: true

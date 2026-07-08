@@ -2,8 +2,8 @@ _id: pZWEbI2ZttpRsUPj
 _key: "!items.effects!wFp72x2FXhipZXPj.pZWEbI2ZttpRsUPj"
 changes:
   - key: bonuses.aimedShot
-    mode: 2
     priority: null
+    type: add
     value: "1"
 description: ""
 disabled: false

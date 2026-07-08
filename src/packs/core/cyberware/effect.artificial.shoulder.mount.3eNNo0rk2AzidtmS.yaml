@@ -2,8 +2,8 @@ _id: 3eNNo0rk2AzidtmS
 _key: "!items.effects!lqyjkgvm1kvILvuw.3eNNo0rk2AzidtmS"
 changes:
   - key: bonuses.hands
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

@@ -23,32 +23,32 @@ effects:
       systemVersion: v0.92.1
     changes:
       - key: bonuses.basicTech
-        mode: 2
         priority: null
+        type: add
         value: "4"
       - key: bonuses.cybertech
-        mode: 2
         priority: null
+        type: add
         value: "4"
       - key: bonuses.landVehicleTech
-        mode: 2
         priority: null
+        type: add
         value: "4"
       - key: bonuses.seaVehicleTech
-        mode: 2
         priority: null
+        type: add
         value: "4"
       - key: bonuses.airVehicleTech
-        mode: 2
         priority: null
+        type: add
         value: "4"
       - key: bonuses.electronicsAndSecurityTech
-        mode: 2
         priority: null
+        type: add
         value: "4"
       - key: bonuses.weaponstech
-        mode: 2
         priority: null
+        type: add
         value: "4"
     description: ""
     disabled: false
@@ -108,7 +108,8 @@ flags:
       current: 38
       previous: "37"
 folder: null
-img: systems/cyberpunk-red-core/icons/compendium/dlc/gear/master_mechanics_tool_kit.svg
+img: >-
+  systems/cyberpunk-red-core/icons/compendium/dlc/gear/master_mechanics_tool_kit.svg
 name: Master Mechanic's Tool Kit
 ownership:
   default: 0

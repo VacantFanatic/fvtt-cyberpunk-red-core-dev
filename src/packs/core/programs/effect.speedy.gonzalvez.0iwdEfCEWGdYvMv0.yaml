@@ -2,8 +2,8 @@ _id: 0iwdEfCEWGdYvMv0
 _key: "!items.effects!XySJZT4SbLBmOihf.0iwdEfCEWGdYvMv0"
 changes:
   - key: bonuses.speed
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

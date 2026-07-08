@@ -2,8 +2,8 @@ _id: ioMOVsyk9FRbs9EI
 _key: "!items.effects!IKKcCgHU1lBJ4wVd.ioMOVsyk9FRbs9EI"
 changes:
   - key: bonuses.allActionsHands
-    mode: 2
     priority: null
+    type: add
     value: "-4"
 description: ""
 disabled: false

@@ -2,8 +2,8 @@ _id: MPX4bqIlawLKgHIC
 _key: "!items.effects!UX79WfUt7Yungbx7.MPX4bqIlawLKgHIC"
 changes:
   - key: bonuses.initiative
-    mode: 2
     priority: null
+    type: add
     value: "3"
 description: ""
 disabled: false

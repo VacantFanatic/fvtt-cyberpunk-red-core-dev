@@ -23,8 +23,8 @@ effects:
       systemVersion: v0.0.0dev
     changes:
       - key: system.stats.body.value
-        mode: 5
         priority: null
+        type: override
         value: "16"
     description: ""
     disabled: false

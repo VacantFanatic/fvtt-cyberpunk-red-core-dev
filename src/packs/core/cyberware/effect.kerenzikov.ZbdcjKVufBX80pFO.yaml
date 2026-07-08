@@ -2,8 +2,8 @@ _id: ZbdcjKVufBX80pFO
 _key: "!items.effects!nSdoCKRscSOeaZUH.ZbdcjKVufBX80pFO"
 changes:
   - key: bonuses.initiative
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

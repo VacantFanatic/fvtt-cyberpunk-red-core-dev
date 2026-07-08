@@ -2,12 +2,12 @@ _id: teuelimTBgI5OKAx
 _key: "!items.effects!5PWjp9rOnZuhYPPu.teuelimTBgI5OKAx"
 changes:
   - key: bonuses.humanPerception
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.interrogation
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

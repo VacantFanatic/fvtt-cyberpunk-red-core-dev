@@ -2,8 +2,8 @@ _id: JoQ7dlYgAuJCSQr5
 _key: "!items.effects!Lx9FSNDEIxLZ7Pyh.JoQ7dlYgAuJCSQr5"
 changes:
   - key: system.stats.body.value
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

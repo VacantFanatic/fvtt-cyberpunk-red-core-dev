@@ -2,28 +2,28 @@ _id: R7hdY2qZux5j9oVJ
 _key: "!items.effects!PRLDaeBVeMuBBIeO.R7hdY2qZux5j9oVJ"
 changes:
   - key: bonuses.acting
-    mode: 2
     priority: null
+    type: add
     value: "-2"
   - key: bonuses.contortionist
-    mode: 2
     priority: null
+    type: add
     value: "-2"
   - key: bonuses.conversation
-    mode: 2
     priority: null
+    type: add
     value: "-2"
   - key: bonuses.dance
-    mode: 2
     priority: null
+    type: add
     value: "-2"
   - key: bonuses.humanPerception
-    mode: 2
     priority: null
+    type: add
     value: "-2"
   - key: bonuses.persuasion
-    mode: 2
     priority: null
+    type: add
     value: "-2"
 description: ""
 disabled: true

@@ -2,8 +2,8 @@ _id: Z1UtRgahC2BAOxh5
 _key: "!items.effects!qRkCxq0KTuBnw2wj.Z1UtRgahC2BAOxh5"
 changes:
   - key: bonuses.perceptionHearing
-    mode: 2
     priority: null
+    type: add
     value: "-2"
 description: ""
 disabled: false

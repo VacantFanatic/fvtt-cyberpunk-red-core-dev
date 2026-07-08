@@ -2,8 +2,8 @@ _id: NVm2e26fprlysF2t
 _key: "!items.effects!EUZBOSRdQWOqKVUg.NVm2e26fprlysF2t"
 changes:
   - key: ATL.light.bright
-    mode: 2
     priority: null
+    type: add
     value: "50"
 description: ""
 disabled: true

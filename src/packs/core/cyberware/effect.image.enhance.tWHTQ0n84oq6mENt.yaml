@@ -2,16 +2,16 @@ _id: tWHTQ0n84oq6mENt
 _key: "!items.effects!YRR8D6hUfq55KnoR.tWHTQ0n84oq6mENt"
 changes:
   - key: bonuses.lipReading
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.concealOrRevealObject
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.perceptionSight
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

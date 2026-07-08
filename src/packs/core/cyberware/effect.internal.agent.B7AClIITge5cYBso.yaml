@@ -2,8 +2,8 @@ _id: B7AClIITge5cYBso
 _key: "!items.effects!2AE8D8ZdRA815IZK.B7AClIITge5cYBso"
 changes:
   - key: bonuses.librarySearch
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

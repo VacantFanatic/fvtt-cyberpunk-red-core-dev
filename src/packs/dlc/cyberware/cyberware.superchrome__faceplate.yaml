@@ -23,8 +23,8 @@ effects:
       systemVersion: v0.0.0dev
     changes:
       - key: bonuses.wardrobeAndStyle
-        mode: 2
         priority: null
+        type: add
         value: "2"
     description: ""
     disabled: false
@@ -56,7 +56,8 @@ effects:
     type: base
 flags: {}
 folder: null
-img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/superchrome-faceplate.svg
+img: >-
+  systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/superchrome-faceplate.svg
 name: Superchrome® Faceplate
 ownership:
   IMREvhAZtigyN7Gy: 3

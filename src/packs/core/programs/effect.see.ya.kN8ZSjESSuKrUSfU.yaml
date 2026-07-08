@@ -2,8 +2,8 @@ _id: kN8ZSjESSuKrUSfU
 _key: "!items.effects!KwNqQrQpLzbhpDNR.kN8ZSjESSuKrUSfU"
 changes:
   - key: bonuses.pathfinder
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

@@ -2,12 +2,12 @@ _id: 1UxCurX6zaToNbUY
 _key: "!items.effects!B59L6Lf0RtqTDUw7.1UxCurX6zaToNbUY"
 changes:
   - key: bonuses.firstAid
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.paramedic
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: false

@@ -2,28 +2,28 @@ _id: v688v2AQZUpGXV7t
 _key: "!items.effects!PRLDaeBVeMuBBIeO.v688v2AQZUpGXV7t"
 changes:
   - key: bonuses.acting
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.contortionist
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.conversation
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.dance
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.humanPerception
-    mode: 2
     priority: null
+    type: add
     value: "2"
   - key: bonuses.persuasion
-    mode: 2
     priority: null
+    type: add
     value: "2"
 description: ""
 disabled: true
