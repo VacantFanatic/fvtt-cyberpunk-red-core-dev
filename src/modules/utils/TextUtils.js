@@ -21,7 +21,7 @@ export default class CPRTextUtils {
     @returns {String}
    */
   static stripHTML(html) {
-    return new Handlebars.SafeString($("<div>").html(html).text());
+    return $("<div>").html(html).text();
   }
 
   /**
