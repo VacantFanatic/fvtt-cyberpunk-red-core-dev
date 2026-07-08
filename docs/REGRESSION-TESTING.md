@@ -19,6 +19,7 @@ This currently includes:
 | `test-handlebars-subexpression-syntax.sh` | Invalid Handlebars like `(helper arg).length` inside `{{...}}` |
 | `test-handlebars-tags.sh` | Unbalanced HTML tags in `.hbs` templates |
 | `test-handlebars-compare.sh` | `cprCompare` used for boolean tests |
+| `test-workflow-permissions.sh` | Every `.github/workflows/*.yml` declares an explicit top-level `permissions:` block (#106) |
 | `test-chat-roll-data.mjs` | Chat message `author`/speaker/whisper shape for roll cards |
 | `test-dice-roll-mode.mjs` | Dice So Nice whisper mapping for roll modes |
 | `test-chat-message-user.mjs` | ChatMessage `#user` fallback for legacy modules |
