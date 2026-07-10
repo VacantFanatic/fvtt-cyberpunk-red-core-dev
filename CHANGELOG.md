@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 1.4.26-rc.1
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed the character sheet's HP/Humanity stat row using `em` instead of `rem` in its grid track sizing, which could drift out of alignment with neighboring rows if a player raises Foundry's UI font-size setting; fixed a typo'd CSS class that left a left-pane grid filler cell unstyled; removed an orphaned filler `<div>` in the Reputation block that had no reserved grid cell (#110).
+- Added a missing delete-button tooltip on the Active Effect sheet's modifier list, matching the tooltip already present on its "add" button (#110).
+- Gave the Fight tab's weapon-list action icons (DV, change ammo, reload) the same minimum tap-target width already used by gear-tab action icons elsewhere (#110).
+- Increased the roll dialog's "hold Ctrl to skip" hint text off the smallest available type size (#110).
+
 ## Version 1.4.25
 
 ### Action Needed
