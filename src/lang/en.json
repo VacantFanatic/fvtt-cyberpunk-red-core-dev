@@ -364,6 +364,7 @@
   "CPR.effectSheet.combat.stats.walkSpeed": "Walking Speed",
   "CPR.effectSheet.createMod": "Create Mod",
   "CPR.effectSheet.createModDesc": "Create a Modifier for this Active Effect",
+  "CPR.effectSheet.deleteModDesc": "Delete this Modifier",
   "CPR.effectSheet.header.onByDefault": "Default on?",
   "CPR.effectSheet.header.situational": "Situational?",
   "CPR.effectSheet.info.deleteAndModesComing": "Additional Active Effect modes for skills and combat abilities will be enabled in a future version",
