@@ -1,5 +1,29 @@
 # Changelog
 
+## Version 1.4.26-rc.2
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- Shortened the "Used Upgrade Slots" label to "Upgrade Slots" on item sheets (weapons, armor, vehicles, etc.) — the narrow summary column word-wrapped it to two lines while every sibling label stayed on one.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed the character sheet's bottom pane (Role/Fight/Lifepath) silently growing past the window's own bounds instead of scrolling inside it, most visible on the Lifepath tab where most fields were unreachable even at the sheet's maximum height. Root cause: every actor sheet template wraps its root grid in a bare `<section>` with no defined height, which defaults to `height: auto` and breaks the percentage-height chain the sheet relies on to size itself against the window.
+- Fixed item sheets (weapon, armor, etc.) not resizing when switching from the Description tab to a taller tab like Settings — the window's "auto" height was only computed once, at initial render, so fields past that height silently scrolled out of view.
+- Fixed the Container actor sheet's "Trade with" label overlapping its own dropdown, and the GM "Container Type" dropdown clipping its selected option text (e.g. "Shop - Items can be p...") with no way to read the rest — both traced to a `<ul>` missing the shared list-reset class, and a dropdown fixed 40% narrower than the space available to it.
+- Added the same "No items in this category." hint the Gear tab already shows for empty categories to the Cyber tab's per-type sections and the Mook sheet's Weapons/Armor/Special Gear/Critical Injuries sections, which previously rendered as unexplained blank boxes when empty.
+- Stopped the cyberware install/uninstall icon from sharing the same red as delete buttons elsewhere on the sheet, so red reliably signals a destructive action.
+- Fixed the NET Architecture item's Settings tab rendering completely blank (including its own icon) immediately after adding a floor via the "+" button, until switching tabs away and back — the floor was always saved correctly, but the update wasn't awaited before the dialog closed, racing the sheet's re-render.
+- Restyled the NET Architecture "Create Floor" dialog's description box, which rendered with the browser's default background instead of the sheet's theme.
+
 ## Version 1.4.26-rc.1
 
 ### Action Needed
