@@ -27,7 +27,7 @@
       background-color: var(--cpr-background-border);
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: 12.4rem 2.8rem 1.5rem 3.2em 3.2rem 3.2rem 3.2rem auto;
+      grid-template-rows: 12.4rem 2.8rem 1.5rem 3.2rem 3.2rem 3.2rem 3.2rem auto;
       gap: 0.313rem;
       grid-auto-flow: row;
       grid-template-areas:
@@ -220,7 +220,7 @@
       padding-top: 0.188rem;
     }
 
-    .actor-details-wound-statee-blank {
+    .actor-details-wound-state-blank {
       grid-area: actor-details-wound-state-blank;
     }
 

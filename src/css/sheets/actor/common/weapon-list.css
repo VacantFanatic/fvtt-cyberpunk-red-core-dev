@@ -102,6 +102,14 @@
     display: flex;
     justify-content: flex-end;
   }
+
+  /* Match the tap-target width used by .gear-actions a (lists.css). Height
+     is left to the icon's natural size: up to 3 icons share this column's
+     fixed 3.5rem height (see .weapon-grid), so forcing the full
+     --cpr-touch-min height on each would overflow the row. */
+  a {
+    min-width: var(--cpr-touch-min);
+  }
 }
 
 .weapon-attack {

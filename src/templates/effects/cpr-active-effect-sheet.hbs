@@ -88,7 +88,10 @@
       <input {{#unless change.isSituational}}disabled{{/unless}} name="onByDefault" class="toggle-on-by-default" type="checkbox" data-index="{{i}}" {{checked change.onByDefault}} {{disabled (cprCompare change.category "===" "stat")}}/>
     </div>
     <div class="change-actions">
-      <a class="effect-change-control" data-action="delete" data-index="{{i}}"><i class="fas fa-trash-can"></i></a>
+      <a class="effect-change-control"
+         data-action="delete"
+         data-index="{{i}}"
+         data-tooltip="{{localize "CPR.effectSheet.deleteModDesc"}}"><i class="fas fa-trash-can"></i></a>
     </div>
   </li>
 {{/each}}
