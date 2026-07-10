@@ -9,6 +9,11 @@
   </span>
 </div>
 <div class="mook-crit-content text-padding-left-smallest mook-crit-list">
+  {{#if (cprIsEmpty actor.itemTypes.criticalInjury) }}
+    <span class="sheet-empty-state text-normal">
+      {{localize "CPR.characterSheet.rightPane.gear.categoryEmpty"}}
+    </span>
+  {{/if}}
   {{#each actor.itemTypes.criticalInjury as |item i| }}
     <a class="name item-edit deletable changeable {{#if item.system.deathSaveIncrease }}text-semi{{/if }}"
        data-tooltip="{{localize "CPR.mookSheet.items.clickToViewItem" }}

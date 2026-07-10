@@ -5,5 +5,10 @@
       {{> "systems/cyberpunk-red-core/templates/actor/mixin/fight/mixin/cpr-armor.hbs" this}}
     {{/if}}
   {{/each}}
+  {{#if (cprIsEmpty (cprFilter actor.itemTypes.armor "system.equipped" "equipped")) }}
+    <li class="sheet-empty-state text-normal text-padding-left-smallest">
+      {{localize "CPR.characterSheet.rightPane.gear.categoryEmpty"}}
+    </li>
+  {{/if}}
 </div>
 

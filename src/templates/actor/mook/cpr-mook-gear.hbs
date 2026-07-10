@@ -4,6 +4,11 @@
   </span>
 </div>
 <div class="mook-special-content text-padding-left-smallest mook-special-list">
+  {{#unless (cprMookHasSpecialGear actor) }}
+    <span class="sheet-empty-state text-normal">
+      {{localize "CPR.characterSheet.rightPane.gear.categoryEmpty"}}
+    </span>
+  {{/unless}}
   <!-- Cyberware -->
   {{#each (cprGetMookCyberware actor) as |type t| }}
     {{#if foundation.system.core }}

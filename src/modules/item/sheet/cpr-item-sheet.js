@@ -385,6 +385,24 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
 
   /* -------------------------------------------- */
   /**
+   * The window's "auto" height is only computed once, when the sheet first
+   * opens on the Description tab. Other tabs (e.g. Settings) can have more
+   * fields than Description, so without recomputing here they render inside
+   * a window sized for a shorter tab and scroll out of view. Re-running
+   * auto-sizing on every tab change keeps the window matched to whichever
+   * tab is actually showing.
+   *
+   * @param {string} tab
+   * @param {string} group
+   * @param {object} options
+   */
+  changeTab(tab, group, options) {
+    super.changeTab(tab, group, options);
+    this.setPosition({ height: "auto" });
+  }
+
+  /* -------------------------------------------- */
+  /**
    * Convert the V1 jQuery-based listeners to native DOM listeners attached to
    * the sheet root. Called from `_onRender` so listeners are re-applied on
    * every render (matching V1 `activateListeners` semantics under V2).
@@ -802,7 +820,7 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
         });
         prop.splice(prop.indexOf(deleteElement), 1);
         foundry.utils.setProperty(cprItemData, "floors", prop);
-        this.item.update({ system: cprItemData });
+        await this.item.update({ system: cprItemData });
       }
     }
 
@@ -854,7 +872,7 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
           prop.push(newElement1);
           prop.push(newElement2);
           foundry.utils.setProperty(cprItemData, "floors", prop);
-          this.item.update({ system: cprItemData });
+          await this.item.update({ system: cprItemData });
         }
       }
     }
@@ -1004,7 +1022,7 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
           description: formData.description,
         });
         foundry.utils.setProperty(cprItemData, "floors", prop);
-        this.item.update({ system: cprItemData });
+        await this.item.update({ system: cprItemData });
       } else {
         const prop = [
           {
@@ -1018,7 +1036,7 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
           },
         ];
         foundry.utils.setProperty(cprItemData, "floors", prop);
-        this.item.update({ system: cprItemData });
+        await this.item.update({ system: cprItemData });
       }
     }
 
@@ -1171,7 +1189,7 @@ export default class CPRItemSheet extends HandlebarsApplicationMixin(
           description: formData.description,
         });
         foundry.utils.setProperty(cprItemData, "floors", prop);
-        this.item.update({ system: cprItemData });
+        await this.item.update({ system: cprItemData });
       }
     }
   }

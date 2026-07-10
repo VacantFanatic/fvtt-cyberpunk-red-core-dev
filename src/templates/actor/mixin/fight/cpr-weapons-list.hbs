@@ -23,4 +23,9 @@
   {{#each (cprSort (cprFilterWeapons actor.system.weapons.equipped "melee") "name") as |weapon|}}
     {{> "systems/cyberpunk-red-core/templates/actor/mixin/fight/mixin/cpr-weapon.hbs" weapon=weapon actor=actor}}
   {{/each}}
+  {{#if (cprCompare (cprIsEmpty (cprFilterWeapons actor.system.weapons.equipped "ranged")) "&&" (cprIsEmpty (cprFilterWeapons actor.system.weapons.equipped "melee"))) }}
+    <li class="sheet-empty-state text-normal text-padding-left-smallest">
+      {{localize "CPR.characterSheet.rightPane.gear.categoryEmpty"}}
+    </li>
+  {{/if}}
 </div>

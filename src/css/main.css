@@ -23,7 +23,8 @@ section {
     background-color: var(--cpr-background-foundry-input);
   }
 
-  select {
+  select,
+  textarea {
     color: var(--cpr-text-normal);
     background: var(--cpr-background-window);
   }
@@ -32,6 +33,16 @@ section {
   .directory-list {
     color: var(--cpr-text-dir-list);
   }
+}
+
+/* Actor sheets wrap their root grid in a bare <section> with no defined
+   height, which defaults to height: auto. That breaks the percentage-height
+   chain .actor-sheet relies on to size itself against the window, so tab
+   content taller than the window (e.g. Lifepath) grows the whole sheet past
+   the window's clipped bounds instead of scrolling inside it. */
+.window-content > section {
+  height: 100%;
+  min-height: 0;
 }
 
 .editor {

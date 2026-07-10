@@ -516,7 +516,7 @@
   width: inherit;
 
   .icon-button {
-    color: var(--cpr-text-icon-highlight);
+    color: var(--cpr-text-icon-normal);
   }
 }
 

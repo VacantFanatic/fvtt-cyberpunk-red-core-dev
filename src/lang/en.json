@@ -920,7 +920,7 @@
   "CPR.itemSheet.itemUpgrade.unusedSlots": "Unused Upgrade Slots",
   "CPR.itemSheet.itemUpgrade.upgradeOverview": "Modifier types will be added/subtracted to the datapoint. Override types will replace the datapoint. Caution: Applying an override datapoint will ignore any modifier upgrades for that datapoint and the largest override value will be used.",
   "CPR.itemSheet.itemUpgrade.upgradeType": "Upgrade Type",
-  "CPR.itemSheet.itemUpgrade.usedSlots": "Used Upgrade Slots",
+  "CPR.itemSheet.itemUpgrade.usedSlots": "Upgrade Slots",
   "CPR.itemSheet.netArchitecture.clickToViewItem": "Click to view this item",
   "CPR.itemSheet.netArchitecture.itemNotFound": "Item with this name not found. Please create or import it.",
   "CPR.itemSheet.physical.concealable": "Concealable",

@@ -201,6 +201,18 @@ export default function registerHandlebarsHelpers() {
   });
 
   /**
+   * Given an actor and a cyberware subtype (e.g. "cyberEye"), return the
+   * subset of that actor's installed items matching it. Used to detect
+   * empty cyberware categories so the Cyber tab can show the same
+   * "no items" hint the Gear tab already shows for empty categories.
+   */
+  Handlebars.registerHelper("cprInstalledItemsOfType", (actor, type) =>
+    actor.system.installedItems.list
+      .map((id) => actor.getOwnedItem(id))
+      .filter((item) => item && item.system.type === type)
+  );
+
+  /**
    * Get a config mapping from config.js by name and key
    */
   Handlebars.registerHelper("cprFindConfigValue", (obj, key) => {
@@ -715,6 +727,29 @@ export default function registerHandlebarsHelpers() {
       }
     }
     return installedCyberwareList.length;
+  });
+
+  /**
+   * Returns true if the mook's Special Gear section (installed cyberware
+   * plus the item types listed there) has nothing to show, so the sheet can
+   * display a "no items" hint instead of an empty box.
+   */
+  Handlebars.registerHelper("cprMookHasSpecialGear", (mook) => {
+    const specialGearTypes = [
+      "ammo",
+      "clothing",
+      "cyberdeck",
+      "drug",
+      "gear",
+      "itemUpgrade",
+      "netarch",
+    ];
+    if (mook.system.installedItems.list.length > 0) {
+      return true;
+    }
+    return specialGearTypes.some(
+      (type) => mook.itemTypes[type] && mook.itemTypes[type].length > 0
+    );
   });
 
   /**
