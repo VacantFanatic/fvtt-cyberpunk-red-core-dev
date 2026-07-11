@@ -1,6 +1,9 @@
 .dialog-sheet {
   background-color: var(--cpr-background-box);
   min-width: 20.625rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 
   .dialog-header {
     display: grid;
@@ -36,6 +39,7 @@
   width: inherit;
   height: inherit;
   flex: 1 1 auto;
+  min-height: 0;
   padding: 0.313rem;
 }
 
@@ -46,6 +50,9 @@
   padding: 0;
   overflow-y: auto;
   scrollbar-width: thin;
+  scrollbar-color: var(--cpr-text-icon-dimmed) transparent;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .dialog-list {
