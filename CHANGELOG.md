@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 1.4.26-rc.3
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed the character sheet bottom pane's (Role/Fight/Lifepath) scrollbar being nearly invisible — a dark red thumb on a transparent track blended into the dark background, easy to miss now that the pane genuinely scrolls (rc.2 fix). Gave it an explicit, more visible thumb color.
+- Also fixed a deploy gap from rc.2 itself: the RC build was missing the `icons/`, `images/`, `assets/`, and `maps/` folders entirely, so every portrait and token fell back to Foundry's default placeholder. The dev build pipeline skips those steps when Foundry has the world's compendium packs open (a known constraint — see `gulpfile.mjs`), and they weren't re-run individually after the packs step failed.
+
 ## Version 1.4.26-rc.2
 
 ### Action Needed
@@ -1765,7 +1784,7 @@ If you are using modified Critical Injuries please check out [this](https://gith
   - Some fields on items were given defaults if they are empty. For example a null price or price category is set to something befitting the item type. It is still a guess, but now there is possibly correct data instead of definitely wrong or useless data.
   - Clothing and gear upgrades were converted to active effects
   - Armor, programs, netarch, vehicles, and weapons cannot be stacked any more. Duplicate items may have been created (up to 50) in players' inventories
-  - The *quality* field has been removed from items (weapons, cyberdecks and vehicles) to avoid confusion about whether to change values in other fields. You can still use the name and other fields (such at attack modifier) to express excellent quality items
+  - The _quality_ field has been removed from items (weapons, cyberdecks and vehicles) to avoid confusion about whether to change values in other fields. You can still use the name and other fields (such at attack modifier) to express excellent quality items
   - Some item types (weapons, vehicles) no longer "stack." They do not have an amount field any more
 
 ### Bug Fixes
