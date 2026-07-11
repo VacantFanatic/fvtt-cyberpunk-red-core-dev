@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.26-rc.4
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed dialog forms built from `.dialog-sheet`/`.dialog-list` (e.g. the "Set Lifepath" dialog) rendering their full content height instead of scrolling — the flex column chain was missing `min-height: 0` at each level, so the list refused to shrink below its content size and the overflow was silently clipped by the window instead of becoming scrollable. Worst on "Set Lifepath," where roughly half its ~14 fields were unreachable. Also gave the list a visible scrollbar-color, matching the rc.3 fix for the character sheet's bottom pane.
+
 ## Version 1.4.26-rc.3
 
 ### Action Needed
