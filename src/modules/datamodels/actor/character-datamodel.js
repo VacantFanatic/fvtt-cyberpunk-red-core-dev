@@ -36,6 +36,7 @@ export default class CharacterDataModel extends CPRSystemDataModel.mixin(
           familyCrisis: new fields.HTMLField({ initial: "" }),
           friends: new fields.HTMLField({ initial: "" }),
           hairStyle: new fields.HTMLField({ initial: "" }),
+          languages: new fields.HTMLField({ initial: "" }),
           lifeGoals: new fields.HTMLField({ initial: "" }),
           personality: new fields.HTMLField({ initial: "" }),
           roleLifepath: new fields.HTMLField({ initial: "" }),
