@@ -1,43 +1,6 @@
 # Changelog
 
-## Version 1.4.26-rc.4
-
-### Action Needed
-
-- None.
-
-### Changed
-
-- None.
-
-### New Features
-
-- None.
-
-### Bug Fixes
-
-- Fixed dialog forms built from `.dialog-sheet`/`.dialog-list` (e.g. the "Set Lifepath" dialog) rendering their full content height instead of scrolling — the flex column chain was missing `min-height: 0` at each level, so the list refused to shrink below its content size and the overflow was silently clipped by the window instead of becoming scrollable. Worst on "Set Lifepath," where roughly half its ~14 fields were unreachable. Also gave the list a visible scrollbar-color, matching the rc.3 fix for the character sheet's bottom pane.
-
-## Version 1.4.26-rc.3
-
-### Action Needed
-
-- None.
-
-### Changed
-
-- None.
-
-### New Features
-
-- None.
-
-### Bug Fixes
-
-- Fixed the character sheet bottom pane's (Role/Fight/Lifepath) scrollbar being nearly invisible — a dark red thumb on a transparent track blended into the dark background, easy to miss now that the pane genuinely scrolls (rc.2 fix). Gave it an explicit, more visible thumb color.
-- Also fixed a deploy gap from rc.2 itself: the RC build was missing the `icons/`, `images/`, `assets/`, and `maps/` folders entirely, so every portrait and token fell back to Foundry's default placeholder. The dev build pipeline skips those steps when Foundry has the world's compendium packs open (a known constraint — see `gulpfile.mjs`), and they weren't re-run individually after the packs step failed.
-
-## Version 1.4.26-rc.2
+## Version 1.4.26
 
 ### Action Needed
 
@@ -53,34 +16,19 @@
 
 ### Bug Fixes
 
+- Fixed the character sheet's HP/Humanity stat row using `em` instead of `rem` in its grid track sizing, which could drift out of alignment with neighboring rows if a player raises Foundry's UI font-size setting; fixed a typo'd CSS class that left a left-pane grid filler cell unstyled; removed an orphaned filler `<div>` in the Reputation block that had no reserved grid cell (#110).
+- Added a missing delete-button tooltip on the Active Effect sheet's modifier list, matching the tooltip already present on its "add" button (#110).
+- Gave the Fight tab's weapon-list action icons (DV, change ammo, reload) the same minimum tap-target width already used by gear-tab action icons elsewhere (#110).
+- Increased the roll dialog's "hold Ctrl to skip" hint text off the smallest available type size (#110).
 - Fixed the character sheet's bottom pane (Role/Fight/Lifepath) silently growing past the window's own bounds instead of scrolling inside it, most visible on the Lifepath tab where most fields were unreachable even at the sheet's maximum height. Root cause: every actor sheet template wraps its root grid in a bare `<section>` with no defined height, which defaults to `height: auto` and breaks the percentage-height chain the sheet relies on to size itself against the window.
+- Fixed dialog forms built from `.dialog-sheet`/`.dialog-list` (e.g. the "Set Lifepath" dialog) rendering their full content height instead of scrolling, for the same reason — the flex column chain was missing `min-height: 0` at each level, so the list refused to shrink below its content size and the overflow was silently clipped by the window instead of becoming scrollable. Worst on "Set Lifepath," where roughly half its ~14 fields were unreachable.
+- Fixed both of the above scrollbars being nearly invisible once they did appear — a dark red thumb on a transparent track blended into the dark background. Gave them an explicit, more visible thumb color.
 - Fixed item sheets (weapon, armor, etc.) not resizing when switching from the Description tab to a taller tab like Settings — the window's "auto" height was only computed once, at initial render, so fields past that height silently scrolled out of view.
 - Fixed the Container actor sheet's "Trade with" label overlapping its own dropdown, and the GM "Container Type" dropdown clipping its selected option text (e.g. "Shop - Items can be p...") with no way to read the rest — both traced to a `<ul>` missing the shared list-reset class, and a dropdown fixed 40% narrower than the space available to it.
 - Added the same "No items in this category." hint the Gear tab already shows for empty categories to the Cyber tab's per-type sections and the Mook sheet's Weapons/Armor/Special Gear/Critical Injuries sections, which previously rendered as unexplained blank boxes when empty.
 - Stopped the cyberware install/uninstall icon from sharing the same red as delete buttons elsewhere on the sheet, so red reliably signals a destructive action.
 - Fixed the NET Architecture item's Settings tab rendering completely blank (including its own icon) immediately after adding a floor via the "+" button, until switching tabs away and back — the floor was always saved correctly, but the update wasn't awaited before the dialog closed, racing the sheet's re-render.
 - Restyled the NET Architecture "Create Floor" dialog's description box, which rendered with the browser's default background instead of the sheet's theme.
-
-## Version 1.4.26-rc.1
-
-### Action Needed
-
-- None.
-
-### Changed
-
-- None.
-
-### New Features
-
-- None.
-
-### Bug Fixes
-
-- Fixed the character sheet's HP/Humanity stat row using `em` instead of `rem` in its grid track sizing, which could drift out of alignment with neighboring rows if a player raises Foundry's UI font-size setting; fixed a typo'd CSS class that left a left-pane grid filler cell unstyled; removed an orphaned filler `<div>` in the Reputation block that had no reserved grid cell (#110).
-- Added a missing delete-button tooltip on the Active Effect sheet's modifier list, matching the tooltip already present on its "add" button (#110).
-- Gave the Fight tab's weapon-list action icons (DV, change ammo, reload) the same minimum tap-target width already used by gear-tab action icons elsewhere (#110).
-- Increased the roll dialog's "hold Ctrl to skip" hint text off the smallest available type size (#110).
 
 ## Version 1.4.25
 
