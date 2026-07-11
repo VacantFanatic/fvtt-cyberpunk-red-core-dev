@@ -1,5 +1,24 @@
 # Changelog
 
+## Version 1.4.27
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed the Set Lifepath dialog's entered values never saving back to the character sheet. `CharacterDataModel`'s `lifepath` schema was missing a `languages` field that the dialog, sheet template, and enrichment code all read/write; the unrecognized key failed schema validation on save, silently aborting the entire lifepath update rather than just that one field (#112).
+- Widened the Fight tab's weapon-actions column (DV/reload/change-ammo icons), which was still clipping the icons' right edge after #110 gave them a wider minimum tap target (#111).
+
 ## Version 1.4.26
 
 ### Action Needed
