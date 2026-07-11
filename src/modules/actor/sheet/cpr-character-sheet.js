@@ -396,13 +396,16 @@ export default class CPRCharacterActorSheet extends CPRActorSheet {
    */
   async _setLifepath() {
     // Show "Set Lifepath" dialog.
-    const dialogData = await CPRDialog.showDialog(this.actor.system.lifepath, {
-      // Set the options for the dialog.
-      title: SystemUtils.Localize("CPR.dialog.setLifepath.title"),
-      template: `systems/${game.system.id}/templates/dialog/cpr-set-lifepath-prompt.hbs`,
-      submitOnChange: false,
-      submitOnClose: true,
-    }).catch((err) => LOGGER.debug(err));
+    const dialogData = await CPRDialog.showDialog(
+      foundry.utils.duplicate(this.actor.system.lifepath),
+      {
+        // Set the options for the dialog.
+        title: SystemUtils.Localize("CPR.dialog.setLifepath.title"),
+        template: `systems/${game.system.id}/templates/dialog/cpr-set-lifepath-prompt.hbs`,
+        submitOnChange: false,
+        submitOnClose: true,
+      }
+    ).catch((err) => LOGGER.debug(err));
     if (dialogData === undefined) {
       return;
     }

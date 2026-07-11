@@ -181,7 +181,7 @@ export default class CPRActorSheet extends HandlebarsApplicationMixin(
     cprData.isTokenSheet = !!this.token;
     cprData.measureDvInteractive = !!this._resolveDvTargetToken();
 
-    cprData.enrichedHTML = [];
+    cprData.enrichedHTML = {};
     const enrich = (html) => enrichDocumentHTML(html, this.actor);
     if (this.actor.type !== "container") {
       cprData.enrichedHTML.systemInformationNotes = await enrich(
