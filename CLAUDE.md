@@ -81,3 +81,35 @@ numeric addition (e.g. a drug bumping a stat from 6 landed on 16 instead of
   steps rather than relying on the pack fix alone — migrations only touch
   documents already in a world at the time they run, not future compendium
   drags from a not-yet-fixed pack.
+
+## Never use an Array as a string-keyed data bag (e.g. `enrichedHTML`)
+
+Sheet `_prepareContext()`/`getData()` methods build a per-render `enrichedHTML`
+object holding `TextEditor.enrichHTML()` output, keyed by field name (e.g.
+`enrichedHTML.systemLifepathCulturalOrigin`). `cpr-actor-sheet.js` once
+initialized this as `cprData.enrichedHTML = [];` (an Array) and then bolted ~18
+string-keyed properties onto it without ever using indices, so `.length`
+stayed `0` the whole time. Every other sheet class in the codebase does this
+correctly with a plain object (`cpr-demon-sheet.js`, `cpr-black-ice-sheet.js`:
+`sheetData.enrichedHTML = sheetData.enrichedHTML ?? {};`).
+
+This class of bug is easy to miss because the container still looks fine at
+the point it's built — the failure shows up later, wherever the context
+object gets cloned or merged (e.g. `foundry.utils.mergeObject`, `structuredClone`,
+`JSON.stringify`, lodash `cloneDeep`, spread-based deep copies). All of these
+treat arrays specially and only iterate actual indexed elements, silently
+dropping any non-index string-keyed properties — so an Array used as an
+object bag can pass through several object spreads untouched and then lose
+every key at the one point something actually deep-clones it. The symptom is
+confusing: persisted data is correct, the live document's prepared data model
+is correct, but the template only ever sees `undefined` for those fields.
+
+- Always initialize field-keyed template context containers (`enrichedHTML`,
+  or anything similar) as `{}`, never `[]` — even though plain property
+  access (`obj.foo = ...`) works identically on both at the point of
+  assignment.
+- If a value that should be a rendered/enriched field is coming back
+  `undefined` in a template despite the underlying document data being
+  verifiably correct (check via `actor.toObject()` for persisted source and
+  `actor.system.x` for the live prepared model), suspect the context-building
+  object itself before suspecting persistence, hooks, or re-render timing.

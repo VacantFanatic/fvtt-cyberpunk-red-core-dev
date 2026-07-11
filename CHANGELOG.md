@@ -1,5 +1,23 @@
 # Changelog
 
+## Version 1.4.28
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- None.
+
+### Bug Fixes
+
+- Fixed the character sheet's Lifepath tab still showing blank after saving the Set Lifepath dialog, even on characters whose data was confirmed to be correctly persisted. `CPRActorSheet` initialized its `enrichedHTML` template-context bag as an Array instead of a plain object, then bolted ~18 string-keyed fields onto it without ever using indices; the array's `.length` stayed 0, so Foundry's array-aware clone/merge logic in the context-building pipeline silently dropped every field whenever it cloned the array, leaving the template with `undefined` for all of them regardless of what was actually saved. Also stopped the Set Lifepath dialog from editing a live reference to the actor's own data before the update was confirmed, matching how every other dialog in the codebase handles this.
+
 ## Version 1.4.27
 
 ### Action Needed
