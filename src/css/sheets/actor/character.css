@@ -436,6 +436,7 @@
       background-color: var(--cpr-background-box);
       border-color: var(--cpr-background-border);
       min-height: 0;
+      scrollbar-color: var(--cpr-text-icon-dimmed) transparent;
     }
   }
 
