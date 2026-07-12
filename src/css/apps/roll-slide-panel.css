@@ -1,0 +1,27 @@
+/* Non-modal, screen-anchored attack roll confirmation panel (CPRRollSlidePanel) */
+
+#cpr-roll-slide-panel {
+  position: fixed;
+  right: var(--sidebar-width, 18.75rem);
+  bottom: calc(var(--hotbar-height, 3.25rem) + 1rem);
+  width: 25rem;
+  max-width: calc(100vw - 2rem);
+  max-height: 70vh;
+  overflow: auto;
+  z-index: calc(var(--z-index-canvas) + 1);
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 200ms ease-in-out, opacity 200ms linear;
+
+  &.cpr-slide-entering,
+  &.cpr-slide-leaving {
+    transform: translateX(110%);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #cpr-roll-slide-panel {
+    transition: none;
+  }
+}
