@@ -286,11 +286,11 @@ export class CPRRoll {
           break;
       }
 
-      // Attack rolls may opt into the non-modal sliding panel instead of the
-      // default modal dialog above.
+      // Attack and damage rolls may opt into the non-modal sliding panel
+      // instead of the default modal dialog above.
       if (
         // eslint-disable-next-line no-use-before-define
-        this instanceof CPRAttackRoll &&
+        (this instanceof CPRAttackRoll || this instanceof CPRDamageRoll) &&
         game.settings.get(game.system.id, "useSlidingAttackPanel")
       ) {
         DialogClass = CPRRollSlidePanel;

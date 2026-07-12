@@ -6,6 +6,7 @@ import {
   isWhisperedChatMessage,
 } from "../hooks/foundry/chat-message-author.js";
 import SystemUtils from "../utils/cpr-systemUtils.js";
+import CPRChat from "../chat/cpr-chat.js";
 
 export default function registerDoesItHit() {
   Hooks.on("createChatMessage", async (message) => {
@@ -153,5 +154,21 @@ export default function registerDoesItHit() {
       },
       { chatBubble: false }
     );
+
+    if (
+      success &&
+      game.settings.get(game.system.id, ADDITIONS_SETTINGS.autoRollDamageOnHit)
+    ) {
+      await CPRChat.rollDamageFromData(
+        {},
+        {
+          actorId: data.actorId,
+          itemId: data.itemId,
+          tokenId: data.tokenId,
+          location: data.damageLocation,
+          attackType,
+        }
+      );
+    }
   });
 }
