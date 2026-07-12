@@ -15,26 +15,36 @@ function prefersReducedMotion() {
 // own actively-managed window stack, since `--z-index-canvas` (the PIXI
 // canvas layer) sits below the UI/interface layer and isn't a safe baseline
 // for a floating panel meant to sit above it.
+//
+// Docks the panel at the end of the hotbar row (flush with its right edge
+// and bottom band) rather than floating above it, so it reads as part of
+// the same UI row instead of an unrelated overlay.
+const CPR_SLIDE_PANEL_MIN_WIDTH_PX = 288;
+
 function applySlidePanelLayout(el) {
   if (!(el instanceof HTMLElement)) return;
   const sidebar = document.getElementById("sidebar");
-  const sidebarWidth =
+  const sidebarLeft =
     sidebar && sidebar.offsetParent !== null
-      ? sidebar.getBoundingClientRect().width
-      : 0;
+      ? sidebar.getBoundingClientRect().left
+      : window.innerWidth;
+
   const hotbar = document.getElementById("hotbar");
-  const hotbarHeight =
-    hotbar && hotbar.offsetParent !== null
-      ? hotbar.getBoundingClientRect().height
-      : 0;
-  el.style.setProperty(
-    "--cpr-slide-panel-right",
-    `${sidebarWidth + CPR_SLIDE_PANEL_GUTTER_PX}px`
+  let left = CPR_SLIDE_PANEL_GUTTER_PX;
+  let bottom = CPR_SLIDE_PANEL_GUTTER_PX;
+  if (hotbar && hotbar.offsetParent !== null) {
+    const rect = hotbar.getBoundingClientRect();
+    left = rect.right + CPR_SLIDE_PANEL_GUTTER_PX;
+    bottom = Math.max(window.innerHeight - rect.bottom, 0);
+  }
+  const available = Math.max(
+    sidebarLeft - left - CPR_SLIDE_PANEL_GUTTER_PX,
+    CPR_SLIDE_PANEL_MIN_WIDTH_PX
   );
-  el.style.setProperty(
-    "--cpr-slide-panel-bottom",
-    `${hotbarHeight + CPR_SLIDE_PANEL_GUTTER_PX}px`
-  );
+
+  el.style.setProperty("--cpr-slide-panel-left", `${left}px`);
+  el.style.setProperty("--cpr-slide-panel-bottom", `${bottom}px`);
+  el.style.setProperty("--cpr-slide-panel-max-width", `${available}px`);
   el.style.setProperty("--cpr-slide-panel-z", String(CPR_SLIDE_PANEL_Z_INDEX));
   // eslint-disable-next-line no-param-reassign
   el.style.zIndex = String(CPR_SLIDE_PANEL_Z_INDEX);

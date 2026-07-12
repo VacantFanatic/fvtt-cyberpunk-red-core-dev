@@ -21,6 +21,18 @@ form {
     }
   }
 
+  .cpr-settings-header {
+    margin: 1rem 0 0.313rem;
+    padding-bottom: 0.188rem;
+    border-bottom: 0.063rem solid var(--cpr-background-dialog-border);
+    color: var(--cpr-text-window) !important;
+    font-family: var(--cpr-font-primary);
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
   span.units {
     color: var(--cpr-text-hint) !important;
   }
