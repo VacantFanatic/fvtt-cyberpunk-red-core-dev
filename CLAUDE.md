@@ -113,3 +113,50 @@ is correct, but the template only ever sees `undefined` for those fields.
   verifiably correct (check via `actor.toObject()` for persisted source and
   `actor.system.x` for the live prepared model), suspect the context-building
   object itself before suspecting persistence, hooks, or re-render timing.
+
+## Cutting an RC build to verify a PR before merging
+
+The GitHub MCP tools available to Claude Code sessions here have **no
+release-creation or asset-upload capability** (only `list_releases`/
+`get_latest_release`/`get_release_by_tag` — read-only), and raw GitHub REST
+API access (`gh` CLI, curl) is out of bounds. A manual release is not
+achievable directly. Instead, use the repo's existing automated pipeline:
+
+- `.github/workflows/release-main.yml` triggers via `workflow_run` after the
+  `CI` workflow completes on `main`, `master`, or **`dev`**. If
+  `package.json`'s version contains a `-` (e.g. `1.4.29-rc.1`), it's treated
+  as a prerelease: it publishes a normal draft `vX.Y.Z-rc.N` release *and*
+  overwrites a moving `prerelease` tag/release that always points at the
+  latest RC — that alias is published immediately (not draft), so its
+  `browser_download_url` is usable right away without anyone needing to
+  click "publish" on GitHub.
+- To cut an RC for a PR: check out `dev`, reset it to current `main` (`dev`
+  tends to go stale between uses — it's only touched for this purpose, e.g.
+  it sat 3 versions behind `main` after PR #108's verification), merge in
+  the PR branch, bump the version in **both** `package.json` and
+  `src/system.json` to `<next-version>-rc.N` (the release job fails if
+  these two don't match), commit (`chore(release): cut X.Y.Z-rc.N from dev
+  to verify #<PR> before merging`), and push. This overwrites `dev`'s
+  history (force-push) and temporarily repoints the shared `prerelease`
+  alias — get explicit user permission first, same as any push to a branch
+  other than the one a task is scoped to.
+- **The Actions API's top-level `head_sha`/`head_branch` fields on a
+  `workflow_run`-triggered run do NOT necessarily reflect what was actually
+  checked out and built** — they can show a stale/unrelated commit (e.g. an
+  old `main` tip) even though the job internally used
+  `github.event.workflow_run.head_sha` correctly. Don't conclude the
+  pipeline didn't fire just because `list_workflow_runs` shows the "wrong"
+  commit. Verify what actually got built by checking whether the
+  prerelease-only steps ran (`Rewrite manifest...`/`Publish static
+  "prerelease" alias release` — these are skipped entirely for non-`-`
+  versions) and by reading the actual release body/assets via
+  `get_release_by_tag` for tag `prerelease`, which states the exact commit
+  and version it was built from.
+- Full `dist/` builds are large (~60MB+, dominated by static assets:
+  tiles/icons/images/packs/maps/fonts unrelated to most code changes) — well
+  over the ~30MB direct file-send limit for delivering files straight to a
+  user. For a full standalone build, use this RC pipeline. For a quick
+  local-overlay test on an existing install, a code-only zip (`modules/`,
+  `css/`, `lang/`, `templates/`, `system.json`, `cpr.js`, `environment.js`,
+  `template.json` — well under 1MB) sent directly is usually sufficient
+  since assets/packs rarely change alongside a typical code fix.
