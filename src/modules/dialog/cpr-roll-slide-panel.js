@@ -58,6 +58,25 @@ export default class CPRRollSlidePanel extends CPRRollDialog {
   };
 
   /**
+   * The static `DEFAULT_OPTIONS.id` above is shared by every instance of
+   * this class. That's fine for a single confirmation dialog at a time,
+   * but this panel can legitimately have two live instances at once (e.g.
+   * an attack panel still mid-close-animation when an automated damage
+   * roll opens a second panel right after) since `close()` is async and
+   * nothing awaits it before the next instance is constructed. Give each
+   * instance its own id so they never collide in Foundry's window
+   * tracking/DOM.
+   */
+  constructor(rollData, actor, item, options = {}) {
+    const uniqueOptions = foundry.utils.mergeObject(
+      options,
+      { id: `cpr-roll-slide-panel-${foundry.utils.randomID()}` },
+      { inplace: false }
+    );
+    super(rollData, actor, item, uniqueOptions);
+  }
+
+  /**
    * Kick off the slide-in transition once the panel is first rendered.
    *
    * @override

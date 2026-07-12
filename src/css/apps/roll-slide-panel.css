@@ -1,6 +1,8 @@
-/* Non-modal, screen-anchored attack roll confirmation panel (CPRRollSlidePanel) */
+/* Non-modal, screen-anchored attack roll confirmation panel (CPRRollSlidePanel).
+   Each instance gets its own unique DOM id (see cpr-roll-slide-panel.js), so
+   this must select by the shared class, not a fixed id. */
 
-#cpr-roll-slide-panel {
+.cpr-roll-slide-panel {
   position: fixed;
   right: var(--cpr-slide-panel-right, 18.75rem);
   bottom: var(--cpr-slide-panel-bottom, 4.25rem);
@@ -21,7 +23,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #cpr-roll-slide-panel {
+  .cpr-roll-slide-panel {
     transition: none;
   }
 }
