@@ -1,5 +1,19 @@
 # Development notes
 
+## Live Foundry test instance
+
+A live Foundry VTT world for manual/browser-driven verification is reachable
+at `http://169.254.83.107:30000/` — log in as user `Cursor`, no password.
+**Note:** this is a link-local address (`169.254.0.0/16`), only reachable
+from a machine on the same local network as the host — confirmed
+unreachable (connection timeout) from this project's remote/cloud Claude
+Code sessions. Useful for local dev sessions running on that same network;
+for remote sessions, either ask the user for a publicly reachable
+tunnel/URL, or rely on their manual testing + reported console output.
+When it is reachable, connect via Playwright (pre-installed Chromium) to
+reproduce the exact reported symptom, inspect the live DOM/console, and
+confirm a fix actually resolves it before reporting success.
+
 ## Before staging/committing any JS changes
 
 Run a local formatting/lint check before staging changes — CI enforces Prettier
