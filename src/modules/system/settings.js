@@ -70,6 +70,20 @@ const registerSystemSettings = () => {
     },
   });
 
+  // Use a non-modal, screen-anchored sliding panel instead of the default
+  // modal dialog to confirm attack rolls.
+  game.settings.register(game.system.id, "useSlidingAttackPanel", {
+    name: "CPR.settings.useSlidingAttackPanel.name",
+    hint: "CPR.settings.useSlidingAttackPanel.hint",
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: (value) => {
+      LOGGER.log(`Changed useSlidingAttackPanel to ${value}`);
+    },
+  });
+
   /*
    *  Game Settings
    */

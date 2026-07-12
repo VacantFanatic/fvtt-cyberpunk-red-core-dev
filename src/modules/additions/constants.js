@@ -10,6 +10,7 @@ export const ADDITIONS_SETTINGS = {
   hideCoverTokenOnPlace: "additionsHideCoverTokenOnPlace",
   coverActorId: "additionsCoverActorId",
   poorWeaponCheck: "additionsPoorWeaponCheck",
+  autoRollDamageOnHit: "additionsAutoRollDamageOnHit",
   dfAmbientLightsEnable: "additionsDfAmbientLightsEnable",
   itemPilesHandling: "additionsItemPilesHandling",
 };

@@ -124,6 +124,19 @@ export default function registerAdditionsSettings() {
 
   game.settings.register(
     game.system.id,
+    ADDITIONS_SETTINGS.autoRollDamageOnHit,
+    {
+      name: "CPR.additions.settings.autoRollDamageOnHit.name",
+      hint: "CPR.additions.settings.autoRollDamageOnHit.hint",
+      scope: "world",
+      config: true,
+      type: Boolean,
+      default: false,
+    }
+  );
+
+  game.settings.register(
+    game.system.id,
     ADDITIONS_SETTINGS.dfAmbientLightsEnable,
     {
       name: "CPR.additions.settings.dfAmbientLightsEnable.name",

@@ -202,6 +202,103 @@ export default class CPRChat {
   }
 
   /**
+   * Roll damage for a weapon/program off the data carried by an attack roll
+   * card's "roll damage" link. Shared by the chat-log click handler (real
+   * click event, so `handleRollDialog`'s ctrl/cmd-skip logic applies as
+   * normal) and automated triggers such as the "does it hit" hit-check
+   * feature (pass `{}` for `event` so the confirmation dialog/panel is
+   * never silently skipped).
+   *
+   * @async
+   * @static
+   * @param {*} event - a click event, or `{}` for an automated trigger
+   * @param {object} data
+   * @param {string} data.actorId
+   * @param {string} data.itemId
+   * @param {string} data.tokenId
+   * @param {string} [data.location] - aimed-shot location, if any
+   * @param {string} [data.attackType]
+   * @param {string} [data.programId] - cyberdeck program id, if applicable
+   * @returns {Promise<void>}
+   */
+  static async rollDamageFromData(
+    event,
+    { actorId, itemId, tokenId, location, attackType, programId }
+  ) {
+    const actor = Object.keys(game.actors.tokens).includes(tokenId)
+      ? game.actors.tokens[tokenId]
+      : game.actors.find((a) => a.id === actorId);
+    const item = actor ? actor.items.find((i) => i.id === itemId) : null;
+    const displayName = actor === null ? "ERROR" : actor.name;
+    if (!item) {
+      SystemUtils.DisplayMessage(
+        "warn",
+        `[${displayName}] ${SystemUtils.Localize(
+          "CPR.actormissingitem"
+        )} ${itemId}`
+      );
+      return;
+    }
+
+    // If item isn't a cyberdeck, rollType is for regular damage. If item is a cyberdeck,
+    // we will roll damage through the cpr-cyberdeck.js (either through createCyberdeckRoll or createInterfaceRoll)
+    let rollType = item.type !== "cyberdeck" ? "damage" : "cyberdeckProgram";
+    let cprRoll;
+    if (item.type !== "cyberdeck") {
+      cprRoll = item.createRoll(rollType, actor, {
+        damageType: attackType,
+      });
+    } else {
+      // Warn if no damage is configured.
+      const program = actor.getOwnedItem(programId);
+      if (
+        programId !== "zap" &&
+        typeof program === "object" &&
+        !program.system?.damage.standard &&
+        !program.system?.damage.blackIce
+      ) {
+        SystemUtils.DisplayMessage(
+          "warn",
+          SystemUtils.Localize("CPR.chat.rollDamage.warningProgramDmg")
+        );
+        return;
+      }
+      rollType = programId === "zap" ? "interfaceAbility" : rollType; // reassign rollType to "interfaceAbility" if this is a Zap roll.
+      const netRoleItem = actor.itemTypes.role.find(
+        (r) => r.id === actor.system.roleInfo.activeNetRole
+      );
+      cprRoll = item.createRoll(rollType, actor, {
+        cyberdeckId: itemId,
+        interfaceAbility: "zap",
+        programId,
+        executionType: "damage",
+        netRoleItem,
+      });
+    }
+
+    if (location) {
+      cprRoll.location = location;
+    }
+
+    const keepRolling = await cprRoll.handleRollDialog(event, actor, item);
+    if (!keepRolling) {
+      return;
+    }
+
+    cprRoll = await item.confirmRoll(cprRoll);
+    await cprRoll.roll();
+
+    const targetedTokens = SystemUtils.getUserTargetedOrSelected("targeted"); // get user targeted tokens for output to chat
+    cprRoll.entityData = {
+      actor: actorId,
+      token: tokenId,
+      item: itemId,
+      tokens: targetedTokens,
+    };
+    CPRChat.RenderRollCard(cprRoll);
+  }
+
+  /**
    * Provide listeners (just like on actor sheets) that do things when an element is
    * clicked. In particular here, this is for showing/hiding roll details, and rolling
    * damage.
@@ -225,98 +322,14 @@ export default class CPRChat {
         }
         case "rollDamage": {
           // This will let us click a damage link off of the attack card
-          const actorId = SystemUtils.GetEventDatum(event, "data-actor-id");
-          const itemId = SystemUtils.GetEventDatum(event, "data-item-id");
-          const tokenId = SystemUtils.GetEventDatum(event, "data-token-id");
-          const location = SystemUtils.GetEventDatum(
-            event,
-            "data-damage-location"
-          );
-          const attackType = SystemUtils.GetEventDatum(
-            event,
-            "data-attack-type"
-          );
-          const actor = Object.keys(game.actors.tokens).includes(tokenId)
-            ? game.actors.tokens[tokenId]
-            : game.actors.find((a) => a.id === actorId);
-          const item = actor ? actor.items.find((i) => i.id === itemId) : null;
-          const displayName = actor === null ? "ERROR" : actor.name;
-          if (!item) {
-            SystemUtils.DisplayMessage(
-              "warn",
-              `[${displayName}] ${SystemUtils.Localize(
-                "CPR.actormissingitem"
-              )} ${itemId}`
-            );
-            return;
-          }
-
-          // If item isn't a cyberdeck, rollType is for regular damage. If item is a cyberdeck,
-          // we will roll damage through the cpr-cyberdeck.js (either through createCyberdeckRoll or createInterfaceRoll)
-          let rollType =
-            item.type !== "cyberdeck" ? "damage" : "cyberdeckProgram";
-          let cprRoll;
-          if (item.type !== "cyberdeck") {
-            cprRoll = item.createRoll(rollType, actor, {
-              damageType: attackType,
-            });
-          } else {
-            const programId = SystemUtils.GetEventDatum(
-              event,
-              "data-program-id"
-            );
-            // Warn if no damage is configured.
-            const program = actor.getOwnedItem(programId);
-            if (
-              programId !== "zap" &&
-              typeof program === "object" &&
-              !program.system?.damage.standard &&
-              !program.system?.damage.blackIce
-            ) {
-              SystemUtils.DisplayMessage(
-                "warn",
-                SystemUtils.Localize("CPR.chat.rollDamage.warningProgramDmg")
-              );
-              return;
-            }
-            rollType = programId === "zap" ? "interfaceAbility" : rollType; // reassign rollType to "interfaceAbility" if this is a Zap roll.
-            const netRoleItem = actor.itemTypes.role.find(
-              (r) => r.id === actor.system.roleInfo.activeNetRole
-            );
-            cprRoll = item.createRoll(rollType, actor, {
-              cyberdeckId: itemId,
-              interfaceAbility: "zap",
-              programId,
-              executionType: "damage",
-              netRoleItem,
-            });
-          }
-
-          if (location) {
-            cprRoll.location = location;
-          }
-
-          const keepRolling = await cprRoll.handleRollDialog(
-            event,
-            actor,
-            item
-          );
-          if (!keepRolling) {
-            return;
-          }
-
-          cprRoll = await item.confirmRoll(cprRoll);
-          await cprRoll.roll();
-
-          const targetedTokens =
-            SystemUtils.getUserTargetedOrSelected("targeted"); // get user targeted tokens for output to chat
-          cprRoll.entityData = {
-            actor: actorId,
-            token: tokenId,
-            item: itemId,
-            tokens: targetedTokens,
-          };
-          CPRChat.RenderRollCard(cprRoll);
+          await CPRChat.rollDamageFromData(event, {
+            actorId: SystemUtils.GetEventDatum(event, "data-actor-id"),
+            itemId: SystemUtils.GetEventDatum(event, "data-item-id"),
+            tokenId: SystemUtils.GetEventDatum(event, "data-token-id"),
+            location: SystemUtils.GetEventDatum(event, "data-damage-location"),
+            attackType: SystemUtils.GetEventDatum(event, "data-attack-type"),
+            programId: SystemUtils.GetEventDatum(event, "data-program-id"),
+          });
           break;
         }
         case "itemEdit": {

@@ -3,6 +3,7 @@ import LOGGER from "../utils/cpr-logger.js";
 import DiceHandler from "../extern/cpr-dice-handler.js";
 import SystemUtils from "../utils/cpr-systemUtils.js";
 import * as CPRRollDialogs from "../dialog/cpr-roll-dialog.js";
+import CPRRollSlidePanel from "../dialog/cpr-roll-slide-panel.js";
 
 /**
  * This is a generic CPR roll object. It builds in critical success and failure
@@ -283,6 +284,16 @@ export class CPRRoll {
         default:
           DialogClass = CPRRollDialogs.CPRRollDialog;
           break;
+      }
+
+      // Attack and damage rolls may opt into the non-modal sliding panel
+      // instead of the default modal dialog above.
+      if (
+        // eslint-disable-next-line no-use-before-define
+        (this instanceof CPRAttackRoll || this instanceof CPRDamageRoll) &&
+        game.settings.get(game.system.id, "useSlidingAttackPanel")
+      ) {
+        DialogClass = CPRRollSlidePanel;
       }
 
       // Call the dialog. Catch and throw an error if the promise is not returned.
