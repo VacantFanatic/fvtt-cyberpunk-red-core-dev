@@ -209,3 +209,44 @@ Foundry exposes CSS custom properties like `--sidebar-width`/
 `--hotbar-height` without confirming them against a live client first —
 if unconfirmed, measure the real DOM elements (`#sidebar`/`#hotbar`) in JS
 instead of guessing static fallback values.
+
+## Foundry has no native settings section headers — use `renderSettingsConfig`
+
+Foundry v13/v14's Settings Config only groups registered settings by
+package/namespace; everything under `game.system.id` renders as one flat
+list, in registration order, with no built-in way to insert visual
+dividers between logically related settings (there's an open, unshipped
+upstream proposal — `foundryvtt/foundryvtt#13541` — but nothing shipped).
+When registration order alone isn't enough to keep two related-but-distinct
+settings from reading as if one controls the other (e.g.
+`useSlidingAttackPanel`, a pure UI-style toggle, sitting ~30 entries away
+from `additionsAutoRollDamageOnHit`, an automation toggle it's easily
+mistaken for), add a `Hooks.on("renderSettingsConfig", ...)` handler that
+inserts header elements into the rendered form — see
+`src/modules/system/settings-headers.js`. Foundry renders each setting's
+input with `name="<namespace>.<key>"` (and each registered menu button with
+`data-key="<namespace>.<key>"`), both wrapped in a `.form-group`; select on
+that to find where to insert a divider before a given setting. Since this
+repo can't verify the exact ApplicationV2 Settings Config DOM structure
+against live Foundry source, wrap the whole thing in a try/catch that logs
+via `LOGGER.error` and no-ops on a selector mismatch, so a future Foundry
+DOM change degrades to "no headers shown" rather than breaking the settings
+menu.
+
+## Sequencing a Promise-resolving dialog's close animation
+
+`CPRDialog#confirmDialog()`/`closeDialog()`
+(`src/modules/dialog/cpr-dialog-application.js`) resolve/reject the Promise
+from `showDialog()` and then call `this.close(options)`. If a subclass's
+`close()` is `async` and awaits a CSS transition (e.g.
+`CPRRollSlidePanel`'s slide-out animation), resolving *before* awaiting
+`close()` lets whatever's awaiting `showDialog()` proceed while the dialog
+is still visually closing — e.g. an auto-triggered follow-up dialog (the
+damage panel opening after an auto-detected attack hit) could visually
+overlap the one that triggered it. Fixed by awaiting `this.close(options)`
+before firing the resolve/reject callback. This is a no-op timing-wise for
+every dialog whose `close()` has no animation to await (the base
+`ApplicationV2` case) and for `prefers-reduced-motion` (where
+`CPRRollSlidePanel.close()` skips the animation entirely) — the tradeoff
+(a ~200-250ms delay between clicking Confirm and the roll actually
+happening) only applies on the animated slide-panel path.

@@ -1,6 +1,7 @@
 import CPR from "./config.js";
 import CPRCompendiaSettings from "../apps/cpr-compendia-settings.js";
 import registerAdditionsSettings from "../additions/settings.js";
+import registerSettingsHeaders from "./settings-headers.js";
 import LOGGER from "../utils/cpr-logger.js";
 import SystemUtils from "../utils/cpr-systemUtils.js";
 import ModuleMigrationSettings from "./migrate/module-migration-settings.js";
@@ -416,6 +417,7 @@ const registerSystemSettings = () => {
   });
 
   registerAdditionsSettings();
+  registerSettingsHeaders();
 };
 
 export default registerSystemSettings;

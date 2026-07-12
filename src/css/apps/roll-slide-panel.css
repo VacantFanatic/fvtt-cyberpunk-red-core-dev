@@ -1,23 +1,24 @@
-/* Non-modal, screen-anchored attack roll confirmation panel (CPRRollSlidePanel).
-   Each instance gets its own unique DOM id (see cpr-roll-slide-panel.js), so
-   this must select by the shared class, not a fixed id. */
+/* Non-modal, screen-anchored attack/damage roll confirmation panel
+   (CPRRollSlidePanel), docked at the end of the hotbar row. Each instance
+   gets its own unique DOM id (see cpr-roll-slide-panel.js), so this must
+   select by the shared class, not a fixed id. */
 
 .cpr-roll-slide-panel {
   position: fixed;
-  right: var(--cpr-slide-panel-right, 18.75rem);
-  bottom: var(--cpr-slide-panel-bottom, 4.25rem);
-  width: 25rem;
+  left: var(--cpr-slide-panel-left, 21rem);
+  bottom: var(--cpr-slide-panel-bottom, 0.5rem);
+  width: min(25rem, var(--cpr-slide-panel-max-width, 25rem));
   max-width: calc(100vw - 2rem);
   max-height: 70vh;
   overflow: auto;
   z-index: var(--cpr-slide-panel-z, 9999);
-  transform: translateX(0);
+  transform: translateY(0);
   opacity: 1;
   transition: transform 200ms ease-in-out, opacity 200ms linear;
 
   &.cpr-slide-entering,
   &.cpr-slide-leaving {
-    transform: translateX(110%);
+    transform: translateY(110%);
     opacity: 0;
   }
 }

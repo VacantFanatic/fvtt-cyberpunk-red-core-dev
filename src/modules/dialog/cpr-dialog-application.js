@@ -348,8 +348,11 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
   async confirmDialog(_event, options) {
     // Taken from Starfinder: Fire callback that resolves original promise.
     await this._flushFormData();
+    // Await close() (which may run a close animation, e.g. CPRRollSlidePanel)
+    // before resolving, so callers awaiting showDialog() don't proceed until
+    // the dialog has actually finished closing.
+    await this.close(options);
     this._confirmDialog?.();
-    return this.close(options);
   }
 
   /**
@@ -358,8 +361,8 @@ export default class CPRDialog extends HandlebarsApplicationMixin(
    * @param {Object} options - potential options to pass to this.close; currently unused;
    */
   async closeDialog(_event, options) {
+    await this.close(options);
     this._closeDialog?.();
-    return this.close(options);
   }
 
   /**
