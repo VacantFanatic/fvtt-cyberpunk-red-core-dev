@@ -175,6 +175,45 @@ achievable directly. Instead, use the repo's existing automated pipeline:
   `template.json` — well under 1MB) sent directly is usually sufficient
   since assets/packs rarely change alongside a typical code fix.
 
+## Cutting a full/stable release
+
+`release-main.yml` refuses to publish a **stable** (non-`-rc.N`) version from
+any branch except `main`/`master` (its "Restrict stable releases to
+main/master" step). So, unlike an RC (which can be force-pushed straight to
+`dev`), a stable release version bump must land on `main` — do this via a
+normal PR, not a direct push:
+
+1. Branch from `main` (e.g. `chore/release-X.Y.Z`).
+2. Add a new `## Version X.Y.Z` section to the top of `CHANGELOG.md`
+   (`Action Needed`/`Changed`/`New Features`/`Bug Fixes`, matching the
+   existing entries' format), summarizing every merged PR since the last
+   version by re-reading their actual diffs/descriptions
+   (`pull_request_read` `get`/`get_files`) rather than guessing from commit
+   subjects — a squash-merged PR's commit list can fold several follow-up
+   fixes in before merge that never got their own PR description update.
+   Only the English `CHANGELOG.md` gets updated per release; the other
+   `CHANGELOG.<lang>.md` files lag behind on a separate translation
+   process and are not touched here.
+3. Bump `package.json`/`src/system.json` to the plain `X.Y.Z` (no `-rc`
+   suffix) — both must match.
+4. Run the full verification suite (prettier/lint/stylelint/build inc.
+   `buildChangelog`/test:regression), commit, push, open a PR into `main`.
+5. Once CI is green, merging the PR triggers `release-main.yml` and
+   publishes a **draft** `vX.Y.Z` GitHub Release — draft releases are not
+   live/"latest" until someone manually publishes them on GitHub, which
+   gives the user a final checkpoint even after the merge happens.
+
+**Merging into `main` needs its own explicit, in-transcript confirmation —
+a broad instruction like "do a full release" is not sufficient on its
+own.** The auto-mode safety classifier blocks a *scheduled/autonomous*
+"check CI, merge if green" action that has no explicit human sign-off for
+the merge step specifically, even when an earlier user message clearly
+asked for the end-to-end release. Get that confirmation as its own
+question (e.g. via `AskUserQuestion`, "merge once CI is green?") before
+scheduling or attempting the merge — this is a stricter bar than the
+force-push-to-`dev` confirmation already established for RCs, since
+merging to `main` is what actually produces the (draft) public release.
+
 ## The "does it hit" hit-check feature already exists — don't rebuild it
 
 `src/modules/additions/does-it-hit.js` (ported from the community "diwako"
