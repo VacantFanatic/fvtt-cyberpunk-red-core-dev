@@ -1,5 +1,28 @@
 # Changelog
 
+## Version 1.4.29
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- Reworded the "Use Sliding Panel for Attack & Damage Rolls" setting's description to make clear it only changes the roll-confirmation window's appearance and does not roll damage automatically, and cross-referenced it with the "Auto-Roll Damage on Hit" setting so the two aren't mistaken for one controlling the other (#117).
+- Added section headers to the system's settings menu, grouping related settings instead of leaving them in one undifferentiated list (#117).
+- The sliding roll-confirmation panel now docks at the end of the hotbar row and slides up/down, instead of floating above the hotbar and sliding in from the side (#117).
+- When an auto-triggered damage roll follows a hit, the attack panel now fully finishes its close animation before the damage panel opens, instead of the two potentially overlapping (#117).
+
+### New Features
+
+- Added an optional non-modal, screen-anchored sliding panel for confirming attack and damage rolls, as an alternative to the centered dialog box (`Use Sliding Panel for Attack & Damage Rolls` setting, off by default) (#115).
+- Added an option to automatically open the damage roll for a weapon when a targeted attack is determined to hit, using the existing hit-check feature (`Auto-Roll Damage on Hit` setting, off by default) (#115).
+
+### Bug Fixes
+
+- Fixed the sliding roll-confirmation panel clipping behind other UI elements due to an incorrect z-index/positioning baseline (#115).
+- Fixed the sliding panel failing to appear consistently when a damage roll auto-triggers while another instance of the panel is still closing, caused by both instances sharing the same DOM id (#115).
+
 ## Version 1.4.28
 
 ### Action Needed
