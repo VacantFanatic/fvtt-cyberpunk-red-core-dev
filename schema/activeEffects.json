@@ -212,6 +212,7 @@
             "bonuses.allActionsSpeech",
             "token.light.bright",
             "token.sight.visionMode",
+            "token.sight.range",
             "bonuses.hasPainSuppression"
           ]
         },
