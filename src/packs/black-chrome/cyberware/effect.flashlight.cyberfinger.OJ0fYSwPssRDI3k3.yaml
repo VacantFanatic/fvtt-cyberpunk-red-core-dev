@@ -1,0 +1,32 @@
+_id: OJ0fYSwPssRDI3k3
+_key: "!items.effects!QQcjD2PAqtd0qxY4.OJ0fYSwPssRDI3k3"
+changes:
+  - key: token.light.bright
+    priority: null
+    type: add
+    value: "50"
+description: ""
+disabled: true
+duration:
+  combat: null
+  rounds: null
+  seconds: null
+  startRound: null
+  startTime: null
+  startTurn: null
+  turns: null
+flags:
+  cyberpunk-red-core:
+    changes:
+      cats:
+        "0": custom
+      situational:
+        "0":
+          isSituational: false
+          onByDefault: false
+img: systems/cyberpunk-red-core/icons/compendium/black-chrome/cyberware/cyberfinger.svg
+name: Flashlight Cyberfinger
+statuses: []
+system: {}
+transfer: true
+type: base

@@ -9,7 +9,8 @@ _stats:
   modifiedTime: 1765813333735
   systemId: cyberpunk-red-core
   systemVersion: v0.0.0dev
-effects: []
+effects:
+  - OJ0fYSwPssRDI3k3
 flags:
   cyberpunk-red-core:
     _migration:

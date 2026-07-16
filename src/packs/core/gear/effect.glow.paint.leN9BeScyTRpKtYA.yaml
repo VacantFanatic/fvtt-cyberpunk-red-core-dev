@@ -1,16 +1,12 @@
-_id: hl1PHc6f7gRFz2gx
-_key: "!items.effects!VbMY2fs3im1sP2dJ.hl1PHc6f7gRFz2gx"
+_id: leN9BeScyTRpKtYA
+_key: "!items.effects!3HWLPHE0VHMGgv48.leN9BeScyTRpKtYA"
 changes:
-  - key: bonuses.wardrobeAndStyle
-    priority: null
-    type: add
-    value: "2"
   - key: token.light.dim
     priority: null
     type: add
-    value: "2"
+    value: "1"
 description: ""
-disabled: false
+disabled: true
 duration:
   combat: null
   rounds: null
@@ -23,17 +19,13 @@ flags:
   cyberpunk-red-core:
     changes:
       cats:
-        "0": skill
-        "1": custom
+        "0": custom
       situational:
         "0":
           isSituational: false
           onByDefault: false
-        "1":
-          isSituational: false
-          onByDefault: false
-img: systems/cyberpunk-red-core/icons/compendium/cyberware/light_tattoo.svg
-name: Light Tattoo
+img: systems/cyberpunk-red-core/icons/compendium/gear/glow_paint.svg
+name: Glow Paint
 statuses: []
 system: {}
 transfer: true
