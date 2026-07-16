@@ -1,5 +1,25 @@
 # Changelog
 
+## Version 1.4.30
+
+### Action Needed
+
+- None.
+
+### Changed
+
+- None.
+
+### New Features
+
+- Replaced the third-party ATL (Active Token Lighting) module's `ATL.light.bright` Active Effect key with Foundry V14's native `token.*` change-key prefix, so the Flashlight, Glow Stick, and Road Flare gear items' light-emitting toggle effects now work without requiring any external module (#119).
+- Added matching light-emitting toggle effects (using the new native `token.light.bright`/`token.light.dim` keys) to the Flashlight Cyberfinger, Lead's Turn-On-Show-Off Nails, Glow Paint, and Light Tattoo items, which previously had no mechanical effect behind their light-emitting flavor text (#120).
+- Added vision-enhancing toggle effects to the Low Light/IR/UV cyberware and the Infrared Nightvision Scope weapon upgrade: both now switch the wielder's token to Foundry's built-in Light Amplification vision mode and grant a matching sight range while toggled on (#121).
+
+### Bug Fixes
+
+- None.
+
 ## Version 1.4.29
 
 ### Action Needed
