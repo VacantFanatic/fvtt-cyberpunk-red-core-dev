@@ -1,6 +1,7 @@
 _id: 3HWLPHE0VHMGgv48
 _key: "!items!3HWLPHE0VHMGgv48"
-effects: []
+effects:
+  - leN9BeScyTRpKtYA
 flags:
   cyberpunk-red-core:
     _migration:

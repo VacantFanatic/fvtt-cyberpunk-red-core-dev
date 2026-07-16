@@ -268,10 +268,19 @@ module's `ATL.*` prefix convention one-for-one for the same underlying
 
 `token.light.bright` is used by the Flashlight, Glow Stick, and Road Flare
 gear items (`src/packs/core/gear/effect.*.yaml`) to make the item's toggle
-effect emit light from the wielder's token. These are **custom**-category
-effects (free-text key, not in `CPR.activeEffectKeys`), so the key also has
-to be added to the `changes[].key` enum in `schema/activeEffects.json` for
-`npx v8r` pack validation to accept it.
+effect emit light from the wielder's token. `token.light.dim` is the same
+idea for weaker ambient-glow sources — used by the Flashlight Cyberfinger
+(`src/packs/black-chrome/cyberware/effect.flashlight.cyberfinger.*.yaml`),
+Lead's Turn-On-Show-Off Nails
+(`src/packs/dlc/cyberware/effect.leads_turn_on_show_off_nails.*.yaml`), Glow
+Paint (`src/packs/core/gear/effect.glow.paint.*.yaml`), and the Light Tattoo
+(`src/packs/core/cyberware/effect.light.tattoo.*.yaml` — added as a second
+`changes[]` entry alongside its existing `bonuses.wardrobeAndStyle` change,
+since one item can carry both a skill bonus and a token change on the same
+effect). These are **custom**-category effects (free-text key, not in
+`CPR.activeEffectKeys`), so each new key also has to be added to the
+`changes[].key` enum in `schema/activeEffects.json` for `npx v8r` pack
+validation to accept it.
 
 `token.sight.visionMode` (an `override`-type change, since it targets a
 string field rather than a number) is used by the Low Light/IR/UV cyberware
