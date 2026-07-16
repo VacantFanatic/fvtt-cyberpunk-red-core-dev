@@ -210,7 +210,7 @@
             "bonuses.allActions",
             "bonuses.allActionsHands",
             "bonuses.allActionsSpeech",
-            "ATL.light.bright",
+            "token.light.bright",
             "bonuses.hasPainSuppression"
           ]
         },

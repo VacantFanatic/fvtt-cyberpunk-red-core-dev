@@ -303,3 +303,44 @@ every dialog whose `close()` has no animation to await (the base
 `CPRRollSlidePanel.close()` skips the animation entirely) — the tradeoff
 (a ~200-250ms delay between clicking Confirm and the roll actually
 happening) only applies on the animated slide-panel path.
+
+## Foundry V14 native `token.*` Active Effect keys replace the ATL module
+
+Foundry V14 (release 14.353) added a native `token.` Active Effect change-key
+prefix: an Actor now has a `tokenOverrides` field, and any change key
+prefixed with `token.` has that prefix stripped and the remaining path (e.g.
+`light.bright`, `light.dim`, `sight.range`) applied directly to the actor's
+placed/prototype `TokenDocument`(s) during data preparation — the same
+phases core already used to apply `system.*`/`bonuses.*` changes to the actor
+itself.
+
+This is a one-for-one native replacement for the third-party **ATL** (Active
+Token Lighting / Active Token Effects, `kandashi/Active-Token-Lighting`)
+module's `ATL.*` prefix convention, which existed solely to bridge Active
+Effects (normally applied only to the owning Actor) onto `TokenDocument`
+fields. ATL used real `TokenDocument`/`LightData` schema paths under its own
+prefix (`LightData` is shared by `AmbientLightDocument` and `TokenDocument`),
+so migrating off ATL is a prefix swap (`ATL.light.bright` →
+`token.light.bright`), not a schema change — and this system never declared
+ATL as a `system.json` dependency, so there's nothing to remove there.
+
+- `token.*` keys are V14+ only. This system's `compatibility.minimum` is 13,
+  so on older clients a `token.*` key silently no-ops — the same behavior
+  these effects already had for anyone without ATL installed, so there's no
+  regression on older Foundry versions and no need to bump the compatibility
+  floor.
+- Worked example: the Flashlight, Glow Stick, and Road Flare gear items
+  (`src/packs/core/gear/effect.*.yaml`) each use `token.light.bright` to make
+  their toggle effect emit light from the wielder's token. See
+  `docs/ACTIVE-EFFECTS.md`'s "Token keys (`token.*`, V14+ only)" section.
+  These are **custom**-category effects (free-text key, not registered in
+  `CPR.activeEffectKeys`), so a new `token.*` key also needs adding to the
+  `changes[].key` enum in `schema/activeEffects.json` for `npx v8r` pack
+  validation to accept it — it does not need an entry in
+  `src/modules/system/config.js`.
+- `foundryvtt.com` and GitHub blocked `WebFetch` (403) from this project's
+  remote/cloud sessions when researching this — the `token.*` behavior above
+  was confirmed via `WebSearch` result snippets quoting the V14 release notes
+  and the `foundryvtt/foundryvtt` GitHub issue tracker, not by fetching the
+  pages directly. If confirming further Foundry-core behavior later, expect
+  the same block and route through `WebSearch` instead.
