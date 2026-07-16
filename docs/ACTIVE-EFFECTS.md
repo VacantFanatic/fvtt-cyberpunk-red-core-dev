@@ -255,6 +255,29 @@ These are applied by Foundry's standard effect mechanism (not `bonuses.*`) and m
 
 One key per role ability, e.g. `bonuses.combatAwareness`, `bonuses.interface`, `bonuses.medicine`. Full list in `CPR.activeEffectKeys.role`.
 
+### Token keys (`token.*`, V14+ only)
+
+Foundry V14 added a native `token.` change-key prefix: the prefix is stripped
+and the remaining path (e.g. `light.bright`, `light.dim`, `sight.range`) is
+applied directly to the actor's placed/prototype `TokenDocument`(s) during
+data preparation, via the actor's new `tokenOverrides` field — the same
+mechanism core already used to apply `system.*`/`bonuses.*` changes to the
+actor itself. This replaces the third-party **ATL** (Active Token Lighting)
+module's `ATL.*` prefix convention one-for-one for the same underlying
+`LightData`/`TokenDocument` schema paths — no dependency on ATL is required.
+
+`token.light.bright` is used by the Flashlight, Glow Stick, and Road Flare
+gear items (`src/packs/core/gear/effect.*.yaml`) to make the item's toggle
+effect emit light from the wielder's token. These are **custom**-category
+effects (free-text key, not in `CPR.activeEffectKeys`), so the key also has
+to be added to the `changes[].key` enum in `schema/activeEffects.json` for
+`npx v8r` pack validation to accept it.
+
+This is V14+ only. On older clients (down to this system's
+`compatibility.minimum: 13`) a `token.*` key silently does nothing — the same
+no-op behavior these effects already had without ATL installed, so there's no
+regression on older Foundry versions.
+
 ---
 
 ## Adding a new effect key

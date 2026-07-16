@@ -1,7 +1,7 @@
 _id: AGKnpiEshwvZDOrK
 _key: "!items.effects!im5VJlsJv37KsyrE.AGKnpiEshwvZDOrK"
 changes:
-  - key: ATL.light.bright
+  - key: token.light.bright
     priority: null
     type: add
     value: "2"
