@@ -282,6 +282,17 @@ effect). These are **custom**-category effects (free-text key, not in
 `changes[].key` enum in `schema/activeEffects.json` for `npx v8r` pack
 validation to accept it.
 
+`token.sight.visionMode` (an `override`-type change, since it targets a
+string field rather than a number) is used by the Low Light/IR/UV cyberware
+(`src/packs/core/cyberware/effect.low.lightiruv.*.yaml`) and the Infrared
+Nightvision Scope item upgrade
+(`src/packs/core/upgrades/effect.infrared.nightvision.scope.*.yaml`) to set
+the wielder's token to Foundry's built-in `"lightAmplification"` vision mode
+(`CONFIG.Canvas.visionModes` — sees light sources brightened and darkness
+lifted). This only covers the "darkness" part of each item's description;
+Foundry has no built-in vision mode for "ignore smoke/fog penalties", so that
+part of the flavor text stays unimplemented rather than overclaimed.
+
 This is V14+ only. On older clients (down to this system's
 `compatibility.minimum: 13`) a `token.*` key silently does nothing — the same
 no-op behavior these effects already had without ATL installed, so there's no
