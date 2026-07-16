@@ -1,6 +1,7 @@
 _id: Iqa0DXFWJji0JRHl
 _key: "!items!Iqa0DXFWJji0JRHl"
-effects: []
+effects:
+  - 0ObGQTmIcDrTjG1T
 flags:
   cyberpunk-red-core:
     _migration:

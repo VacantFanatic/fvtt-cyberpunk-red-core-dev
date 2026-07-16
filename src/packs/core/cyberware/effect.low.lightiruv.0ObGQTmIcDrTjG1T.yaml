@@ -1,0 +1,32 @@
+_id: 0ObGQTmIcDrTjG1T
+_key: "!items.effects!Iqa0DXFWJji0JRHl.0ObGQTmIcDrTjG1T"
+changes:
+  - key: token.sight.visionMode
+    priority: null
+    type: override
+    value: lightAmplification
+description: ""
+disabled: true
+duration:
+  combat: null
+  rounds: null
+  seconds: null
+  startRound: null
+  startTime: null
+  startTurn: null
+  turns: null
+flags:
+  cyberpunk-red-core:
+    changes:
+      cats:
+        "0": custom
+      situational:
+        "0":
+          isSituational: false
+          onByDefault: false
+img: systems/cyberpunk-red-core/icons/compendium/cyberware/lowlight_ir_uv.svg
+name: Low Light/IR/UV
+statuses: []
+system: {}
+transfer: true
+type: base
