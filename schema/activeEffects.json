@@ -213,6 +213,7 @@
             "token.light.bright",
             "token.light.dim",
             "token.sight.visionMode",
+            "token.sight.range",
             "bonuses.hasPainSuppression"
           ]
         },

@@ -5,6 +5,10 @@ changes:
     priority: null
     type: override
     value: lightAmplification
+  - key: token.sight.range
+    priority: null
+    type: override
+    value: "18"
 description: ""
 disabled: true
 duration:
@@ -20,8 +24,12 @@ flags:
     changes:
       cats:
         "0": custom
+        "1": custom
       situational:
         "0":
+          isSituational: false
+          onByDefault: false
+        "1":
           isSituational: false
           onByDefault: false
 img: systems/cyberpunk-red-core/icons/compendium/upgrades/infrared_nightvision_scope.svg
