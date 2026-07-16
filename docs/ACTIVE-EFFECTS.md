@@ -282,6 +282,28 @@ effect). These are **custom**-category effects (free-text key, not in
 `changes[].key` enum in `schema/activeEffects.json` for `npx v8r` pack
 validation to accept it.
 
+`token.sight.visionMode` (an `override`-type change, since it targets a
+string field rather than a number) is used by the Low Light/IR/UV cyberware
+(`src/packs/core/cyberware/effect.low.lightiruv.*.yaml`) and the Infrared
+Nightvision Scope item upgrade
+(`src/packs/core/upgrades/effect.infrared.nightvision.scope.*.yaml`) to set
+the wielder's token to Foundry's built-in `"lightAmplification"` vision mode
+(`CONFIG.Canvas.visionModes` — sees light sources brightened and darkness
+lifted). This only covers the "darkness" part of each item's description;
+Foundry has no built-in vision mode for "ignore smoke/fog penalties", so that
+part of the flavor text stays unimplemented rather than overclaimed.
+
+A vision *mode* only changes how light is perceived within the token's
+existing `sight.range` — it grants no sight distance on its own, so both
+effects also carry a second, paired change: `token.sight.range` (`override`,
+value `"18"`). Foundry's `sight.range` is a plain number interpreted in
+whatever unit the **scene's own grid** is configured for, not a fixed
+real-world distance — this system's default new-scene grid is 2 meters/square
+(`grid.units: "m"` in `src/system.json`), matching the metric-flavored ranges
+used elsewhere in the compendium (e.g. Radar Detector: 100m), so `18` here
+approximates a 60ft real-world range under that default. A scene using a
+feet-based grid instead would see a literal 18ft range from the same value.
+
 This is V14+ only. On older clients (down to this system's
 `compatibility.minimum: 13`) a `token.*` key silently does nothing — the same
 no-op behavior these effects already had without ATL installed, so there's no

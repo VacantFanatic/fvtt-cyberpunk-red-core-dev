@@ -1,6 +1,7 @@
 _id: pEXcsIk1FYMNdbUc
 _key: "!items!pEXcsIk1FYMNdbUc"
-effects: []
+effects:
+  - L0xi6TUAphqja9Sn
 flags:
   cyberpunk-red-core:
     _migration:
@@ -108,6 +109,7 @@ system:
     page: 343
   type: weapon
   unarmedAutomaticCalculation: true
+  usage: toggled
   usesType: magazine
   weaponSkill: ""
   weaponType: ""

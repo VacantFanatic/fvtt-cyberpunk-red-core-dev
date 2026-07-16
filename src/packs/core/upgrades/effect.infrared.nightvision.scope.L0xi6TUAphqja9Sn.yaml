@@ -1,0 +1,40 @@
+_id: L0xi6TUAphqja9Sn
+_key: "!items.effects!pEXcsIk1FYMNdbUc.L0xi6TUAphqja9Sn"
+changes:
+  - key: token.sight.visionMode
+    priority: null
+    type: override
+    value: lightAmplification
+  - key: token.sight.range
+    priority: null
+    type: override
+    value: "18"
+description: ""
+disabled: true
+duration:
+  combat: null
+  rounds: null
+  seconds: null
+  startRound: null
+  startTime: null
+  startTurn: null
+  turns: null
+flags:
+  cyberpunk-red-core:
+    changes:
+      cats:
+        "0": custom
+        "1": custom
+      situational:
+        "0":
+          isSituational: false
+          onByDefault: false
+        "1":
+          isSituational: false
+          onByDefault: false
+img: systems/cyberpunk-red-core/icons/compendium/upgrades/infrared_nightvision_scope.svg
+name: Infrared Nightvision Scope
+statuses: []
+system: {}
+transfer: true
+type: base
