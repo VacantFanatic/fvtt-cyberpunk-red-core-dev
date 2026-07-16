@@ -211,6 +211,7 @@
             "bonuses.allActionsHands",
             "bonuses.allActionsSpeech",
             "token.light.bright",
+            "token.light.dim",
             "bonuses.hasPainSuppression"
           ]
         },

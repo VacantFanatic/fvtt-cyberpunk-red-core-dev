@@ -1,16 +1,12 @@
-_id: hl1PHc6f7gRFz2gx
-_key: "!items.effects!VbMY2fs3im1sP2dJ.hl1PHc6f7gRFz2gx"
+_id: jap54X0lCvClPFDL
+_key: "!items.effects!37RCGTuozpxgA9EN.jap54X0lCvClPFDL"
 changes:
-  - key: bonuses.wardrobeAndStyle
-    priority: null
-    type: add
-    value: "2"
   - key: token.light.dim
     priority: null
     type: add
-    value: "2"
+    value: "5"
 description: ""
-disabled: false
+disabled: true
 duration:
   combat: null
   rounds: null
@@ -23,17 +19,13 @@ flags:
   cyberpunk-red-core:
     changes:
       cats:
-        "0": skill
-        "1": custom
+        "0": custom
       situational:
         "0":
           isSituational: false
           onByDefault: false
-        "1":
-          isSituational: false
-          onByDefault: false
-img: systems/cyberpunk-red-core/icons/compendium/cyberware/light_tattoo.svg
-name: Light Tattoo
+img: systems/cyberpunk-red-core/icons/compendium/dlc/cyberware/leads_turn_on_show_off_nails.svg
+name: Lead's Turn-On-Show-Off Nails
 statuses: []
 system: {}
 transfer: true
